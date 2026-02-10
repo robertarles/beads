@@ -239,7 +239,7 @@ func TestInitializeNoDbMode_SetsStoreActive(t *testing.T) {
 	// Save and restore global state
 	oldStore := store
 	oldStoreActive := storeActive
-	oldCwd, _ := os.Getwd()
+	oldCwd, _ := os.Getwd() // best-effort, unlikely to fail
 	defer func() {
 		storeMutex.Lock()
 		store = oldStore
@@ -323,7 +323,7 @@ func TestInitializeNoDbMode_SetsCmdCtxStoreActive(t *testing.T) {
 	// Initialize CommandContext (simulates what PersistentPreRun does)
 	initCommandContext()
 
-	oldCwd, _ := os.Getwd()
+	oldCwd, _ := os.Getwd() // best-effort, unlikely to fail
 	defer func() {
 		_ = os.Chdir(oldCwd)
 		resetCommandContext()

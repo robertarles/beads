@@ -21,7 +21,7 @@ func MigrateHookedStatus(db *sql.DB) error {
 		return fmt.Errorf("failed to migrate pinned to hooked: %w", err)
 	}
 
-	rowsAffected, _ := result.RowsAffected()
+	rowsAffected, _ := result.RowsAffected() // informational only, error not critical
 	if rowsAffected > 0 {
 		// Log migration for audit trail (optional - no-op if table doesn't exist)
 		_, _ = db.Exec(`

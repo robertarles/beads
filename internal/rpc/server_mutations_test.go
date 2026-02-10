@@ -24,7 +24,7 @@ func TestHandleCreate_SetsCreatedBy(t *testing.T) {
 		Priority:  2,
 		CreatedBy: "test-actor",
 	}
-	createJSON, _ := json.Marshal(createArgs)
+	createJSON, _ := json.Marshal(createArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	createReq := &Request{
 		Operation: OpCreate,
 		Args:      createJSON,
@@ -203,7 +203,7 @@ func TestHandleGetMutations(t *testing.T) {
 
 	// Create RPC request
 	args := GetMutationsArgs{Since: checkpoint}
-	argsJSON, _ := json.Marshal(args)
+	argsJSON, _ := json.Marshal(args) // marshaling known types, error not possible // test setup, marshaling known types
 
 	req := &Request{
 		Operation: OpGetMutations,
@@ -415,7 +415,7 @@ func TestHandleClose_EmitsStatusMutation(t *testing.T) {
 		IssueType: "bug",
 		Priority:  1,
 	}
-	createJSON, _ := json.Marshal(createArgs)
+	createJSON, _ := json.Marshal(createArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	createReq := &Request{
 		Operation: OpCreate,
 		Args:      createJSON,
@@ -443,7 +443,7 @@ func TestHandleClose_EmitsStatusMutation(t *testing.T) {
 		ID:     issueID,
 		Reason: "test complete",
 	}
-	closeJSON, _ := json.Marshal(closeArgs)
+	closeJSON, _ := json.Marshal(closeArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	closeReq := &Request{
 		Operation: OpClose,
 		Args:      closeJSON,
@@ -489,7 +489,7 @@ func TestHandleUpdate_EmitsStatusMutationOnStatusChange(t *testing.T) {
 		IssueType: "task",
 		Priority:  2,
 	}
-	createJSON, _ := json.Marshal(createArgs)
+	createJSON, _ := json.Marshal(createArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	createReq := &Request{
 		Operation: OpCreate,
 		Args:      createJSON,
@@ -518,7 +518,7 @@ func TestHandleUpdate_EmitsStatusMutationOnStatusChange(t *testing.T) {
 		ID:     issueID,
 		Status: &status,
 	}
-	updateJSON, _ := json.Marshal(updateArgs)
+	updateJSON, _ := json.Marshal(updateArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	updateReq := &Request{
 		Operation: OpUpdate,
 		Args:      updateJSON,
@@ -564,7 +564,7 @@ func TestHandleUpdate_EmitsUpdateMutationForNonStatusChanges(t *testing.T) {
 		IssueType: "task",
 		Priority:  2,
 	}
-	createJSON, _ := json.Marshal(createArgs)
+	createJSON, _ := json.Marshal(createArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	createReq := &Request{
 		Operation: OpCreate,
 		Args:      createJSON,
@@ -593,7 +593,7 @@ func TestHandleUpdate_EmitsUpdateMutationForNonStatusChanges(t *testing.T) {
 		ID:    issueID,
 		Title: &newTitle,
 	}
-	updateJSON, _ := json.Marshal(updateArgs)
+	updateJSON, _ := json.Marshal(updateArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	updateReq := &Request{
 		Operation: OpUpdate,
 		Args:      updateJSON,
@@ -638,7 +638,7 @@ func TestHandleDelete_EmitsMutation(t *testing.T) {
 		IssueType: "bug",
 		Priority:  1,
 	}
-	createJSON, _ := json.Marshal(createArgs)
+	createJSON, _ := json.Marshal(createArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	createReq := &Request{
 		Operation: OpCreate,
 		Args:      createJSON,
@@ -666,7 +666,7 @@ func TestHandleDelete_EmitsMutation(t *testing.T) {
 		Force:  true,
 		Reason: "test deletion",
 	}
-	deleteJSON, _ := json.Marshal(deleteArgs)
+	deleteJSON, _ := json.Marshal(deleteArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	deleteReq := &Request{
 		Operation: OpDelete,
 		Args:      deleteJSON,
@@ -712,7 +712,7 @@ func TestHandleDelete_BatchEmitsMutations(t *testing.T) {
 			IssueType: "bug",
 			Priority:  1,
 		}
-		createJSON, _ := json.Marshal(createArgs)
+		createJSON, _ := json.Marshal(createArgs) // marshaling known types, error not possible // test setup, marshaling known types
 		createReq := &Request{
 			Operation: OpCreate,
 			Args:      createJSON,
@@ -740,7 +740,7 @@ func TestHandleDelete_BatchEmitsMutations(t *testing.T) {
 		Force:  true,
 		Reason: "batch test deletion",
 	}
-	deleteJSON, _ := json.Marshal(deleteArgs)
+	deleteJSON, _ := json.Marshal(deleteArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	deleteReq := &Request{
 		Operation: OpDelete,
 		Args:      deleteJSON,
@@ -787,7 +787,7 @@ func TestHandleDelete_ErrorEmptyIDs(t *testing.T) {
 		IDs:   []string{},
 		Force: true,
 	}
-	deleteJSON, _ := json.Marshal(deleteArgs)
+	deleteJSON, _ := json.Marshal(deleteArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	deleteReq := &Request{
 		Operation: OpDelete,
 		Args:      deleteJSON,
@@ -820,7 +820,7 @@ func TestHandleDelete_ErrorIssueNotFound(t *testing.T) {
 		IDs:   []string{"bd-nonexistent-12345"},
 		Force: true,
 	}
-	deleteJSON, _ := json.Marshal(deleteArgs)
+	deleteJSON, _ := json.Marshal(deleteArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	deleteReq := &Request{
 		Operation: OpDelete,
 		Args:      deleteJSON,
@@ -886,7 +886,7 @@ func TestHandleDelete_ErrorCannotDeleteTemplate(t *testing.T) {
 		IDs:   []string{"bd-template-test"},
 		Force: true,
 	}
-	deleteJSON, _ := json.Marshal(deleteArgs)
+	deleteJSON, _ := json.Marshal(deleteArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	deleteReq := &Request{
 		Operation: OpDelete,
 		Args:      deleteJSON,
@@ -927,7 +927,7 @@ func TestHandleDelete_ErrorCannotDeleteTemplate(t *testing.T) {
 
 	// Verify template still exists
 	showArgs := ShowArgs{ID: "bd-template-test"}
-	showJSON, _ := json.Marshal(showArgs)
+	showJSON, _ := json.Marshal(showArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	showReq := &Request{
 		Operation: OpShow,
 		Args:      showJSON,
@@ -973,7 +973,7 @@ func TestHandleDelete_ReasonField(t *testing.T) {
 		IssueType: "task",
 		Priority:  2,
 	}
-	createJSON, _ := json.Marshal(createArgs)
+	createJSON, _ := json.Marshal(createArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	createReq := &Request{
 		Operation: OpCreate,
 		Args:      createJSON,
@@ -997,7 +997,7 @@ func TestHandleDelete_ReasonField(t *testing.T) {
 		Force:  true,
 		Reason: "no longer needed",
 	}
-	deleteJSON, _ := json.Marshal(deleteArgs)
+	deleteJSON, _ := json.Marshal(deleteArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	deleteReq := &Request{
 		Operation: OpDelete,
 		Args:      deleteJSON,
@@ -1034,7 +1034,7 @@ func TestHandleDelete_CascadeAndForceFlags(t *testing.T) {
 		IssueType: "task",
 		Priority:  2,
 	}
-	createJSON, _ := json.Marshal(createArgs)
+	createJSON, _ := json.Marshal(createArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	createReq := &Request{
 		Operation: OpCreate,
 		Args:      createJSON,
@@ -1058,7 +1058,7 @@ func TestHandleDelete_CascadeAndForceFlags(t *testing.T) {
 		Force:   true,
 		Cascade: true,
 	}
-	deleteJSON, _ := json.Marshal(deleteArgs)
+	deleteJSON, _ := json.Marshal(deleteArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	deleteReq := &Request{
 		Operation: OpDelete,
 		Args:      deleteJSON,
@@ -1093,7 +1093,7 @@ func TestHandleUpdate_ClaimFlag(t *testing.T) {
 		IssueType: "task",
 		Priority:  2,
 	}
-	createJSON, _ := json.Marshal(createArgs)
+	createJSON, _ := json.Marshal(createArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	createReq := &Request{
 		Operation: OpCreate,
 		Args:      createJSON,
@@ -1121,7 +1121,7 @@ func TestHandleUpdate_ClaimFlag(t *testing.T) {
 		ID:    issueID,
 		Claim: true,
 	}
-	updateJSON, _ := json.Marshal(updateArgs)
+	updateJSON, _ := json.Marshal(updateArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	updateReq := &Request{
 		Operation: OpUpdate,
 		Args:      updateJSON,
@@ -1159,7 +1159,7 @@ func TestHandleUpdate_ClaimFlag_AlreadyClaimed(t *testing.T) {
 		IssueType: "task",
 		Priority:  2,
 	}
-	createJSON, _ := json.Marshal(createArgs)
+	createJSON, _ := json.Marshal(createArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	createReq := &Request{
 		Operation: OpCreate,
 		Args:      createJSON,
@@ -1182,7 +1182,7 @@ func TestHandleUpdate_ClaimFlag_AlreadyClaimed(t *testing.T) {
 		ID:    issueID,
 		Claim: true,
 	}
-	updateJSON, _ := json.Marshal(updateArgs)
+	updateJSON, _ := json.Marshal(updateArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	updateReq := &Request{
 		Operation: OpUpdate,
 		Args:      updateJSON,
@@ -1199,7 +1199,7 @@ func TestHandleUpdate_ClaimFlag_AlreadyClaimed(t *testing.T) {
 		ID:    issueID,
 		Claim: true,
 	}
-	updateJSON2, _ := json.Marshal(updateArgs2)
+	updateJSON2, _ := json.Marshal(updateArgs2) // marshaling known types, error not possible // test setup, marshaling known types
 	updateReq2 := &Request{
 		Operation: OpUpdate,
 		Args:      updateJSON2,
@@ -1232,7 +1232,7 @@ func TestHandleUpdate_ClaimFlag_WithOtherUpdates(t *testing.T) {
 		IssueType: "task",
 		Priority:  2,
 	}
-	createJSON, _ := json.Marshal(createArgs)
+	createJSON, _ := json.Marshal(createArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	createReq := &Request{
 		Operation: OpCreate,
 		Args:      createJSON,
@@ -1257,7 +1257,7 @@ func TestHandleUpdate_ClaimFlag_WithOtherUpdates(t *testing.T) {
 		Claim:    true,
 		Priority: &priority,
 	}
-	updateJSON, _ := json.Marshal(updateArgs)
+	updateJSON, _ := json.Marshal(updateArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	updateReq := &Request{
 		Operation: OpUpdate,
 		Args:      updateJSON,
@@ -1299,7 +1299,7 @@ func TestHandleUpdate_ClaimFlag_Concurrent(t *testing.T) {
 		IssueType: "task",
 		Priority:  2,
 	}
-	createJSON, _ := json.Marshal(createArgs)
+	createJSON, _ := json.Marshal(createArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	createReq := &Request{
 		Operation: OpCreate,
 		Args:      createJSON,
@@ -1327,7 +1327,7 @@ func TestHandleUpdate_ClaimFlag_Concurrent(t *testing.T) {
 				ID:    issueID,
 				Claim: true,
 			}
-			updateJSON, _ := json.Marshal(updateArgs)
+			updateJSON, _ := json.Marshal(updateArgs) // marshaling known types, error not possible // test setup, marshaling known types
 			updateReq := &Request{
 				Operation: OpUpdate,
 				Args:      updateJSON,
@@ -1382,7 +1382,7 @@ func TestHandleClose_BlockerCheck(t *testing.T) {
 		IssueType: "bug",
 		Priority:  1,
 	}
-	blockerJSON, _ := json.Marshal(blockerArgs)
+	blockerJSON, _ := json.Marshal(blockerArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	blockerReq := &Request{
 		Operation: OpCreate,
 		Args:      blockerJSON,
@@ -1404,7 +1404,7 @@ func TestHandleClose_BlockerCheck(t *testing.T) {
 		IssueType: "task",
 		Priority:  2,
 	}
-	blockedJSON, _ := json.Marshal(blockedArgs)
+	blockedJSON, _ := json.Marshal(blockedArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	blockedReq := &Request{
 		Operation: OpCreate,
 		Args:      blockedJSON,
@@ -1436,7 +1436,7 @@ func TestHandleClose_BlockerCheck(t *testing.T) {
 		ID:     blockedIssue.ID,
 		Reason: "attempting to close blocked issue",
 	}
-	closeJSON, _ := json.Marshal(closeArgs)
+	closeJSON, _ := json.Marshal(closeArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	closeReq := &Request{
 		Operation: OpClose,
 		Args:      closeJSON,
@@ -1463,7 +1463,7 @@ func TestHandleClose_BlockerCheck(t *testing.T) {
 		Reason: "force closing blocked issue",
 		Force:  true,
 	}
-	forceCloseJSON, _ := json.Marshal(forceCloseArgs)
+	forceCloseJSON, _ := json.Marshal(forceCloseArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	forceCloseReq := &Request{
 		Operation: OpClose,
 		Args:      forceCloseJSON,
@@ -1489,7 +1489,7 @@ func TestHandleClose_BlockerCheck_ClosedBlocker(t *testing.T) {
 		IssueType: "bug",
 		Priority:  1,
 	}
-	blockerJSON, _ := json.Marshal(blockerArgs)
+	blockerJSON, _ := json.Marshal(blockerArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	blockerReq := &Request{
 		Operation: OpCreate,
 		Args:      blockerJSON,
@@ -1511,7 +1511,7 @@ func TestHandleClose_BlockerCheck_ClosedBlocker(t *testing.T) {
 		IssueType: "task",
 		Priority:  2,
 	}
-	blockedJSON, _ := json.Marshal(blockedArgs)
+	blockedJSON, _ := json.Marshal(blockedArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	blockedReq := &Request{
 		Operation: OpCreate,
 		Args:      blockedJSON,
@@ -1543,7 +1543,7 @@ func TestHandleClose_BlockerCheck_ClosedBlocker(t *testing.T) {
 		ID:     blockerIssue.ID,
 		Reason: "blocker fixed",
 	}
-	closeBlockerJSON, _ := json.Marshal(closeBlockerArgs)
+	closeBlockerJSON, _ := json.Marshal(closeBlockerArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	closeBlockerReq := &Request{
 		Operation: OpClose,
 		Args:      closeBlockerJSON,
@@ -1560,7 +1560,7 @@ func TestHandleClose_BlockerCheck_ClosedBlocker(t *testing.T) {
 		ID:     blockedIssue.ID,
 		Reason: "now unblocked",
 	}
-	closeBlockedJSON, _ := json.Marshal(closeBlockedArgs)
+	closeBlockedJSON, _ := json.Marshal(closeBlockedArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	closeBlockedReq := &Request{
 		Operation: OpClose,
 		Args:      closeBlockedJSON,

@@ -195,7 +195,7 @@ func expandLoopWithVars(step *Step, vars map[string]string) ([]*Step, error) {
 				"until": step.Loop.Until,
 				"max":   step.Loop.Max,
 			}
-			loopJSON, _ := json.Marshal(loopMeta)
+			loopJSON, _ := json.Marshal(loopMeta) // marshaling known types, error not possible // marshaling known types, error not possible
 			firstStep.Labels = append(firstStep.Labels, fmt.Sprintf("loop:%s", string(loopJSON)))
 		}
 
@@ -535,7 +535,7 @@ func applyGatesWithMap(stepMap map[string]*Step, compose *ComposeRules) error {
 
 		// Add gate label for runtime evaluation using JSON for unambiguous parsing
 		gateMeta := map[string]string{"condition": gate.Condition}
-		gateJSON, _ := json.Marshal(gateMeta)
+		gateJSON, _ := json.Marshal(gateMeta) // marshaling known types, error not possible // marshaling known types, error not possible
 		gateLabel := fmt.Sprintf("gate:%s", string(gateJSON))
 		step.Labels = appendUnique(step.Labels, gateLabel)
 	}

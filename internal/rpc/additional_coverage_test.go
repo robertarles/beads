@@ -611,7 +611,7 @@ func TestCommentList_NilStorage(t *testing.T) {
 	server := NewServer(filepath.Join(tmpDir, "test.sock"), nil, tmpDir, filepath.Join(tmpDir, "test.db"))
 
 	commentArgs := CommentListArgs{ID: "bd-123"}
-	argsJSON, _ := json.Marshal(commentArgs)
+	argsJSON, _ := json.Marshal(commentArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	req := &Request{
 		Operation: OpCommentList,
 		Args:      argsJSON,
@@ -638,7 +638,7 @@ func TestCommentAdd_NilStorage(t *testing.T) {
 		Author: "test-user",
 		Text:   "test comment",
 	}
-	argsJSON, _ := json.Marshal(commentArgs)
+	argsJSON, _ := json.Marshal(commentArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	req := &Request{
 		Operation: OpCommentAdd,
 		Args:      argsJSON,

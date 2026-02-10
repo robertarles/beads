@@ -72,7 +72,7 @@ func showIssueChildren(ctx context.Context, args []string, resolvedIDs []string,
 			if err := processIssue(id, dbStore); err != nil {
 				fmt.Fprintf(os.Stderr, "Error getting children for %s: %v\n", id, err)
 			}
-			_ = dbStore.Close()
+			_ = dbStore.Close() // best-effort cleanup
 		}
 	} else {
 		// Direct mode - process each arg

@@ -37,7 +37,7 @@ func TestWatchModeWithDaemonDoesNotPanic(t *testing.T) {
 		// Restore state
 		daemonClient = origDaemonClient
 		if store != nil && store != origStore {
-			_ = store.Close()
+			_ = store.Close() // best-effort cleanup
 		}
 		storeMutex.Lock()
 		store = origStore

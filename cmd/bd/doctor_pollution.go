@@ -112,7 +112,7 @@ func runPollutionCheck(_ string, clean bool, yes bool) {
 	if !yes {
 		fmt.Printf("\nDelete %d test issues? [y/N] ", len(polluted))
 		var response string
-		_, _ = fmt.Scanln(&response)
+		_, _ = fmt.Scanln(&response) // interactive input, empty on error
 		if strings.ToLower(response) != "y" {
 			fmt.Println("Canceled.")
 			return

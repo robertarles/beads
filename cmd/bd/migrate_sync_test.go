@@ -299,10 +299,10 @@ func TestMigrateSyncOrphanWorktree(t *testing.T) {
 	// Configure git user
 	cmd = exec.Command("git", "config", "user.email", "test@test.com")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "config", "user.name", "Test User")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	// Create initial commit on main
 	testFile := filepath.Join(tmpDir, "test.txt")
@@ -311,7 +311,7 @@ func TestMigrateSyncOrphanWorktree(t *testing.T) {
 	}
 	cmd = exec.Command("git", "add", ".")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "commit", "-m", "initial")
 	cmd.Dir = tmpDir
 	if err := cmd.Run(); err != nil {
@@ -321,7 +321,7 @@ func TestMigrateSyncOrphanWorktree(t *testing.T) {
 	// Get main branch name
 	cmd = exec.Command("git", "branch", "--show-current")
 	cmd.Dir = tmpDir
-	output, _ := cmd.Output()
+	output, _ := cmd.Output() // test helper, errors checked elsewhere
 	mainBranch := strings.TrimSpace(string(output))
 
 	// Create orphan branch
@@ -335,10 +335,10 @@ func TestMigrateSyncOrphanWorktree(t *testing.T) {
 	// Clean orphan branch
 	cmd = exec.Command("git", "rm", "-rf", "--cached", ".")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "clean", "-fd")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	// Create .beads content on orphan branch
 	beadsDir := filepath.Join(tmpDir, ".beads")
@@ -350,7 +350,7 @@ func TestMigrateSyncOrphanWorktree(t *testing.T) {
 	}
 	cmd = exec.Command("git", "add", ".beads")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "commit", "-m", "orphan initial")
 	cmd.Dir = tmpDir
 	if err := cmd.Run(); err != nil {
@@ -396,7 +396,7 @@ func TestMigrateSyncOrphanWorktree(t *testing.T) {
 		// Cleanup worktree
 		cmd = exec.Command("git", "worktree", "remove", "--force", worktreePath)
 		cmd.Dir = tmpDir
-		_ = cmd.Run()
+		_ = cmd.Run() // test setup, errors not critical
 	})
 }
 
@@ -420,10 +420,10 @@ func TestMigrateSyncExistingBranchPreserved(t *testing.T) {
 	// Configure git user
 	cmd = exec.Command("git", "config", "user.email", "test@test.com")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "config", "user.name", "Test User")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	// Create initial commit on main
 	testFile := filepath.Join(tmpDir, "test.txt")
@@ -432,7 +432,7 @@ func TestMigrateSyncExistingBranchPreserved(t *testing.T) {
 	}
 	cmd = exec.Command("git", "add", ".")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "commit", "-m", "initial")
 	cmd.Dir = tmpDir
 	if err := cmd.Run(); err != nil {
@@ -442,7 +442,7 @@ func TestMigrateSyncExistingBranchPreserved(t *testing.T) {
 	// Get main branch name
 	cmd = exec.Command("git", "branch", "--show-current")
 	cmd.Dir = tmpDir
-	output, _ := cmd.Output()
+	output, _ := cmd.Output() // test helper, errors checked elsewhere
 	mainBranch := strings.TrimSpace(string(output))
 
 	// Create a REGULAR (non-orphan) branch to simulate existing setup
@@ -501,10 +501,10 @@ func TestMigrateSyncOrphanMigration(t *testing.T) {
 	// Configure git user
 	cmd = exec.Command("git", "config", "user.email", "test@test.com")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "config", "user.name", "Test User")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	// Create initial commit on main
 	testFile := filepath.Join(tmpDir, "test.txt")
@@ -513,7 +513,7 @@ func TestMigrateSyncOrphanMigration(t *testing.T) {
 	}
 	cmd = exec.Command("git", "add", ".")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "commit", "-m", "initial")
 	cmd.Dir = tmpDir
 	if err := cmd.Run(); err != nil {
@@ -523,7 +523,7 @@ func TestMigrateSyncOrphanMigration(t *testing.T) {
 	// Get main branch name
 	cmd = exec.Command("git", "branch", "--show-current")
 	cmd.Dir = tmpDir
-	output, _ := cmd.Output()
+	output, _ := cmd.Output() // test helper, errors checked elsewhere
 	mainBranch := strings.TrimSpace(string(output))
 
 	// Create a REGULAR (non-orphan) branch
@@ -562,12 +562,12 @@ func TestMigrateSyncOrphanMigration(t *testing.T) {
 		// Remove staged files
 		cmd = exec.Command("git", "rm", "-rf", "--cached", ".")
 		cmd.Dir = tmpDir
-		_ = cmd.Run()
+		_ = cmd.Run() // test setup, errors not critical
 
 		// Clean working directory
 		cmd = exec.Command("git", "clean", "-fd")
 		cmd.Dir = tmpDir
-		_ = cmd.Run()
+		_ = cmd.Run() // test setup, errors not critical
 
 		// Create .beads and commit
 		beadsDir := filepath.Join(tmpDir, ".beads")
@@ -580,7 +580,7 @@ func TestMigrateSyncOrphanMigration(t *testing.T) {
 		}
 		cmd = exec.Command("git", "add", ".beads")
 		cmd.Dir = tmpDir
-		_ = cmd.Run()
+		_ = cmd.Run() // test setup, errors not critical
 		cmd = exec.Command("git", "commit", "-m", "init beads on orphan")
 		cmd.Dir = tmpDir
 		if err := cmd.Run(); err != nil {
@@ -622,10 +622,10 @@ func TestHasChangesInWorktreeDir(t *testing.T) {
 	// Configure git user
 	cmd = exec.Command("git", "config", "user.email", "test@test.com")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "config", "user.name", "Test User")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	// Create and commit initial file
 	testFile := filepath.Join(tmpDir, "test.txt")
@@ -634,10 +634,10 @@ func TestHasChangesInWorktreeDir(t *testing.T) {
 	}
 	cmd = exec.Command("git", "add", ".")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "commit", "-m", "initial")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	ctx := context.Background()
 

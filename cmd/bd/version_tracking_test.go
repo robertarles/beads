@@ -470,7 +470,7 @@ func TestAutoMigrateOnVersionBump_AlreadyMigrated(t *testing.T) {
 	if err := store.SetMetadata(ctx, "bd_version", Version); err != nil {
 		t.Fatalf("Failed to set version: %v", err)
 	}
-	_ = store.Close()
+	_ = store.Close() // best-effort cleanup
 
 	// Save original state
 	origUpgradeDetected := versionUpgradeDetected

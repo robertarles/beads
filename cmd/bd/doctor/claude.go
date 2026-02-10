@@ -547,7 +547,7 @@ func fetchLatestPyPIVersion(packageName string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer func() { _ = resp.Body.Close() }()
+	defer func() { _ = resp.Body.Close() }() // best-effort cleanup
 
 	if resp.StatusCode != http.StatusOK {
 		return "", fmt.Errorf("pypi api returned status %d", resp.StatusCode)

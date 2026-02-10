@@ -296,7 +296,7 @@ func (s *SQLiteStorage) SearchIssues(ctx context.Context, query string, filter t
 	if err != nil {
 		return nil, fmt.Errorf("failed to search issues: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	issues, err := s.scanIssues(ctx, rows)
 	if err != nil {

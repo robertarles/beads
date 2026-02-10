@@ -18,7 +18,7 @@ func mkTmpDirInTmp(t *testing.T, prefix string) string {
 			t.Fatalf("failed to create temp dir: %v", err)
 		}
 	}
-	t.Cleanup(func() { _ = os.RemoveAll(dir) })
+	t.Cleanup(func() { _ = os.RemoveAll(dir) }) // best-effort cleanup
 	return dir
 }
 

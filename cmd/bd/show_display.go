@@ -53,14 +53,14 @@ func displayShowIssue(ctx context.Context, issueID string) {
 	}
 
 	// Labels
-	labels, _ := issueStore.GetLabels(ctx, issue.ID)
+	labels, _ := issueStore.GetLabels(ctx, issue.ID) // best-effort enrichment, nil on error
 	if len(labels) > 0 {
 		fmt.Printf("\n%s %s\n", ui.RenderBold("LABELS:"), strings.Join(labels, ", "))
 	}
 
 	// Dependencies (what this issue depends on)
 	relatedSeen := make(map[string]*types.IssueWithDependencyMetadata)
-	depsWithMeta, _ := issueStore.GetDependenciesWithMetadata(ctx, issue.ID)
+	depsWithMeta, _ := issueStore.GetDependenciesWithMetadata(ctx, issue.ID) // best-effort enrichment, nil on error
 	if len(depsWithMeta) > 0 {
 		var blocks, parent, discovered []*types.IssueWithDependencyMetadata
 		for _, dep := range depsWithMeta {
@@ -144,7 +144,7 @@ func displayShowIssue(ctx context.Context, issueID string) {
 	}
 
 	// Comments
-	comments, _ := issueStore.GetIssueComments(ctx, issue.ID)
+	comments, _ := issueStore.GetIssueComments(ctx, issue.ID) // best-effort enrichment, nil on error
 	if len(comments) > 0 {
 		fmt.Printf("\n%s\n", ui.RenderBold("COMMENTS"))
 		for _, comment := range comments {
@@ -176,7 +176,7 @@ func watchIssue(ctx context.Context, issueID string) {
 		fmt.Fprintf(os.Stderr, "Error creating watcher: %v\n", err)
 		return
 	}
-	defer func() { _ = watcher.Close() }()
+	defer func() { _ = watcher.Close() }() // best-effort cleanup
 
 	// Watch the .beads directory
 	if err := watcher.Add(beadsDir); err != nil {

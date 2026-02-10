@@ -117,7 +117,7 @@ This is more explicit than 'bd update --status open' and emits a Reopened event.
 				}
 			}
 			if jsonOutput {
-				issue, _ := store.GetIssue(ctx, fullID)
+				issue, _ := store.GetIssue(ctx, fullID) // nil if not found
 				if issue != nil {
 					reopenedIssues = append(reopenedIssues, issue)
 				}

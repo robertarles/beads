@@ -220,7 +220,7 @@ Installed hooks:
 				output := map[string]interface{}{
 					"error": err.Error(),
 				}
-				jsonBytes, _ := json.MarshalIndent(output, "", "  ")
+				jsonBytes, _ := json.MarshalIndent(output, "", "  ") // marshaling known types, error not possible
 				fmt.Println(string(jsonBytes))
 			} else {
 				fmt.Fprintf(os.Stderr, "Error loading hooks: %v\n", err)
@@ -233,7 +233,7 @@ Installed hooks:
 				output := map[string]interface{}{
 					"error": err.Error(),
 				}
-				jsonBytes, _ := json.MarshalIndent(output, "", "  ")
+				jsonBytes, _ := json.MarshalIndent(output, "", "  ") // marshaling known types, error not possible
 				fmt.Println(string(jsonBytes))
 			} else {
 				fmt.Fprintf(os.Stderr, "Error installing hooks: %v\n", err)
@@ -249,7 +249,7 @@ Installed hooks:
 				"chained":    chain,
 				"beadsHooks": beadsHooks,
 			}
-			jsonBytes, _ := json.MarshalIndent(output, "", "  ")
+			jsonBytes, _ := json.MarshalIndent(output, "", "  ") // marshaling known types, error not possible
 			fmt.Println(string(jsonBytes))
 		} else {
 			fmt.Println("✓ Git hooks installed successfully")
@@ -287,7 +287,7 @@ var hooksUninstallCmd = &cobra.Command{
 				output := map[string]interface{}{
 					"error": err.Error(),
 				}
-				jsonBytes, _ := json.MarshalIndent(output, "", "  ")
+				jsonBytes, _ := json.MarshalIndent(output, "", "  ") // marshaling known types, error not possible
 				fmt.Println(string(jsonBytes))
 			} else {
 				fmt.Fprintf(os.Stderr, "Error uninstalling hooks: %v\n", err)
@@ -300,7 +300,7 @@ var hooksUninstallCmd = &cobra.Command{
 				"success": true,
 				"message": "Git hooks uninstalled successfully",
 			}
-			jsonBytes, _ := json.MarshalIndent(output, "", "  ")
+			jsonBytes, _ := json.MarshalIndent(output, "", "  ") // marshaling known types, error not possible
 			fmt.Println(string(jsonBytes))
 		} else {
 			fmt.Println("✓ Git hooks uninstalled successfully")
@@ -319,7 +319,7 @@ var hooksListCmd = &cobra.Command{
 			output := map[string]interface{}{
 				"hooks": statuses,
 			}
-			jsonBytes, _ := json.MarshalIndent(output, "", "  ")
+			jsonBytes, _ := json.MarshalIndent(output, "", "  ") // marshaling known types, error not possible
 			fmt.Println(string(jsonBytes))
 		} else {
 			fmt.Println("Git hooks status:")
@@ -743,7 +743,7 @@ func runPrePushHook(args []string) int {
 		// #nosec G204 - statusArgs built from hardcoded list and git subcommands
 		statusCmd = exec.Command("git", statusArgs...)
 	}
-	output, _ := statusCmd.Output()
+	output, _ := statusCmd.Output() // best-effort, ignore command errors
 	if len(output) > 0 {
 		fmt.Fprintln(os.Stderr, "❌ Error: Uncommitted changes detected")
 		fmt.Fprintln(os.Stderr, "")

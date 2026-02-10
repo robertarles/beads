@@ -352,7 +352,7 @@ func TestRateLimiting(t *testing.T) {
 func TestErrorHandling(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
-		_, _ = w.Write([]byte(`{"message": "401 Unauthorized"}`))
+		_, _ = w.Write([]byte(`{"message": "401 Unauthorized"}`)) // test response writer, errors not critical // test response writer, errors not critical
 	}))
 	defer server.Close()
 
@@ -514,7 +514,7 @@ func TestCreateIssueLink(t *testing.T) {
 func TestUpdateIssue_Error(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
-		_, _ = w.Write([]byte(`{"message": "Issue not found"}`))
+		_, _ = w.Write([]byte(`{"message": "Issue not found"}`)) // test response writer, errors not critical // test response writer, errors not critical
 	}))
 	defer server.Close()
 
@@ -534,7 +534,7 @@ func TestUpdateIssue_Error(t *testing.T) {
 func TestUpdateIssue_InvalidJSON(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{invalid json`))
+		_, _ = w.Write([]byte(`{invalid json`)) // test response writer, errors not critical // test response writer, errors not critical
 	}))
 	defer server.Close()
 
@@ -554,7 +554,7 @@ func TestUpdateIssue_InvalidJSON(t *testing.T) {
 func TestGetIssueLinks_Error(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusForbidden)
-		_, _ = w.Write([]byte(`{"message": "Access denied"}`))
+		_, _ = w.Write([]byte(`{"message": "Access denied"}`)) // test response writer, errors not critical // test response writer, errors not critical
 	}))
 	defer server.Close()
 
@@ -574,7 +574,7 @@ func TestGetIssueLinks_Error(t *testing.T) {
 func TestGetIssueLinks_InvalidJSON(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`not valid json`))
+		_, _ = w.Write([]byte(`not valid json`)) // test response writer, errors not critical // test response writer, errors not critical
 	}))
 	defer server.Close()
 
@@ -594,7 +594,7 @@ func TestGetIssueLinks_InvalidJSON(t *testing.T) {
 func TestFetchIssueByIID_Error(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
-		_, _ = w.Write([]byte(`{"message": "Issue not found"}`))
+		_, _ = w.Write([]byte(`{"message": "Issue not found"}`)) // test response writer, errors not critical // test response writer, errors not critical
 	}))
 	defer server.Close()
 
@@ -614,7 +614,7 @@ func TestFetchIssueByIID_Error(t *testing.T) {
 func TestFetchIssueByIID_InvalidJSON(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{malformed`))
+		_, _ = w.Write([]byte(`{malformed`)) // test response writer, errors not critical // test response writer, errors not critical
 	}))
 	defer server.Close()
 
@@ -634,7 +634,7 @@ func TestFetchIssueByIID_InvalidJSON(t *testing.T) {
 func TestCreateIssueLink_Error(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
-		_, _ = w.Write([]byte(`{"message": "Target issue not found"}`))
+		_, _ = w.Write([]byte(`{"message": "Target issue not found"}`)) // test response writer, errors not critical // test response writer, errors not critical
 	}))
 	defer server.Close()
 
@@ -655,7 +655,7 @@ func TestCreateIssueLink_InvalidJSON(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
-		_, _ = w.Write([]byte(`{broken json`))
+		_, _ = w.Write([]byte(`{broken json`)) // test response writer, errors not critical // test response writer, errors not critical
 	}))
 	defer server.Close()
 
@@ -676,7 +676,7 @@ func TestCreateIssue_InvalidJSON(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
-		_, _ = w.Write([]byte(`{not valid json`))
+		_, _ = w.Write([]byte(`{not valid json`)) // test response writer, errors not critical // test response writer, errors not critical
 	}))
 	defer server.Close()
 
@@ -696,7 +696,7 @@ func TestCreateIssue_InvalidJSON(t *testing.T) {
 func TestFetchIssuesSince_Error(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
-		_, _ = w.Write([]byte(`{"message": "Server error"}`))
+		_, _ = w.Write([]byte(`{"message": "Server error"}`)) // test response writer, errors not critical // test response writer, errors not critical
 	}))
 	defer server.Close()
 
@@ -715,7 +715,7 @@ func TestRetryMarshalError(t *testing.T) {
 	// This test verifies that when rate-limited and retrying with a request body,
 	// the error from json.Marshal is handled properly (not ignored with _).
 	//
-	// The current bug: line 114 does `jsonBody, _ := json.Marshal(body)`
+	// The current bug: line 114 does `jsonBody, _ := json.Marshal(body)` // marshaling known types, error not possible // test setup, marshaling known types
 	// which silently ignores marshal errors during retry.
 	//
 	// Note: In practice, json.Marshal rarely fails for a body that successfully

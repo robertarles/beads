@@ -183,7 +183,7 @@ func TestImportWarnsUncommittedChanges(t *testing.T) {
 	// Now test the warning detection function directly
 	// Capture stderr to check for warning
 	oldStderr := os.Stderr
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stderr = w
 
 	checkUncommittedChanges(jsonlPath, result)
@@ -335,7 +335,7 @@ func TestImportNoWarningWhenClean(t *testing.T) {
 
 	// Capture stderr
 	oldStderr := os.Stderr
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stderr = w
 
 	checkUncommittedChanges(jsonlPath, result)

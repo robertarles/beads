@@ -307,7 +307,7 @@ func TestCompleteCommandInNoDbCommandsList(t *testing.T) {
 	// Capture stdout/stderr
 	oldStdout := os.Stdout
 	oldStderr := os.Stderr
-	_, w, _ := os.Pipe()
+	_, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stdout = w
 	os.Stderr = w
 	defer func() {
@@ -320,7 +320,7 @@ func TestCompleteCommandInNoDbCommandsList(t *testing.T) {
 	err = rootCmd.Execute()
 
 	// Close pipe to get output
-	_ = w.Close()
+	_ = w.Close() // best-effort cleanup
 
 	// The command should NOT fail - if __complete is in noDbCommands,
 	// PersistentPreRun will skip database initialization and the completion

@@ -256,7 +256,7 @@ func getTitlesFromClone(t *testing.T, cloneDir string) map[string]bool {
 func resolveConflictMarkersIfPresent(t *testing.T, cloneDir string) {
 	t.Helper()
 	jsonlPath := filepath.Join(cloneDir, ".beads", "issues.jsonl")
-	jsonlContent, _ := os.ReadFile(jsonlPath)
+	jsonlContent, _ := os.ReadFile(jsonlPath) // best-effort read, nil on error
 	if strings.Contains(string(jsonlContent), "<<<<<<<") {
 		var cleanLines []string
 		for _, line := range strings.Split(string(jsonlContent), "\n") {
@@ -299,7 +299,7 @@ func runCmd(t *testing.T, dir string, name string, args ...string) {
 	cmd := exec.Command(name, args...)
 	cmd.Dir = dir
 	if err := cmd.Run(); err != nil {
-		out, _ := cmd.CombinedOutput()
+		out, _ := cmd.CombinedOutput() // test helper, errors checked elsewhere
 		t.Fatalf("Command failed: %s %v\nError: %v\nOutput: %s", name, args, err, string(out))
 	}
 }
@@ -315,7 +315,7 @@ func runCmdOutputAllowError(t *testing.T, dir string, name string, args ...strin
 	t.Helper()
 	cmd := exec.Command(name, args...)
 	cmd.Dir = dir
-	out, _ := cmd.CombinedOutput()
+	out, _ := cmd.CombinedOutput() // test helper, errors checked elsewhere
 	return string(out)
 }
 

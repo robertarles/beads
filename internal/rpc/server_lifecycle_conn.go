@@ -54,7 +54,7 @@ func (s *Server) Start(_ context.Context) error {
 		if err := os.Chmod(s.socketPath, 0600); err != nil {
 			// EINVAL typically means the filesystem doesn't support chmod on sockets
 			if !isPermissionUnsupportedError(err) {
-				_ = listener.Close()
+				_ = listener.Close() // best-effort cleanup
 				return fmt.Errorf("failed to set socket permissions: %w", err)
 			}
 			// Log but continue - socket is still usable
@@ -109,7 +109,7 @@ func (s *Server) Start(_ context.Context) error {
 		default:
 			// Max connections reached, reject immediately
 			s.metrics.RecordRejectedConnection()
-			_ = conn.Close()
+			_ = conn.Close() // best-effort cleanup
 		}
 	}
 }
@@ -195,7 +195,7 @@ func (s *Server) removeOldSocket() error {
 		conn, err := dialRPC(s.socketPath, 500*time.Millisecond)
 		if err == nil {
 			// Socket is active - another daemon is running
-			_ = conn.Close()
+			_ = conn.Close() // best-effort cleanup
 			return fmt.Errorf("socket %s is in use by another daemon", s.socketPath)
 		}
 
@@ -216,7 +216,7 @@ func (s *Server) handleSignals() {
 
 func (s *Server) handleConnection(conn net.Conn) {
 	defer func() {
-		_ = conn.Close()
+		_ = conn.Close() // best-effort cleanup
 	}()
 
 	// Recover from panics to prevent daemon crash (bd-1048)

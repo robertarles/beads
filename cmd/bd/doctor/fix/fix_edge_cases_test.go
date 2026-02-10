@@ -306,7 +306,7 @@ func TestGitHooks_EdgeCases(t *testing.T) {
 
 		// Verify .git/hooks doesn't exist or remove it
 		hooksDir := filepath.Join(dir, ".git", "hooks")
-		_ = os.RemoveAll(hooksDir)
+		_ = os.RemoveAll(hooksDir) // best-effort cleanup
 
 		// GitHooks should create the directory via bd hooks install
 		err := GitHooks(dir)
@@ -639,7 +639,7 @@ func TestMigrateTombstones_EdgeCases(t *testing.T) {
 			Timestamp: time.Now(),
 			Actor:     "testuser",
 		}
-		data, _ := json.Marshal(deletion)
+		data, _ := json.Marshal(deletion) // marshaling known types, error not possible // test setup, marshaling known types
 		if err := os.WriteFile(deletionsPath, append(data, '\n'), 0600); err != nil {
 			t.Fatalf("failed to create deletions.jsonl: %v", err)
 		}

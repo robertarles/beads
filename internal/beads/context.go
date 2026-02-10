@@ -311,8 +311,8 @@ func isPathInSafeBoundary(path string) bool {
 	// Allow OS-designated temp directories (e.g., /var/folders on macOS)
 	// On macOS, TempDir() returns paths under /var/folders which symlinks to /private/var/folders
 	tempDir := os.TempDir()
-	resolvedTemp, _ := filepath.EvalSymlinks(tempDir)
-	resolvedPath, _ := filepath.EvalSymlinks(absPath)
+	resolvedTemp, _ := filepath.EvalSymlinks(tempDir) // best-effort symlink resolution
+	resolvedPath, _ := filepath.EvalSymlinks(absPath) // best-effort symlink resolution
 	if resolvedTemp != "" && strings.HasPrefix(resolvedPath, resolvedTemp) {
 		return true
 	}

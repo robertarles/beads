@@ -152,7 +152,7 @@ func runMergeSlotCreate(cmd *cobra.Command, args []string) error {
 			}
 		}
 	} else {
-		existing, _ = store.GetIssue(ctx, slotID)
+		existing, _ = store.GetIssue(ctx, slotID) // nil if not found
 		if existing != nil {
 			fmt.Printf("Merge slot already exists: %s\n", slotID)
 			return nil

@@ -213,8 +213,8 @@ func TestFindBeadsDir(t *testing.T) {
 		t.Error("Expected to find .beads directory")
 	}
 	// Use EvalSymlinks to handle /var vs /private/var on macOS
-	expectedPath, _ := filepath.EvalSymlinks(beadsDir)
-	foundPath, _ := filepath.EvalSymlinks(found)
+	expectedPath, _ := filepath.EvalSymlinks(beadsDir) // best-effort symlink resolution
+	foundPath, _ := filepath.EvalSymlinks(found) // best-effort symlink resolution
 	if foundPath != expectedPath {
 		t.Errorf("Expected %s, got %s", expectedPath, foundPath)
 	}
@@ -272,8 +272,8 @@ func TestFindBeadsDir_ParentDirectory(t *testing.T) {
 		t.Error("Expected to find .beads directory in parent")
 	}
 	// Use EvalSymlinks to handle /var vs /private/var on macOS
-	expectedPath, _ := filepath.EvalSymlinks(beadsDir)
-	foundPath, _ := filepath.EvalSymlinks(found)
+	expectedPath, _ := filepath.EvalSymlinks(beadsDir) // best-effort symlink resolution
+	foundPath, _ := filepath.EvalSymlinks(found) // best-effort symlink resolution
 	if foundPath != expectedPath {
 		t.Errorf("Expected %s, got %s", expectedPath, foundPath)
 	}

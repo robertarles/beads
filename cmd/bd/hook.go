@@ -391,7 +391,7 @@ func hookPreCommit() int {
 					// #nosec G204 -- f comes from jsonlFilePaths (controlled, hardcoded paths)
 					gitAdd = exec.Command("git", "add", f)
 				}
-				_ = gitAdd.Run()
+				_ = gitAdd.Run() // best-effort, ignore errors
 			}
 		}
 	}
@@ -439,7 +439,7 @@ func hookPreCommitDolt(beadsDir, worktreeRoot string) int {
 		fmt.Fprintf(os.Stderr, "Warning: could not open database: %v\n", err)
 		return 0
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	// Check if store supports versioned operations (required for Dolt)
 	vs, ok := storage.AsVersioned(store)
@@ -551,7 +551,7 @@ func stageJSONLFiles(ctx context.Context) {
 				// #nosec G204 -- f comes from jsonlFilePaths (controlled, hardcoded paths)
 				gitAdd = exec.Command("git", "add", f)
 			}
-			_ = gitAdd.Run()
+			_ = gitAdd.Run() // best-effort, ignore errors
 		}
 	}
 }
@@ -609,7 +609,7 @@ func hookPostMerge(args []string) int {
 
 	// Run quick health check
 	healthCmd := exec.Command("bd", "doctor", "--check-health")
-	_ = healthCmd.Run()
+	_ = healthCmd.Run() // best-effort, ignore errors
 
 	if cfg.ChainStrategy == ChainAfter {
 		return runChainedHookWithConfig("post-merge", args, cfg)
@@ -632,7 +632,7 @@ func hookPostMergeDolt(beadsDir string) int {
 		fmt.Fprintf(os.Stderr, "Warning: could not open database: %v\n", err)
 		return 0
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	// Check if Dolt store supports version control operations
 	doltStore, ok := store.(interface {
@@ -646,7 +646,7 @@ func hookPostMergeDolt(beadsDir string) int {
 	if !ok {
 		// Not a Dolt store with version control, use regular import
 		cmd := exec.Command("bd", "sync", "--import-only", "--no-git-history", "--no-daemon")
-		_ = cmd.Run()
+		_ = cmd.Run() // best-effort, ignore errors
 		return 0
 	}
 
@@ -835,7 +835,7 @@ func hookPostCheckout(args []string) int {
 
 	// Run quick health check
 	healthCmd := exec.Command("bd", "doctor", "--check-health")
-	_ = healthCmd.Run()
+	_ = healthCmd.Run() // best-effort, ignore errors
 
 	if cfg.ChainStrategy == ChainAfter {
 		return runChainedHookWithConfig("post-checkout", args, cfg)
@@ -855,7 +855,7 @@ func importFromJSONLToStore(ctx context.Context, store storage.Storage, jsonlPat
 	if err != nil {
 		return err
 	}
-	defer func() { _ = f.Close() }()
+	defer func() { _ = f.Close() }() // best-effort cleanup
 
 	scanner := bufio.NewScanner(f)
 	// 2MB buffer for large issues

@@ -615,7 +615,7 @@ func TestIsSyncBranchSameAsCurrent(t *testing.T) {
 		currentBranch := strings.TrimSpace(getGitOutput(t, repoDir, "symbolic-ref", "--short", "HEAD"))
 
 		// Save original dir and change to test repo
-		origDir, _ := os.Getwd()
+		origDir, _ := os.Getwd() // best-effort, unlikely to fail
 		os.Chdir(repoDir)
 		defer os.Chdir(origDir)
 
@@ -635,7 +635,7 @@ func TestIsSyncBranchSameAsCurrent(t *testing.T) {
 		runGit(t, repoDir, "commit", "-m", "initial commit")
 
 		// Save original dir and change to test repo
-		origDir, _ := os.Getwd()
+		origDir, _ := os.Getwd() // best-effort, unlikely to fail
 		os.Chdir(repoDir)
 		defer os.Chdir(origDir)
 
@@ -650,7 +650,7 @@ func TestIsSyncBranchSameAsCurrent(t *testing.T) {
 		tmpDir, _ := os.MkdirTemp("", "non-git-*")
 		defer os.RemoveAll(tmpDir)
 
-		origDir, _ := os.Getwd()
+		origDir, _ := os.Getwd() // best-effort, unlikely to fail
 		os.Chdir(tmpDir)
 		defer os.Chdir(origDir)
 
@@ -789,7 +789,7 @@ func TestContentMergeRecoveryPreservesTombstones(t *testing.T) {
 			t.Fatalf("contentMergeRecovery() error = %v", err)
 		}
 
-		mergedData, _ := os.ReadFile(jsonlPath)
+		mergedData, _ := os.ReadFile(jsonlPath) // best-effort read, nil on error
 		if !strings.Contains(string(mergedData), `"status":"tombstone"`) {
 			t.Errorf("Expected tombstone to be preserved, got: %s", mergedData)
 		}

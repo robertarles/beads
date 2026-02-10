@@ -200,7 +200,7 @@ func promptForkExclude(upstreamURL string, quiet bool) bool {
 	fmt.Print("\n[Y/n]: ")
 
 	reader := bufio.NewReader(os.Stdin)
-	response, _ := reader.ReadString('\n')
+	response, _ := reader.ReadString('\n') // interactive input, handle empty on error
 	response = strings.TrimSpace(strings.ToLower(response))
 
 	// Default to yes (empty or "y" or "yes")

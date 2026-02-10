@@ -128,14 +128,14 @@ func defaultAgentsEnv() agentsEnv {
 }
 
 func installAgents(env agentsEnv, integration agentsIntegration) error {
-	_, _ = fmt.Fprintf(env.stdout, "Installing %s integration...\n", integration.name)
+	_, _ = fmt.Fprintf(env.stdout, "Installing %s integration...\n", integration.name) // output error not actionable
 
 	var currentContent string
 	data, err := os.ReadFile(env.agentsPath)
 	if err == nil {
 		currentContent = string(data)
 	} else if !os.IsNotExist(err) {
-		_, _ = fmt.Fprintf(env.stderr, "Error: failed to read %s: %v\n", env.agentsPath, err)
+		_, _ = fmt.Fprintf(env.stderr, "Error: failed to read %s: %v\n", env.agentsPath, err) // output error not actionable
 		return err
 	}
 
@@ -143,73 +143,73 @@ func installAgents(env agentsEnv, integration agentsIntegration) error {
 		if strings.Contains(currentContent, agentsBeginMarker) {
 			newContent := updateBeadsSection(currentContent)
 			if err := atomicWriteFile(env.agentsPath, []byte(newContent)); err != nil {
-				_, _ = fmt.Fprintf(env.stderr, "Error: write %s: %v\n", env.agentsPath, err)
+				_, _ = fmt.Fprintf(env.stderr, "Error: write %s: %v\n", env.agentsPath, err) // output error not actionable
 				return err
 			}
-			_, _ = fmt.Fprintln(env.stdout, "✓ Updated existing beads section in AGENTS.md")
+			_, _ = fmt.Fprintln(env.stdout, "✓ Updated existing beads section in AGENTS.md") // output error not actionable
 		} else {
 			newContent := currentContent + "\n\n" + agentsBeadsSection
 			if err := atomicWriteFile(env.agentsPath, []byte(newContent)); err != nil {
-				_, _ = fmt.Fprintf(env.stderr, "Error: write %s: %v\n", env.agentsPath, err)
+				_, _ = fmt.Fprintf(env.stderr, "Error: write %s: %v\n", env.agentsPath, err) // output error not actionable
 				return err
 			}
-			_, _ = fmt.Fprintln(env.stdout, "✓ Added beads section to existing AGENTS.md")
+			_, _ = fmt.Fprintln(env.stdout, "✓ Added beads section to existing AGENTS.md") // output error not actionable
 		}
 	} else {
 		newContent := createNewAgentsFile()
 		if err := atomicWriteFile(env.agentsPath, []byte(newContent)); err != nil {
-			_, _ = fmt.Fprintf(env.stderr, "Error: write %s: %v\n", env.agentsPath, err)
+			_, _ = fmt.Fprintf(env.stderr, "Error: write %s: %v\n", env.agentsPath, err) // output error not actionable
 			return err
 		}
-		_, _ = fmt.Fprintln(env.stdout, "✓ Created new AGENTS.md with beads integration")
+		_, _ = fmt.Fprintln(env.stdout, "✓ Created new AGENTS.md with beads integration") // output error not actionable
 	}
 
-	_, _ = fmt.Fprintf(env.stdout, "\n✓ %s integration installed\n", integration.name)
-	_, _ = fmt.Fprintf(env.stdout, "  File: %s\n", env.agentsPath)
+	_, _ = fmt.Fprintf(env.stdout, "\n✓ %s integration installed\n", integration.name) // output error not actionable
+	_, _ = fmt.Fprintf(env.stdout, "  File: %s\n", env.agentsPath) // output error not actionable
 	if integration.readHint != "" {
-		_, _ = fmt.Fprintf(env.stdout, "\n%s\n", integration.readHint)
+		_, _ = fmt.Fprintf(env.stdout, "\n%s\n", integration.readHint) // output error not actionable
 	}
-	_, _ = fmt.Fprintln(env.stdout, "No additional configuration needed!")
+	_, _ = fmt.Fprintln(env.stdout, "No additional configuration needed!") // output error not actionable
 	return nil
 }
 
 func checkAgents(env agentsEnv, integration agentsIntegration) error {
 	data, err := os.ReadFile(env.agentsPath)
 	if os.IsNotExist(err) {
-		_, _ = fmt.Fprintln(env.stdout, "✗ AGENTS.md not found")
-		_, _ = fmt.Fprintf(env.stdout, "  Run: %s\n", integration.setupCommand)
+		_, _ = fmt.Fprintln(env.stdout, "✗ AGENTS.md not found") // output error not actionable
+		_, _ = fmt.Fprintf(env.stdout, "  Run: %s\n", integration.setupCommand) // output error not actionable
 		return errAgentsFileMissing
 	} else if err != nil {
-		_, _ = fmt.Fprintf(env.stderr, "Error: failed to read %s: %v\n", env.agentsPath, err)
+		_, _ = fmt.Fprintf(env.stderr, "Error: failed to read %s: %v\n", env.agentsPath, err) // output error not actionable
 		return err
 	}
 
 	content := string(data)
 	if strings.Contains(content, agentsBeginMarker) {
-		_, _ = fmt.Fprintf(env.stdout, "✓ %s integration installed: %s\n", integration.name, env.agentsPath)
-		_, _ = fmt.Fprintln(env.stdout, "  Beads section found in AGENTS.md")
+		_, _ = fmt.Fprintf(env.stdout, "✓ %s integration installed: %s\n", integration.name, env.agentsPath) // output error not actionable
+		_, _ = fmt.Fprintln(env.stdout, "  Beads section found in AGENTS.md") // output error not actionable
 		return nil
 	}
 
-	_, _ = fmt.Fprintln(env.stdout, "⚠ AGENTS.md exists but no beads section found")
-	_, _ = fmt.Fprintf(env.stdout, "  Run: %s (to add beads section)\n", integration.setupCommand)
+	_, _ = fmt.Fprintln(env.stdout, "⚠ AGENTS.md exists but no beads section found") // output error not actionable
+	_, _ = fmt.Fprintf(env.stdout, "  Run: %s (to add beads section)\n", integration.setupCommand) // output error not actionable
 	return errBeadsSectionMissing
 }
 
 func removeAgents(env agentsEnv, integration agentsIntegration) error {
-	_, _ = fmt.Fprintf(env.stdout, "Removing %s integration...\n", integration.name)
+	_, _ = fmt.Fprintf(env.stdout, "Removing %s integration...\n", integration.name) // output error not actionable
 	data, err := os.ReadFile(env.agentsPath)
 	if os.IsNotExist(err) {
-		_, _ = fmt.Fprintln(env.stdout, "No AGENTS.md file found")
+		_, _ = fmt.Fprintln(env.stdout, "No AGENTS.md file found") // output error not actionable
 		return nil
 	} else if err != nil {
-		_, _ = fmt.Fprintf(env.stderr, "Error: failed to read %s: %v\n", env.agentsPath, err)
+		_, _ = fmt.Fprintf(env.stderr, "Error: failed to read %s: %v\n", env.agentsPath, err) // output error not actionable
 		return err
 	}
 
 	content := string(data)
 	if !strings.Contains(content, agentsBeginMarker) {
-		_, _ = fmt.Fprintln(env.stdout, "No beads section found in AGENTS.md")
+		_, _ = fmt.Fprintln(env.stdout, "No beads section found in AGENTS.md") // output error not actionable
 		return nil
 	}
 
@@ -217,18 +217,18 @@ func removeAgents(env agentsEnv, integration agentsIntegration) error {
 	trimmed := strings.TrimSpace(newContent)
 	if trimmed == "" {
 		if err := os.Remove(env.agentsPath); err != nil {
-			_, _ = fmt.Fprintf(env.stderr, "Error: failed to remove %s: %v\n", env.agentsPath, err)
+			_, _ = fmt.Fprintf(env.stderr, "Error: failed to remove %s: %v\n", env.agentsPath, err) // output error not actionable
 			return err
 		}
-		_, _ = fmt.Fprintf(env.stdout, "✓ Removed %s (file was empty after removing beads section)\n", env.agentsPath)
+		_, _ = fmt.Fprintf(env.stdout, "✓ Removed %s (file was empty after removing beads section)\n", env.agentsPath) // output error not actionable
 		return nil
 	}
 
 	if err := atomicWriteFile(env.agentsPath, []byte(newContent)); err != nil {
-		_, _ = fmt.Fprintf(env.stderr, "Error: write %s: %v\n", env.agentsPath, err)
+		_, _ = fmt.Fprintf(env.stderr, "Error: write %s: %v\n", env.agentsPath, err) // output error not actionable
 		return err
 	}
-	_, _ = fmt.Fprintln(env.stdout, "✓ Removed beads section from AGENTS.md")
+	_, _ = fmt.Fprintln(env.stdout, "✓ Removed beads section from AGENTS.md") // output error not actionable
 	return nil
 }
 

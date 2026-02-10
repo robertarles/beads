@@ -129,7 +129,7 @@ func TestExportStateJSON(t *testing.T) {
 		LastExportCommit: "abc",
 		LastExportTime:   time.Now(),
 	}
-	dataMinimal, _ := json.Marshal(stateMinimal)
+	dataMinimal, _ := json.Marshal(stateMinimal) // marshaling known types, error not possible // test setup, marshaling known types
 	jsonMinimal := string(dataMinimal)
 
 	// WorktreeHash and JSONLHash should be omitted when empty

@@ -25,7 +25,7 @@ func TestHandleDelete_DryRun(t *testing.T) {
 		IDs:    issueIDs,
 		DryRun: true,
 	}
-	deleteJSON, _ := json.Marshal(deleteArgs)
+	deleteJSON, _ := json.Marshal(deleteArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	deleteReq := &Request{
 		Operation: OpDelete,
 		Args:      deleteJSON,
@@ -76,7 +76,7 @@ func TestHandleDelete_InvalidIssueID(t *testing.T) {
 	deleteArgs := DeleteArgs{
 		IDs: []string{"bd-nonexistent"},
 	}
-	deleteJSON, _ := json.Marshal(deleteArgs)
+	deleteJSON, _ := json.Marshal(deleteArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	deleteReq := &Request{
 		Operation: OpDelete,
 		Args:      deleteJSON,
@@ -109,7 +109,7 @@ func TestHandleDelete_PartialSuccess(t *testing.T) {
 	deleteArgs := DeleteArgs{
 		IDs: []string{validID, "bd-fake1", "bd-fake2"},
 	}
-	deleteJSON, _ := json.Marshal(deleteArgs)
+	deleteJSON, _ := json.Marshal(deleteArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	deleteReq := &Request{
 		Operation: OpDelete,
 		Args:      deleteJSON,
@@ -159,7 +159,7 @@ func TestHandleDelete_NoIDs(t *testing.T) {
 	deleteArgs := DeleteArgs{
 		IDs: []string{},
 	}
-	deleteJSON, _ := json.Marshal(deleteArgs)
+	deleteJSON, _ := json.Marshal(deleteArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	deleteReq := &Request{
 		Operation: OpDelete,
 		Args:      deleteJSON,
@@ -186,7 +186,7 @@ func TestHandleDelete_StorageNotAvailable(t *testing.T) {
 	deleteArgs := DeleteArgs{
 		IDs: []string{"bd-123"},
 	}
-	deleteJSON, _ := json.Marshal(deleteArgs)
+	deleteJSON, _ := json.Marshal(deleteArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	deleteReq := &Request{
 		Operation: OpDelete,
 		Args:      deleteJSON,
@@ -241,7 +241,7 @@ func TestHandleDelete_ResponseStructure(t *testing.T) {
 		IDs:    issueIDs,
 		Reason: "testing response structure",
 	}
-	deleteJSON, _ := json.Marshal(deleteArgs)
+	deleteJSON, _ := json.Marshal(deleteArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	deleteReq := &Request{
 		Operation: OpDelete,
 		Args:      deleteJSON,
@@ -305,7 +305,7 @@ func TestHandleDelete_WithReason(t *testing.T) {
 		IDs:    issueIDs,
 		Reason: "test deletion with reason",
 	}
-	deleteJSON, _ := json.Marshal(deleteArgs)
+	deleteJSON, _ := json.Marshal(deleteArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	deleteReq := &Request{
 		Operation: OpDelete,
 		Args:      deleteJSON,
@@ -319,7 +319,7 @@ func TestHandleDelete_WithReason(t *testing.T) {
 
 	// Verify issue was converted to tombstone (now that MemoryStorage supports CreateTombstone)
 	ctx := context.Background()
-	issue, _ := store.GetIssue(ctx, issueIDs[0])
+	issue, _ := store.GetIssue(ctx, issueIDs[0]) // test assertion handles nil
 	if issue == nil {
 		t.Error("issue should exist as tombstone")
 	} else if issue.Status != types.StatusTombstone {
@@ -345,7 +345,7 @@ func TestHandleDelete_WithTombstone(t *testing.T) {
 		IssueType: "task",
 		Priority:  1,
 	}
-	createJSON, _ := json.Marshal(createArgs)
+	createJSON, _ := json.Marshal(createArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	createReq := &Request{
 		Operation: OpCreate,
 		Args:      createJSON,
@@ -368,7 +368,7 @@ func TestHandleDelete_WithTombstone(t *testing.T) {
 		IDs:    []string{issueID},
 		Reason: "tombstone test",
 	}
-	deleteJSON, _ := json.Marshal(deleteArgs)
+	deleteJSON, _ := json.Marshal(deleteArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	deleteReq := &Request{
 		Operation: OpDelete,
 		Args:      deleteJSON,
@@ -409,7 +409,7 @@ func TestHandleDelete_AllFail(t *testing.T) {
 	deleteArgs := DeleteArgs{
 		IDs: []string{"bd-fake1", "bd-fake2", "bd-fake3"},
 	}
-	deleteJSON, _ := json.Marshal(deleteArgs)
+	deleteJSON, _ := json.Marshal(deleteArgs) // marshaling known types, error not possible // test setup, marshaling known types
 	deleteReq := &Request{
 		Operation: OpDelete,
 		Args:      deleteJSON,
@@ -441,7 +441,7 @@ func TestHandleDelete_DryRunPreservesData(t *testing.T) {
 	ctx := context.Background()
 	beforeIssues := make(map[string]string)
 	for _, id := range issueIDs {
-		issue, _ := store.GetIssue(ctx, id)
+		issue, _ := store.GetIssue(ctx, id) // test assertion handles nil
 		if issue != nil {
 			beforeIssues[id] = issue.Title
 		}
@@ -453,7 +453,7 @@ func TestHandleDelete_DryRunPreservesData(t *testing.T) {
 			IDs:    issueIDs,
 			DryRun: true,
 		}
-		deleteJSON, _ := json.Marshal(deleteArgs)
+		deleteJSON, _ := json.Marshal(deleteArgs) // marshaling known types, error not possible // test setup, marshaling known types
 		deleteReq := &Request{
 			Operation: OpDelete,
 			Args:      deleteJSON,
@@ -494,7 +494,7 @@ func createTestIssues(t *testing.T, server *Server, count int) []string {
 			IssueType: "task",
 			Priority:  1,
 		}
-		createJSON, _ := json.Marshal(createArgs)
+		createJSON, _ := json.Marshal(createArgs) // marshaling known types, error not possible // test setup, marshaling known types
 		createReq := &Request{
 			Operation: OpCreate,
 			Args:      createJSON,

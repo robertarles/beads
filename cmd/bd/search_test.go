@@ -37,7 +37,7 @@ func TestSearchCommand_HelpErrorHandling(t *testing.T) {
 
 			if query == "" {
 				// This is the code path being tested
-				_ = cmd.Help() // Intentionally ignore error (bd-gra)
+				_ = cmd.Help() // Intentionally ignore error (bd-gra) // help output error not actionable
 				// In real code, os.Exit(1) follows, so Help() error doesn't matter
 			}
 		},
@@ -139,7 +139,7 @@ func TestSearchCommand_MissingQueryShowsHelp(t *testing.T) {
 			if query == "" {
 				// Capture stderr
 				oldStderr := os.Stderr
-				r, w, _ := os.Pipe()
+				r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 				os.Stderr = w
 
 				cmd.PrintErrf("Error: search query is required\n")
@@ -155,7 +155,7 @@ func TestSearchCommand_MissingQueryShowsHelp(t *testing.T) {
 				}
 
 				// Help() is called here (may fail, but we don't care)
-				_ = cmd.Help() // #nosec - see bd-gra
+				_ = cmd.Help() // #nosec - see bd-gra // help output error not actionable
 
 				// os.Exit(1) would be called here
 			}

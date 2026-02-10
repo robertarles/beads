@@ -161,8 +161,8 @@ func (s *SQLiteStorage) exportToRepo(ctx context.Context, repoPath string, issue
 	// Ensure cleanup on failure
 	defer func() {
 		if f != nil {
-			_ = f.Close()
-			_ = os.Remove(tempPath)
+			_ = f.Close() // best-effort cleanup
+			_ = os.Remove(tempPath) // best-effort cleanup
 		}
 	}()
 
@@ -182,7 +182,7 @@ func (s *SQLiteStorage) exportToRepo(ctx context.Context, repoPath string, issue
 
 	// Atomic rename
 	if err := os.Rename(tempPath, jsonlPath); err != nil {
-		_ = os.Remove(tempPath)
+		_ = os.Remove(tempPath) // best-effort cleanup
 		return 0, fmt.Errorf("failed to rename temp file: %w", err)
 	}
 

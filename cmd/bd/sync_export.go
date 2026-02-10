@@ -309,8 +309,8 @@ func exportToJSONLDeferred(ctx context.Context, jsonlPath string) (*ExportResult
 	}
 	tempPath := tempFile.Name()
 	defer func() {
-		_ = tempFile.Close()
-		_ = os.Remove(tempPath)
+		_ = tempFile.Close() // best-effort cleanup
+		_ = os.Remove(tempPath) // best-effort cleanup
 	}()
 
 	// Write JSONL and collect content hashes (GH#1278)
@@ -329,7 +329,7 @@ func exportToJSONLDeferred(ctx context.Context, jsonlPath string) (*ExportResult
 	}
 
 	// Close temp file before rename (error checked implicitly by Rename success)
-	_ = tempFile.Close()
+	_ = tempFile.Close() // best-effort cleanup
 
 	// Atomic replace
 	if err := os.Rename(tempPath, jsonlPath); err != nil {
@@ -592,8 +592,8 @@ func performIncrementalExport(ctx context.Context, jsonlPath string, dirtyIDs []
 	}
 	tempPath := tempFile.Name()
 	defer func() {
-		_ = tempFile.Close()
-		_ = os.Remove(tempPath)
+		_ = tempFile.Close() // best-effort cleanup
+		_ = os.Remove(tempPath) // best-effort cleanup
 	}()
 
 	// Write JSONL in sorted order
@@ -610,7 +610,7 @@ func performIncrementalExport(ctx context.Context, jsonlPath string, dirtyIDs []
 	}
 
 	// Close and rename
-	_ = tempFile.Close()
+	_ = tempFile.Close() // best-effort cleanup
 	if err := os.Rename(tempPath, jsonlPath); err != nil {
 		return nil, fmt.Errorf("failed to replace JSONL file: %w", err)
 	}
@@ -647,7 +647,7 @@ func readJSONLToMap(jsonlPath string) (map[string]json.RawMessage, []string, err
 	if err != nil {
 		return nil, nil, err
 	}
-	defer func() { _ = file.Close() }()
+	defer func() { _ = file.Close() }() // best-effort cleanup
 
 	issueMap := make(map[string]json.RawMessage)
 	var ids []string

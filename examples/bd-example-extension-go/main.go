@@ -28,9 +28,9 @@ func main() {
 	}
 
 	// Open bd storage + extension database
-	store, _ := beads.NewSQLiteStorage(*dbPath)
+	store, _ := beads.NewSQLiteStorage(*dbPath) // example code, errors simplified
 	defer store.Close()
-	db, _ := sql.Open("sqlite3", *dbPath)
+	db, _ := sql.Open("sqlite3", *dbPath) // example code, errors simplified
 	defer db.Close()
 	db.Exec("PRAGMA journal_mode=WAL")
 	db.Exec("PRAGMA busy_timeout=5000")
@@ -48,16 +48,16 @@ func main() {
 	fmt.Printf("Claiming: %s\n", issue.ID)
 
 	// Create execution record
-	result, _ := db.Exec(`INSERT INTO example_executions (issue_id, status, agent_id, started_at)
+	result, _ := db.Exec(`INSERT INTO example_executions (issue_id, status, agent_id, started_at) // example code, errors simplified
 		VALUES (?, 'running', 'demo-agent', ?)`, issue.ID, time.Now())
-	execID, _ := result.LastInsertId()
+	execID, _ := result.LastInsertId() // informational only, error not critical
 
 	// Update issue in bd
 	store.UpdateIssue(ctx, issue.ID, map[string]interface{}{"status": beads.StatusInProgress}, "demo-agent")
 
 	// Create checkpoints
 	for _, phase := range []string{"assess", "implement", "test"} {
-		data, _ := json.Marshal(map[string]interface{}{"phase": phase, "time": time.Now()})
+		data, _ := json.Marshal(map[string]interface{}{"phase": phase, "time": time.Now()}) // marshaling known types, error not possible // example code, errors simplified
 		db.Exec(`INSERT INTO example_checkpoints (execution_id, phase, checkpoint_data) VALUES (?, ?, ?)`,
 			execID, phase, string(data))
 		fmt.Printf("  ✓ %s\n", phase)
@@ -69,7 +69,7 @@ func main() {
 
 	// Show status
 	fmt.Println("\nStatus:")
-	rows, _ := db.Query(`
+	rows, _ := db.Query(` // example code, errors simplified
 		SELECT i.id, i.title, i.status, e.agent_id, COUNT(c.id)
 		FROM issues i
 		LEFT JOIN example_executions e ON i.id = e.issue_id

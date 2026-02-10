@@ -241,7 +241,7 @@ func (s *DoltStore) RemoveFederationPeer(ctx context.Context, name string) error
 		return fmt.Errorf("failed to remove federation peer: %w", err)
 	}
 
-	rows, _ := result.RowsAffected()
+	rows, _ := result.RowsAffected() // informational only, error not critical
 	if rows == 0 {
 		// Peer not in credentials table, but might still be a Dolt remote
 		// Continue to try removing the remote

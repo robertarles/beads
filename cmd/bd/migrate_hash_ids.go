@@ -104,7 +104,7 @@ WARNING: Backup your database before running this command, even though it create
 			}
 			os.Exit(1)
 		}
-		defer func() { _ = store.Close() }()
+		defer func() { _ = store.Close() }() // best-effort cleanup
 
 		// Get all issues using SearchIssues with empty query and no filters
 		issues, err := store.SearchIssues(ctx, "", types.IssueFilter{})

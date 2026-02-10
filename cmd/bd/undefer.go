@@ -114,7 +114,7 @@ Examples:
 			}
 
 			if jsonOutput {
-				issue, _ := store.GetIssue(ctx, fullID)
+				issue, _ := store.GetIssue(ctx, fullID) // nil if not found
 				if issue != nil {
 					undeferredIssues = append(undeferredIssues, issue)
 				}

@@ -234,8 +234,8 @@ func performReset(items []resetItem, _, beadsDir string) {
 
 		case "config":
 			// Remove merge driver config (ignore errors - may not exist)
-			_ = exec.Command("git", "config", "--unset", "merge.beads.driver").Run()
-			_ = exec.Command("git", "config", "--unset", "merge.beads.name").Run()
+			_ = exec.Command("git", "config", "--unset", "merge.beads.driver").Run() // best-effort, ignore errors
+			_ = exec.Command("git", "config", "--unset", "merge.beads.name").Run() // best-effort, ignore errors
 			if !jsonOutput {
 				fmt.Printf("%s Removed merge driver config\n", ui.RenderPass("✓"))
 			}

@@ -453,7 +453,7 @@ func TestDeleteViaDaemon_HumanReadableOutput(t *testing.T) {
 
 	// Test output formatting by capturing stdout
 	oldStdout := os.Stdout
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stdout = w
 
 	// Create a mock response to test output formatting
@@ -461,7 +461,7 @@ func TestDeleteViaDaemon_HumanReadableOutput(t *testing.T) {
 		"deleted_count": float64(1),
 		"total_count":   float64(1),
 	}
-	resultJSON, _ := json.Marshal(result)
+	resultJSON, _ := json.Marshal(result) // marshaling known types, error not possible // test setup, marshaling known types
 
 	// Simulate the human-readable output logic
 	deletedCount := int(result["deleted_count"].(float64))
@@ -669,7 +669,7 @@ func TestDeleteViaDaemon_DirectCall(t *testing.T) {
 
 	// Capture stdout
 	oldStdout := os.Stdout
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stdout = w
 
 	// Call deleteViaDaemon directly (should not exit since it succeeds)
@@ -730,7 +730,7 @@ func TestDeleteViaDaemon_DirectDryRun(t *testing.T) {
 
 	// Capture stdout
 	oldStdout := os.Stdout
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stdout = w
 
 	// Call deleteViaDaemon with dry-run
@@ -794,7 +794,7 @@ func TestDeleteViaDaemon_DirectHumanOutput(t *testing.T) {
 
 	// Capture stdout
 	oldStdout := os.Stdout
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stdout = w
 
 	// Call deleteViaDaemon with human output
@@ -853,7 +853,7 @@ func TestDeleteViaDaemon_DirectBatch(t *testing.T) {
 
 	// Capture stdout
 	oldStdout := os.Stdout
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stdout = w
 
 	// Call deleteViaDaemon with multiple issues

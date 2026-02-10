@@ -40,7 +40,7 @@ func readJSONLIssues(t *testing.T, path string) map[string]*types.Issue {
 	if err != nil {
 		t.Fatalf("open %s: %v", path, err)
 	}
-	defer func() { _ = f.Close() }()
+	defer func() { _ = f.Close() }() // best-effort cleanup
 
 	scanner := bufio.NewScanner(f)
 	// allow larger issues
@@ -72,7 +72,7 @@ func writeJSONLIssues(t *testing.T, path string, issues map[string]*types.Issue)
 	if err != nil {
 		t.Fatalf("open %s for write: %v", path, err)
 	}
-	defer func() { _ = f.Close() }()
+	defer func() { _ = f.Close() }() // best-effort cleanup
 
 	ids := make([]string, 0, len(issues))
 	for id := range issues {

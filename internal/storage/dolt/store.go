@@ -288,7 +288,7 @@ func New(ctx context.Context, cfg *Config) (*DoltStore, error) {
 			return nil, fmt.Errorf("Dolt server unreachable at %s: %w\n\nThe Dolt server may not be running. Try:\n  gt dolt start    # If using Gas Town\n  dolt sql-server  # Manual start in database directory",
 				addr, err)
 		}
-		_ = conn.Close()
+		_ = conn.Close() // best-effort cleanup
 
 		// Server mode: connect via MySQL protocol to dolt sql-server
 		db, connStr, err = openServerConnection(ctx, cfg)
@@ -355,9 +355,9 @@ func New(ctx context.Context, cfg *Config) (*DoltStore, error) {
 	}
 	if err := db.PingContext(pingCtx); err != nil {
 		// Ensure we don't leak filesystem locks if embedded open fails after creating a connector.
-		_ = db.Close()
+		_ = db.Close() // best-effort cleanup
 		if embeddedConnector != nil {
-			_ = embeddedConnector.Close()
+			_ = embeddedConnector.Close() // best-effort cleanup
 		}
 		if accessLock != nil {
 			accessLock.Release()
@@ -402,11 +402,11 @@ func New(ctx context.Context, cfg *Config) (*DoltStore, error) {
 			// This makes polecats self-healing: they create their own branches
 			// if Gas Town hasn't pre-created them (race condition, cleanup, etc.).
 			if _, createErr := db.ExecContext(ctx, "CALL DOLT_BRANCH(?)", bdBranch); createErr != nil {
-				_ = store.Close()
+				_ = store.Close() // best-effort cleanup
 				return nil, fmt.Errorf("failed to create Dolt branch %s: %w (checkout error: %v)", bdBranch, createErr, err)
 			}
 			if _, coErr := db.ExecContext(ctx, "CALL DOLT_CHECKOUT(?)", bdBranch); coErr != nil {
-				_ = store.Close()
+				_ = store.Close() // best-effort cleanup
 				return nil, fmt.Errorf("failed to checkout Dolt branch %s after creation: %w", bdBranch, coErr)
 			}
 		}
@@ -476,14 +476,14 @@ func openServerConnection(ctx context.Context, cfg *Config) (*sql.DB, string, er
 	}
 	initDB, err := sql.Open("mysql", initConnStr)
 	if err != nil {
-		_ = db.Close()
+		_ = db.Close() // best-effort cleanup
 		return nil, "", fmt.Errorf("failed to open init connection: %w", err)
 	}
-	defer func() { _ = initDB.Close() }()
+	defer func() { _ = initDB.Close() }() // best-effort cleanup
 
 	// Validate database name to prevent SQL injection via backtick escaping
 	if err := validateDatabaseName(cfg.Database); err != nil {
-		_ = db.Close()
+		_ = db.Close() // best-effort cleanup
 		return nil, "", fmt.Errorf("invalid database name %q: %w", cfg.Database, err)
 	}
 	_, err = initDB.ExecContext(ctx, fmt.Sprintf("CREATE DATABASE IF NOT EXISTS `%s`", cfg.Database)) //nolint:gosec // G201: cfg.Database validated by validateDatabaseName above
@@ -491,7 +491,7 @@ func openServerConnection(ctx context.Context, cfg *Config) (*sql.DB, string, er
 		// Dolt may return error 1007 even with IF NOT EXISTS - ignore if database already exists
 		errLower := strings.ToLower(err.Error())
 		if !strings.Contains(errLower, "database exists") && !strings.Contains(errLower, "1007") {
-			_ = db.Close()
+			_ = db.Close() // best-effort cleanup
 			// Check for connection refused - server likely not running
 			if strings.Contains(errLower, "connection refused") || strings.Contains(errLower, "connect: connection refused") {
 				return nil, "", fmt.Errorf("failed to connect to Dolt server at %s:%d: %w\n\nThe Dolt server may not be running. Try:\n  gt dolt start    # If using Gas Town\n  dolt sql-server  # Manual start in database directory",

@@ -29,11 +29,11 @@ func setupGitRepoForForkTest(t *testing.T) string {
 	// Configure git user
 	cmd = exec.Command("git", "config", "user.email", "test@test.com")
 	cmd.Dir = dir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	cmd = exec.Command("git", "config", "user.name", "Test User")
 	cmd.Dir = dir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	return dir
 }

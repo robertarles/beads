@@ -938,8 +938,8 @@ func TestMultiRepoFlushPrefixFiltering(t *testing.T) {
 	// Determine if we're primary (we're not - we're in additional)
 	cwd := additionalDir // Simulate being in additional repo
 	primaryPath := config.GetMultiRepoConfig().Primary
-	absCwd, _ := filepath.Abs(cwd)
-	absPrimary, _ := filepath.Abs(primaryPath)
+	absCwd, _ := filepath.Abs(cwd) // best-effort path resolution
+	absPrimary, _ := filepath.Abs(primaryPath) // best-effort path resolution
 	isPrimary := absCwd == absPrimary
 
 	if isPrimary {

@@ -600,14 +600,14 @@ func (s *SQLiteStorage) reconnect() error {
 			journalMode = "DELETE" // Fallback for WSL2 Windows filesystem (GH#920)
 		}
 		if _, err := db.Exec("PRAGMA journal_mode=" + journalMode); err != nil {
-			_ = db.Close()
+			_ = db.Close() // best-effort cleanup
 			return fmt.Errorf("failed to enable %s mode: %w", journalMode, err)
 		}
 	}
 
 	// Test the new connection
 	if err := db.Ping(); err != nil {
-		_ = db.Close()
+		_ = db.Close() // best-effort cleanup
 		return fmt.Errorf("failed to ping on reconnect: %w", err)
 	}
 

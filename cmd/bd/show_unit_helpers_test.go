@@ -53,7 +53,7 @@ func TestApplyLabelUpdates_SetAddRemove(t *testing.T) {
 	if err := applyLabelUpdates(ctx, st, issue.ID, "tester", []string{"a", "b"}, []string{"b", "c"}, []string{"a"}); err != nil {
 		t.Fatalf("applyLabelUpdates: %v", err)
 	}
-	labels, _ := st.GetLabels(ctx, issue.ID)
+	labels, _ := st.GetLabels(ctx, issue.ID) // best-effort enrichment, nil on error
 	if len(labels) != 2 {
 		t.Fatalf("expected 2 labels, got %v", labels)
 	}
@@ -88,7 +88,7 @@ func TestApplyLabelUpdates_AddRemoveOnly(t *testing.T) {
 	if err := applyLabelUpdates(ctx, st, issue.ID, "tester", nil, []string{"b"}, []string{"a"}); err != nil {
 		t.Fatalf("applyLabelUpdates: %v", err)
 	}
-	labels, _ := st.GetLabels(ctx, issue.ID)
+	labels, _ := st.GetLabels(ctx, issue.ID) // best-effort enrichment, nil on error
 	if len(labels) != 1 || labels[0] != "b" {
 		t.Fatalf("expected [b], got %v", labels)
 	}

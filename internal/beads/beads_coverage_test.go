@@ -21,8 +21,8 @@ func TestFindDatabaseInBeadsDir_CanonicalDB(t *testing.T) {
 
 	result := findDatabaseInBeadsDir(tmpDir, false)
 
-	resultResolved, _ := filepath.EvalSymlinks(result)
-	expectedResolved, _ := filepath.EvalSymlinks(dbPath)
+	resultResolved, _ := filepath.EvalSymlinks(result) // best-effort symlink resolution
+	expectedResolved, _ := filepath.EvalSymlinks(dbPath) // best-effort symlink resolution
 	if resultResolved != expectedResolved {
 		t.Errorf("findDatabaseInBeadsDir() = %q, want %q", result, dbPath)
 	}
@@ -42,8 +42,8 @@ func TestFindDatabaseInBeadsDir_LegacyDB(t *testing.T) {
 			// With warnOnIssues=true should still find the db
 			result := findDatabaseInBeadsDir(tmpDir, true)
 
-			resultResolved, _ := filepath.EvalSymlinks(result)
-			expectedResolved, _ := filepath.EvalSymlinks(dbPath)
+			resultResolved, _ := filepath.EvalSymlinks(result) // best-effort symlink resolution
+			expectedResolved, _ := filepath.EvalSymlinks(dbPath) // best-effort symlink resolution
 			if resultResolved != expectedResolved {
 				t.Errorf("findDatabaseInBeadsDir() = %q, want %q", result, dbPath)
 			}
@@ -114,8 +114,8 @@ func TestFindDatabaseInBeadsDir_WithMetadataJSON(t *testing.T) {
 
 	result := findDatabaseInBeadsDir(tmpDir, false)
 
-	resultResolved, _ := filepath.EvalSymlinks(result)
-	expectedResolved, _ := filepath.EvalSymlinks(dbPath)
+	resultResolved, _ := filepath.EvalSymlinks(result) // best-effort symlink resolution
+	expectedResolved, _ := filepath.EvalSymlinks(dbPath) // best-effort symlink resolution
 	if resultResolved != expectedResolved {
 		t.Errorf("findDatabaseInBeadsDir() = %q, want %q", result, dbPath)
 	}
@@ -139,8 +139,8 @@ func TestFindDatabaseInBeadsDir_DoltBackend(t *testing.T) {
 
 	result := findDatabaseInBeadsDir(tmpDir, false)
 
-	resultResolved, _ := filepath.EvalSymlinks(result)
-	expectedResolved, _ := filepath.EvalSymlinks(doltDir)
+	resultResolved, _ := filepath.EvalSymlinks(result) // best-effort symlink resolution
+	expectedResolved, _ := filepath.EvalSymlinks(doltDir) // best-effort symlink resolution
 	if resultResolved != expectedResolved {
 		t.Errorf("findDatabaseInBeadsDir() with dolt = %q, want %q", result, doltDir)
 	}
@@ -253,8 +253,8 @@ func TestFindLocalBeadsDir_WithBEADS_DIR(t *testing.T) {
 	os.Setenv("BEADS_DIR", tmpDir)
 
 	result := findLocalBeadsDir()
-	resultResolved, _ := filepath.EvalSymlinks(result)
-	expectedResolved, _ := filepath.EvalSymlinks(tmpDir)
+	resultResolved, _ := filepath.EvalSymlinks(result) // best-effort symlink resolution
+	expectedResolved, _ := filepath.EvalSymlinks(tmpDir) // best-effort symlink resolution
 	if resultResolved != expectedResolved {
 		t.Errorf("findLocalBeadsDir() = %q, want %q", result, tmpDir)
 	}
@@ -292,8 +292,8 @@ func TestFindLocalBeadsDir_WalksUpTree(t *testing.T) {
 
 	result := findLocalBeadsDir()
 
-	resultResolved, _ := filepath.EvalSymlinks(result)
-	expectedResolved, _ := filepath.EvalSymlinks(beadsDir)
+	resultResolved, _ := filepath.EvalSymlinks(result) // best-effort symlink resolution
+	expectedResolved, _ := filepath.EvalSymlinks(beadsDir) // best-effort symlink resolution
 	if resultResolved != expectedResolved {
 		t.Errorf("findLocalBeadsDir() = %q, want %q", result, beadsDir)
 	}
@@ -330,8 +330,8 @@ func TestRepoContext_GitCmdCWD(t *testing.T) {
 		t.Error("GitCmdCWD().Dir should not be empty when CWDRepoRoot is set")
 	}
 
-	resolvedDir, _ := filepath.EvalSymlinks(cmd.Dir)
-	resolvedExpected, _ := filepath.EvalSymlinks(rc.CWDRepoRoot)
+	resolvedDir, _ := filepath.EvalSymlinks(cmd.Dir) // best-effort symlink resolution
+	resolvedExpected, _ := filepath.EvalSymlinks(rc.CWDRepoRoot) // best-effort symlink resolution
 	if resolvedDir != resolvedExpected {
 		t.Errorf("GitCmdCWD().Dir = %q, want %q", cmd.Dir, rc.CWDRepoRoot)
 	}
@@ -479,8 +479,8 @@ func TestCheckRedirectInDir(t *testing.T) {
 			t.Error("IsRedirected should be true with valid redirect")
 		}
 
-		targetResolved, _ := filepath.EvalSymlinks(targetDir)
-		infoResolved, _ := filepath.EvalSymlinks(info.TargetDir)
+		targetResolved, _ := filepath.EvalSymlinks(targetDir) // best-effort symlink resolution
+		infoResolved, _ := filepath.EvalSymlinks(info.TargetDir) // best-effort symlink resolution
 		if infoResolved != targetResolved {
 			t.Errorf("TargetDir = %q, want %q", info.TargetDir, targetDir)
 		}
@@ -530,8 +530,8 @@ func TestFollowRedirect_ChainPrevention(t *testing.T) {
 
 	// Should follow to dir2 but not further (and log warning about chain)
 	result := FollowRedirect(dir1)
-	resultResolved, _ := filepath.EvalSymlinks(result)
-	dir2Resolved, _ := filepath.EvalSymlinks(dir2)
+	resultResolved, _ := filepath.EvalSymlinks(result) // best-effort symlink resolution
+	dir2Resolved, _ := filepath.EvalSymlinks(dir2) // best-effort symlink resolution
 	if resultResolved != dir2Resolved {
 		t.Errorf("FollowRedirect() = %q, want %q (chain should stop at first redirect)", result, dir2)
 	}
@@ -590,8 +590,8 @@ func TestFindDatabaseInTree_WithBEADS_DIR(t *testing.T) {
 		t.Error("findDatabaseInTree() returned empty string, expected to find db")
 	}
 
-	resultResolved, _ := filepath.EvalSymlinks(result)
-	expectedResolved, _ := filepath.EvalSymlinks(dbPath)
+	resultResolved, _ := filepath.EvalSymlinks(result) // best-effort symlink resolution
+	expectedResolved, _ := filepath.EvalSymlinks(dbPath) // best-effort symlink resolution
 	if resultResolved != expectedResolved {
 		t.Errorf("findDatabaseInTree() = %q, want %q", result, dbPath)
 	}
@@ -618,8 +618,8 @@ func TestFindBeadsDir_BEADS_DIR_WithProjectFiles(t *testing.T) {
 	os.Setenv("BEADS_DIR", tmpDir)
 
 	result := FindBeadsDir()
-	resultResolved, _ := filepath.EvalSymlinks(result)
-	expectedResolved, _ := filepath.EvalSymlinks(tmpDir)
+	resultResolved, _ := filepath.EvalSymlinks(result) // best-effort symlink resolution
+	expectedResolved, _ := filepath.EvalSymlinks(tmpDir) // best-effort symlink resolution
 	if resultResolved != expectedResolved {
 		t.Errorf("FindBeadsDir() = %q, want %q", result, tmpDir)
 	}

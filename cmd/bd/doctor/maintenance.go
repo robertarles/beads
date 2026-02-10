@@ -71,7 +71,7 @@ func CheckStaleClosedIssues(path string) DoctorCheck {
 			Category: CategoryMaintenance,
 		}
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	// If disabled (0), check for large closed issue count and warn if appropriate
 	if thresholdDays == 0 {
@@ -230,7 +230,7 @@ func CheckStaleMolecules(path string) DoctorCheck {
 			Category: CategoryMaintenance,
 		}
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	// Get all epics eligible for closure (complete but unclosed)
 	epicStatuses, err := store.GetEpicsEligibleForClosure(ctx)
@@ -317,7 +317,7 @@ func CheckCompactionCandidates(path string) DoctorCheck {
 			Category: CategoryMaintenance,
 		}
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	// Type assert to CompactableStorage for compaction methods
 	compactStore, ok := store.(storage.CompactableStorage)

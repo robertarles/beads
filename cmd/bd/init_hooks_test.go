@@ -120,7 +120,7 @@ func TestInstallGitHooks_NoExistingHooks(t *testing.T) {
 		postMergePath := filepath.Join(hooksDir, "post-merge")
 
 		if _, err := os.Stat(preCommitPath); err == nil {
-			content, _ := os.ReadFile(preCommitPath)
+			content, _ := os.ReadFile(preCommitPath) // best-effort read, nil on error
 			if !strings.Contains(string(content), "bd (beads)") {
 				t.Error("pre-commit hook doesn't contain bd marker")
 			}
@@ -130,7 +130,7 @@ func TestInstallGitHooks_NoExistingHooks(t *testing.T) {
 		}
 
 		if _, err := os.Stat(postMergePath); err == nil {
-			content, _ := os.ReadFile(postMergePath)
+			content, _ := os.ReadFile(postMergePath) // best-effort read, nil on error
 			if !strings.Contains(string(content), "bd (beads)") {
 				t.Error("post-merge hook doesn't contain bd marker")
 			}

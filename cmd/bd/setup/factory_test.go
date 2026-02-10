@@ -179,7 +179,7 @@ func TestInstallFactoryCreatesNewFile(t *testing.T) {
 }
 
 func TestInstallFactoryUpdatesExistingSection(t *testing.T) {
-	env, _, _ := newFactoryTestEnv(t)
+	env, _, _ := newFactoryTestEnv(t) // test env setup, t.Fatal on error within
 	initial := `# Header
 
 <!-- BEGIN BEADS INTEGRATION -->

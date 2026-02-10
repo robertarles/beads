@@ -272,10 +272,10 @@ func captureStderr(t *testing.T, fn func()) string {
 	}()
 
 	fn()
-	_ = w.Close()
+	_ = w.Close() // best-effort cleanup
 	os.Stderr = old
 	<-done
-	_ = r.Close()
+	_ = r.Close() // best-effort cleanup
 
 	return buf.String()
 }

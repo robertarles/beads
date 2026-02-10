@@ -114,13 +114,13 @@ func TestFederationDatabaseIsolation(t *testing.T) {
 	t.Log("✓ Beta cannot see alpha-001")
 
 	// Verify each town sees its own issue
-	alphaCheck, _ := alphaStore.GetIssue(ctx, "alpha-001")
+	alphaCheck, _ := alphaStore.GetIssue(ctx, "alpha-001") // test assertion handles nil
 	if alphaCheck == nil {
 		t.Fatal("alpha should see its own issue")
 	}
 	t.Logf("✓ Alpha sees alpha-001: %q", alphaCheck.Title)
 
-	betaCheck, _ := betaStore.GetIssue(ctx, "beta-001")
+	betaCheck, _ := betaStore.GetIssue(ctx, "beta-001") // test assertion handles nil
 	if betaCheck == nil {
 		t.Fatal("beta should see its own issue")
 	}
@@ -193,7 +193,7 @@ func TestFederationVersionControlAPIs(t *testing.T) {
 	}
 
 	// Verify main still has original title
-	mainIssue, _ := store.GetIssue(ctx, "vc-001")
+	mainIssue, _ := store.GetIssue(ctx, "vc-001") // test assertion handles nil
 	if mainIssue.Title != "Version control test" {
 		t.Errorf("main should have original title, got %q", mainIssue.Title)
 	}
@@ -210,7 +210,7 @@ func TestFederationVersionControlAPIs(t *testing.T) {
 	t.Log("✓ Merged feature-branch into main")
 
 	// Verify merge result
-	mergedIssue, _ := store.GetIssue(ctx, "vc-001")
+	mergedIssue, _ := store.GetIssue(ctx, "vc-001") // test assertion handles nil
 	if mergedIssue.Title != "Updated on feature branch" {
 		t.Errorf("expected merged title, got %q", mergedIssue.Title)
 	}

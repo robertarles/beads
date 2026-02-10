@@ -68,7 +68,7 @@ func TestInitCommand(t *testing.T) {
 			// Capture output
 			var buf bytes.Buffer
 			oldStdout := os.Stdout
-			r, w, _ := os.Pipe()
+			r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 			os.Stdout = w
 			defer func() {
 				os.Stdout = oldStdout
@@ -668,10 +668,10 @@ func TestInitNoDbMode(t *testing.T) {
 	beadsDirEnv := os.Getenv("BEADS_DIR")
 	t.Logf("DEBUG: tmpDir=%s", tmpDir)
 	t.Logf("DEBUG: BEADS_DIR=%s", beadsDirEnv)
-	t.Logf("DEBUG: CWD=%s", func() string { cwd, _ := os.Getwd(); return cwd }())
+	t.Logf("DEBUG: CWD=%s", func() string { cwd, _ := os.Getwd(); return cwd }()) // best-effort, unlikely to fail
 
 	// Check what files exist in tmpDir
-	entries, _ := os.ReadDir(tmpDir)
+	entries, _ := os.ReadDir(tmpDir) // best-effort read, nil on error
 	t.Logf("DEBUG: entries in tmpDir: %v", entries)
 	if beadsDirEnv != "" {
 		beadsEntries, err := os.ReadDir(beadsDirEnv)
@@ -1424,7 +1424,7 @@ func TestSetupGlobalGitIgnore_ReadOnly(t *testing.T) {
 func captureStdout(t *testing.T, fn func() error) string {
 	t.Helper()
 	oldStdout := os.Stdout
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stdout = w
 
 	err := fn()
@@ -1821,7 +1821,7 @@ func TestInitRedirect(t *testing.T) {
 		}
 
 		// Use os.Chdir since checkExistingBeadsData reads CWD directly
-		origWd, _ := os.Getwd()
+		origWd, _ := os.Getwd() // best-effort, unlikely to fail
 		if err := os.Chdir(projectDir); err != nil {
 			t.Fatal(err)
 		}
@@ -1921,7 +1921,7 @@ func TestInitBEADS_DIR(t *testing.T) {
 		t.Cleanup(func() { os.Unsetenv("BEADS_DIR") })
 		beads.ResetCaches()
 
-		origWd, _ := os.Getwd()
+		origWd, _ := os.Getwd() // best-effort, unlikely to fail
 		os.Chdir(filepath.Join(tmpDir, "cwd"))
 		defer os.Chdir(origWd)
 

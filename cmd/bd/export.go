@@ -171,7 +171,7 @@ Examples:
 		// If daemon is connected, close it and open direct connection
 		if daemonClient != nil {
 			debug.Logf("Debug: export command forcing direct mode (closes daemon connection)\n")
-			_ = daemonClient.Close()
+			_ = daemonClient.Close() // best-effort cleanup
 			daemonClient = nil
 		}
 
@@ -194,7 +194,7 @@ Examples:
 				fmt.Fprintf(os.Stderr, "Error: failed to open database: %v\n", err)
 				os.Exit(1)
 			}
-			defer func() { _ = store.Close() }()
+			defer func() { _ = store.Close() }() // best-effort cleanup
 		}
 
 		requireFreshDB(rootCtx)
@@ -515,7 +515,7 @@ Examples:
 			// Ensure cleanup on failure
 			defer func() {
 				if tempFile != nil {
-					_ = tempFile.Close()
+					_ = tempFile.Close() // best-effort cleanup
 					_ = os.Remove(tempPath) // Clean up temp file if we haven't renamed it
 				}
 			}()
@@ -646,7 +646,7 @@ Examples:
 			if output != "" {
 				stats["output_file"] = output
 			}
-			data, _ := json.MarshalIndent(stats, "", "  ")
+			data, _ := json.MarshalIndent(stats, "", "  ") // marshaling known types, error not possible
 			fmt.Fprintln(os.Stderr, string(data))
 		}
 	},

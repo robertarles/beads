@@ -142,9 +142,9 @@ func exportToJSONLWithStore(ctx context.Context, store storage.Storage, jsonlPat
 	// Use defer pattern for proper cleanup
 	var writeErr error
 	defer func() {
-		_ = tempFile.Close()
+		_ = tempFile.Close() // best-effort cleanup
 		if writeErr != nil {
-			_ = os.Remove(tempPath)
+			_ = os.Remove(tempPath) // best-effort cleanup
 		}
 	}()
 

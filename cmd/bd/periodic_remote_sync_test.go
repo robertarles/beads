@@ -235,7 +235,7 @@ func TestSyncBranchPull_FetchesRemoteUpdates(t *testing.T) {
 
 	// Clone 2's worktree should NOT have the second issue yet
 	worktreeJSONL := filepath.Join(worktreePath, ".beads", "issues.jsonl")
-	beforePull, _ := os.ReadFile(worktreeJSONL)
+	beforePull, _ := os.ReadFile(worktreeJSONL) // best-effort read, nil on error
 	if strings.Contains(string(beforePull), "issue-2") {
 		t.Log("Worktree already has issue-2 (unexpected)")
 	} else {
@@ -246,7 +246,7 @@ func TestSyncBranchPull_FetchesRemoteUpdates(t *testing.T) {
 	runGitCmd(t, worktreePath, "pull", "origin", "beads-sync")
 
 	// Clone 2's worktree SHOULD now have the second issue
-	afterPull, _ := os.ReadFile(worktreeJSONL)
+	afterPull, _ := os.ReadFile(worktreeJSONL) // best-effort read, nil on error
 	if !strings.Contains(string(afterPull), "issue-2") {
 		t.Fatal("After pull, worktree still doesn't have issue-2 - sync branch pull broken")
 	}

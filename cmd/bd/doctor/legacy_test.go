@@ -688,7 +688,7 @@ func TestCheckFreshClone(t *testing.T) {
 				}
 				for _, issueID := range tt.jsonlIssues {
 					issue := map[string]string{"id": issueID, "title": "Test issue"}
-					data, _ := json.Marshal(issue)
+					data, _ := json.Marshal(issue) // marshaling known types, error not possible // test setup, marshaling known types
 					file.Write(data)
 					file.WriteString("\n")
 				}

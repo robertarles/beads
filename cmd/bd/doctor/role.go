@@ -79,7 +79,7 @@ func getRoleFromDatabase(path string) string {
 	if err != nil {
 		return ""
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	// Check "beads.role" first, then "role"
 	for _, key := range []string{"beads.role", "role"} {

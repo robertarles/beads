@@ -213,7 +213,7 @@ func runDoltDiagnosticQueries(ctx context.Context, db *sql.DB, metrics *DoltPerf
 		} else {
 			for rows.Next() {
 			}
-			_ = rows.Close()
+			_ = rows.Close() // best-effort cleanup
 			metrics.ShowIssueTime = time.Since(start).Milliseconds()
 		}
 	}
@@ -261,7 +261,7 @@ func isDoltServerRunning(host string, port int) bool {
 	if err != nil {
 		return false
 	}
-	_ = conn.Close()
+	_ = conn.Close() // best-effort cleanup
 	return true
 }
 

@@ -27,7 +27,7 @@ func CheckKVSyncStatus(path string) DoctorCheck {
 			Category: CategoryData,
 		}
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	// Get all config and count kv.* entries
 	allConfig, err := store.GetAllConfig(ctx)

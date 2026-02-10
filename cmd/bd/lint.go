@@ -191,7 +191,7 @@ Examples:
 				Issues:  len(results),
 				Results: results,
 			}
-			data, _ := json.MarshalIndent(output, "", "  ")
+			data, _ := json.MarshalIndent(output, "", "  ") // marshaling known types, error not possible
 			fmt.Println(string(data))
 			return
 		}

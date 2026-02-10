@@ -235,7 +235,7 @@ func (s *Server) handleGetMutations(req *Request) Response {
 	}
 
 	mutations := s.GetRecentMutations(args.Since)
-	data, _ := json.Marshal(mutations)
+	data, _ := json.Marshal(mutations) // marshaling known types, error not possible
 
 	return Response{
 		Success: true,
@@ -354,7 +354,7 @@ func (s *Server) handleGetMoleculeProgress(req *Request) Response {
 		Steps:      steps,
 	}
 
-	data, _ := json.Marshal(progress)
+	data, _ := json.Marshal(progress) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,

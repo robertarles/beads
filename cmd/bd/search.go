@@ -359,7 +359,7 @@ Examples:
 		for i, issue := range issues {
 			issueIDs[i] = issue.ID
 		}
-		labelsMap, _ := store.GetLabelsForIssues(ctx, issueIDs)
+		labelsMap, _ := store.GetLabelsForIssues(ctx, issueIDs) // best-effort enrichment, nil on error
 		for _, issue := range issues {
 			issue.Labels = labelsMap[issue.ID]
 		}

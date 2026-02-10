@@ -55,7 +55,7 @@ func TempDirInMemory(t testing.TB) string {
 
 	// Register cleanup
 	t.Cleanup(func() {
-		_ = os.RemoveAll(tmpDir)
+		_ = os.RemoveAll(tmpDir) // best-effort cleanup
 	})
 
 	return tmpDir

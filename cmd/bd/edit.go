@@ -121,14 +121,14 @@ Examples:
 			FatalErrorRespectJSON("creating temp file: %v", err)
 		}
 		tmpPath := tmpFile.Name()
-		defer func() { _ = os.Remove(tmpPath) }()
+		defer func() { _ = os.Remove(tmpPath) }() // best-effort cleanup
 
 		// Write current value to temp file
 		if _, err := tmpFile.WriteString(currentValue); err != nil {
-			_ = tmpFile.Close()
+			_ = tmpFile.Close() // best-effort cleanup
 			FatalErrorRespectJSON("writing to temp file: %v", err)
 		}
-		_ = tmpFile.Close()
+		_ = tmpFile.Close() // best-effort cleanup
 
 		// Open the editor - parse command and args (handles "vim -w" or "zeditor --wait")
 		editorParts := strings.Fields(editor)

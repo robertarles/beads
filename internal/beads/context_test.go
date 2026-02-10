@@ -644,7 +644,7 @@ func TestGetRepoContext_BEADS_DIR_ExternalRepo(t *testing.T) {
 
 	os.Setenv("BEADS_DIR", targetBeadsDir)
 
-	originalWd, _ := os.Getwd()
+	originalWd, _ := os.Getwd() // best-effort, unlikely to fail
 	if err := os.Chdir(sourceRepo); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
@@ -727,7 +727,7 @@ func TestRole_BEADS_DIR_ImpliesContributor(t *testing.T) {
 	os.Setenv("BEADS_DIR", targetBeadsDir)
 
 	// Change to source repo to trigger redirect detection
-	originalWd, _ := os.Getwd()
+	originalWd, _ := os.Getwd() // best-effort, unlikely to fail
 	if err := os.Chdir(sourceRepo); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}

@@ -691,7 +691,7 @@ not valid json at all
 
 	// Capture stderr to verify warning is produced
 	oldStderr := os.Stderr
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stderr = w
 
 	loaded, err := loadBaseState(tmpDir)
@@ -1157,7 +1157,7 @@ func TestFieldMerge_EdgeCases(t *testing.T) {
 		remote := makeTestIssue("bd-1234", "Test Remote", types.StatusClosed, 1, now.Add(2*time.Hour))
 		remote.Labels = []string{"remote-label"}
 
-		merged, _, _ := MergeIssue(base, local, remote)
+		merged, _, _ := MergeIssue(base, local, remote) // conflicts not tracked in this context
 		if merged == nil {
 			t.Fatal("Expected merged issue, got nil")
 		}
@@ -1176,7 +1176,7 @@ func TestFieldMerge_EdgeCases(t *testing.T) {
 		remote := makeTestIssue("bd-1234", "Test Remote", types.StatusClosed, 1, now.Add(2*time.Hour))
 		remote.Labels = []string{"remote-label"}
 
-		merged, _, _ := MergeIssue(base, local, remote)
+		merged, _, _ := MergeIssue(base, local, remote) // conflicts not tracked in this context
 		if merged == nil {
 			t.Fatal("Expected merged issue, got nil")
 		}
@@ -1202,7 +1202,7 @@ func TestFieldMerge_EdgeCases(t *testing.T) {
 		remote := makeTestIssue("bd-1234", "Test Remote", types.StatusClosed, 1, now.Add(2*time.Hour))
 		remote.Dependencies = nil
 
-		merged, _, _ := MergeIssue(base, local, remote)
+		merged, _, _ := MergeIssue(base, local, remote) // conflicts not tracked in this context
 		if merged == nil {
 			t.Fatal("Expected merged issue, got nil")
 		}
@@ -1229,7 +1229,7 @@ func TestFieldMerge_EdgeCases(t *testing.T) {
 		remote := makeTestIssue("bd-1234", "Test Remote", types.StatusClosed, 1, now.Add(2*time.Hour))
 		remote.Comments = []*types.Comment{comment}
 
-		merged, _, _ := MergeIssue(base, local, remote)
+		merged, _, _ := MergeIssue(base, local, remote) // conflicts not tracked in this context
 		if merged == nil {
 			t.Fatal("Expected merged issue, got nil")
 		}
@@ -1265,7 +1265,7 @@ func TestFieldMerge_EdgeCases(t *testing.T) {
 		remote := makeTestIssue("bd-1234", "Test Remote", types.StatusClosed, 1, now.Add(2*time.Hour))
 		remote.Dependencies = []*types.Dependency{remoteDep}
 
-		merged, _, _ := MergeIssue(base, local, remote)
+		merged, _, _ := MergeIssue(base, local, remote) // conflicts not tracked in this context
 		if merged == nil {
 			t.Fatal("Expected merged issue, got nil")
 		}
@@ -1295,7 +1295,7 @@ func TestMergeClockSkewWarning(t *testing.T) {
 
 		// Capture stderr
 		oldStderr := os.Stderr
-		r, w, _ := os.Pipe()
+		r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 		os.Stderr = w
 
 		_, _, _ = MergeIssue(base, local, remote)
@@ -1319,7 +1319,7 @@ func TestMergeClockSkewWarning(t *testing.T) {
 
 		// Capture stderr
 		oldStderr := os.Stderr
-		r, w, _ := os.Pipe()
+		r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 		os.Stderr = w
 
 		_, _, _ = MergeIssue(base, local, remote)
@@ -1346,7 +1346,7 @@ func TestMergeClockSkewWarning(t *testing.T) {
 
 		// Capture stderr
 		oldStderr := os.Stderr
-		r, w, _ := os.Pipe()
+		r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 		os.Stderr = w
 
 		_, _, _ = MergeIssue(base, local, remote)
@@ -1373,7 +1373,7 @@ func TestMergeClockSkewWarning(t *testing.T) {
 
 		// Capture stderr
 		oldStderr := os.Stderr
-		r, w, _ := os.Pipe()
+		r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 		os.Stderr = w
 
 		_, _, _ = MergeIssue(base, local, remote)

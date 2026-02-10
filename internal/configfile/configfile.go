@@ -78,7 +78,7 @@ func Load(beadsDir string) (*Config, error) {
 		}
 
 		// Remove legacy file (best effort)
-		_ = os.Remove(legacyPath)
+		_ = os.Remove(legacyPath) // best-effort cleanup
 
 		return &cfg, nil
 	}

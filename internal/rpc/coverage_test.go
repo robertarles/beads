@@ -225,7 +225,7 @@ func TestBatch(t *testing.T) {
 	defer cleanup()
 	defer client.Close()
 
-	createArgs, _ := json.Marshal(CreateArgs{Title: "Batch 1", IssueType: "task", Priority: 1})
+	createArgs, _ := json.Marshal(CreateArgs{Title: "Batch 1", IssueType: "task", Priority: 1}) // marshaling known types, error not possible // test setup, marshaling known types
 	args := &BatchArgs{
 		Operations: []BatchOperation{
 			{
@@ -252,7 +252,7 @@ func TestBatch_RejectsNestedBatch(t *testing.T) {
 
 	// Construct a batch containing a nested batch operation — this should be rejected
 	// to prevent unbounded recursion (stack overflow crash).
-	innerBatchArgs, _ := json.Marshal(BatchArgs{
+	innerBatchArgs, _ := json.Marshal(BatchArgs{ // marshaling known types, error not possible // test setup, marshaling known types
 		Operations: []BatchOperation{
 			{Operation: "list", Args: json.RawMessage(`{}`)},
 		},

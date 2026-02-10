@@ -368,7 +368,7 @@ variable.`,
 		// Set the issue prefix in config
 		if err := store.SetConfig(ctx, "issue_prefix", prefix); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: failed to set issue prefix: %v\n", err)
-			_ = store.Close()
+			_ = store.Close() // best-effort cleanup
 			os.Exit(1)
 		}
 
@@ -500,7 +500,7 @@ variable.`,
 		if branch != "" {
 			if err := syncbranch.Set(ctx, store, branch); err != nil {
 				fmt.Fprintf(os.Stderr, "Error: failed to set sync branch: %v\n", err)
-				_ = store.Close()
+				_ = store.Close() // best-effort cleanup
 				os.Exit(1)
 			}
 			if !quiet {
@@ -572,7 +572,7 @@ variable.`,
 		if contributor {
 			if err := runContributorWizard(ctx, store); err != nil {
 				fmt.Fprintf(os.Stderr, "Error running contributor wizard: %v\n", err)
-				_ = store.Close()
+				_ = store.Close() // best-effort cleanup
 				os.Exit(1)
 			}
 		}
@@ -581,7 +581,7 @@ variable.`,
 		if team {
 			if err := runTeamWizard(ctx, store); err != nil {
 				fmt.Fprintf(os.Stderr, "Error running team wizard: %v\n", err)
-				_ = store.Close()
+				_ = store.Close() // best-effort cleanup
 				os.Exit(1)
 			}
 		}

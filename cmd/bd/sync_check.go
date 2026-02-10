@@ -106,7 +106,7 @@ func showSyncIntegrityCheck(ctx context.Context, jsonlPath string) {
 	}
 
 	if jsonOutput {
-		data, _ := json.MarshalIndent(result, "", "  ")
+		data, _ := json.MarshalIndent(result, "", "  ") // marshaling known types, error not possible
 		fmt.Println(string(data))
 	}
 }

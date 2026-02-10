@@ -91,7 +91,7 @@ func (s *SQLiteStorage) GetLabels(ctx context.Context, issueID string) ([]string
 	if err != nil {
 		return nil, fmt.Errorf("failed to get labels: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	var labels []string
 	for rows.Next() {
@@ -137,7 +137,7 @@ func (s *SQLiteStorage) GetLabelsForIssues(ctx context.Context, issueIDs []strin
 	if err != nil {
 		return nil, fmt.Errorf("failed to batch get labels: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	result := make(map[string][]string)
 	for rows.Next() {
@@ -190,7 +190,7 @@ func (s *SQLiteStorage) GetIssuesByLabel(ctx context.Context, label string) ([]*
 	if err != nil {
 		return nil, fmt.Errorf("failed to get issues by label: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	return s.scanIssues(ctx, rows)
 }

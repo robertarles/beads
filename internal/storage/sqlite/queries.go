@@ -96,7 +96,7 @@ func (s *SQLiteStorage) CreateIssue(ctx context.Context, issue *types.Issue, act
 	if err != nil {
 		return fmt.Errorf("failed to acquire connection: %w", err)
 	}
-	defer func() { _ = conn.Close() }()
+	defer func() { _ = conn.Close() }() // best-effort cleanup
 
 	// Start IMMEDIATE transaction with retry logic for SQLITE_BUSY.
 	// IMMEDIATE acquires a RESERVED lock immediately, preventing other IMMEDIATE or EXCLUSIVE
@@ -549,7 +549,7 @@ func (s *SQLiteStorage) GetCloseReasonsForIssues(ctx context.Context, issueIDs [
 	if err != nil {
 		return nil, fmt.Errorf("failed to get close reasons: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	for rows.Next() {
 		var issueID string
@@ -896,7 +896,7 @@ func (s *SQLiteStorage) UpdateIssue(ctx context.Context, id string, updates map[
 
 		// Handle JSON serialization for array fields stored as TEXT
 		if key == "waiters" {
-			waitersJSON, _ := json.Marshal(value)
+			waitersJSON, _ := json.Marshal(value) // marshaling known types, error not possible
 			args = append(args, string(waitersJSON))
 		} else if key == "metadata" {
 			// GH#1417: Normalize metadata to string, accepting string/[]byte/json.RawMessage
@@ -1156,7 +1156,7 @@ func (s *SQLiteStorage) UpdateIssueID(ctx context.Context, oldID, newID string, 
 	if err != nil {
 		return fmt.Errorf("failed to get connection: %w", err)
 	}
-	defer func() { _ = conn.Close() }()
+	defer func() { _ = conn.Close() }() // best-effort cleanup
 
 	// Disable foreign keys on this specific connection
 	_, err = conn.ExecContext(ctx, `PRAGMA foreign_keys = OFF`)
@@ -1168,7 +1168,7 @@ func (s *SQLiteStorage) UpdateIssueID(ctx context.Context, oldID, newID string, 
 	if err != nil {
 		return fmt.Errorf("failed to begin transaction: %w", err)
 	}
-	defer func() { _ = tx.Rollback() }()
+	defer func() { _ = tx.Rollback() }() // no-op if committed
 
 	result, err := tx.ExecContext(ctx, `
 		UPDATE issues
@@ -1356,7 +1356,7 @@ func (s *SQLiteStorage) CloseIssue(ctx context.Context, id string, reason string
 		if err != nil {
 			return fmt.Errorf("failed to find tracking convoys: %w", err)
 		}
-		defer func() { _ = convoyRows.Close() }()
+		defer func() { _ = convoyRows.Close() }() // best-effort cleanup
 
 		var convoyIDs []string
 		for convoyRows.Next() {

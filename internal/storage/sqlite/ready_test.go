@@ -1028,7 +1028,7 @@ func TestGetReadyWorkExternalDeps(t *testing.T) {
 		t.Fatalf("failed to get capability issue: %v", err)
 	}
 	t.Logf("Capability issue status: %s", capIssue.Status)
-	labels, _ := externalStore.GetLabels(ctx, capabilityIssue.ID)
+	labels, _ := externalStore.GetLabels(ctx, capabilityIssue.ID) // best-effort enrichment, nil on error
 	t.Logf("Capability issue labels: %v", labels)
 
 	// Close external store to checkpoint WAL before read-only access

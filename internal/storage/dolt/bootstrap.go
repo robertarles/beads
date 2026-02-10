@@ -160,7 +160,7 @@ func acquireBootstrapLock(lockPath string, timeout time.Duration) (*os.File, err
 		age := time.Since(info.ModTime())
 		if age > staleLockAge {
 			fmt.Fprintf(os.Stderr, "Bootstrap: removing stale lock file (age: %s)\n", age.Round(time.Second))
-			_ = os.Remove(lockPath)
+			_ = os.Remove(lockPath) // best-effort cleanup
 		}
 	}
 
@@ -184,12 +184,12 @@ func acquireBootstrapLock(lockPath string, timeout time.Duration) (*os.File, err
 
 		if !lockfile.IsLocked(err) {
 			// Unexpected error (not contention)
-			_ = f.Close()
+			_ = f.Close() // best-effort cleanup
 			return nil, fmt.Errorf("failed to acquire bootstrap lock: %w", err)
 		}
 
 		if time.Now().After(deadline) {
-			_ = f.Close()
+			_ = f.Close() // best-effort cleanup
 			return nil, fmt.Errorf("timeout after %s waiting for bootstrap lock (another bootstrap may be running)", timeout)
 		}
 
@@ -202,10 +202,10 @@ func acquireBootstrapLock(lockPath string, timeout time.Duration) (*os.File, err
 func releaseBootstrapLock(f *os.File, lockPath string) {
 	if f != nil {
 		_ = lockfile.FlockUnlock(f)
-		_ = f.Close()
+		_ = f.Close() // best-effort cleanup
 	}
 	// Clean up lock file
-	_ = os.Remove(lockPath)
+	_ = os.Remove(lockPath) // best-effort cleanup
 }
 
 // performBootstrap performs the actual bootstrap from JSONL files.
@@ -244,7 +244,7 @@ func performBootstrap(ctx context.Context, cfg BootstrapConfig, jsonlPath string
 	if err != nil {
 		return nil, fmt.Errorf("failed to create Dolt store: %w", err)
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	// Set issue prefix
 	if result.PrefixDetected != "" {
@@ -295,7 +295,7 @@ func parseJSONLWithErrors(jsonlPath string) ([]*types.Issue, []ParseError) {
 	if err != nil {
 		return nil, []ParseError{{Line: 0, Message: fmt.Sprintf("failed to open file: %v", err)}}
 	}
-	defer func() { _ = f.Close() }()
+	defer func() { _ = f.Close() }() // best-effort cleanup
 
 	var issues []*types.Issue
 	var parseErrors []ParseError
@@ -435,7 +435,7 @@ func importIssuesBootstrap(ctx context.Context, store *DoltStore, issues []*type
 	if err != nil {
 		return 0, 0, fmt.Errorf("failed to begin transaction: %w", err)
 	}
-	defer func() { _ = tx.Rollback() }()
+	defer func() { _ = tx.Rollback() }() // no-op if committed
 
 	// Pre-scan: identify IDs with tombstone versions (resurrection protection).
 	// If a JSONL has both a live and tombstone version of the same ID,
@@ -564,7 +564,7 @@ func importRoutesBootstrap(ctx context.Context, store *DoltStore, beadsDir strin
 	if err != nil {
 		return 0, fmt.Errorf("failed to begin transaction: %w", err)
 	}
-	defer func() { _ = tx.Rollback() }()
+	defer func() { _ = tx.Rollback() }() // no-op if committed
 
 	imported := 0
 	for _, route := range routes {
@@ -597,13 +597,13 @@ func importInteractionsBootstrap(ctx context.Context, store *DoltStore, interact
 		}
 		return 0, err
 	}
-	defer func() { _ = f.Close() }()
+	defer func() { _ = f.Close() }() // best-effort cleanup
 
 	tx, err := store.db.BeginTx(ctx, nil)
 	if err != nil {
 		return 0, fmt.Errorf("failed to begin transaction: %w", err)
 	}
-	defer func() { _ = tx.Rollback() }()
+	defer func() { _ = tx.Rollback() }() // no-op if committed
 
 	imported := 0
 	scanner := bufio.NewScanner(f)

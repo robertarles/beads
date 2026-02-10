@@ -52,9 +52,9 @@ func getDescriptionFlag(cmd *cobra.Command) (string, bool) {
 	if bodyFileChanged || descFileChanged {
 		var filePath string
 		if bodyFileChanged {
-			filePath, _ = cmd.Flags().GetString("body-file")
+			filePath, _ = cmd.Flags().GetString("body-file") // flag was registered in init, error cannot occur
 		} else {
-			filePath, _ = cmd.Flags().GetString("description-file")
+			filePath, _ = cmd.Flags().GetString("description-file") // flag was registered in init, error cannot occur
 		}
 
 		// Error if both file and string flags are specified

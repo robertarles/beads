@@ -150,10 +150,10 @@ func TestInstallCursorIdempotent(t *testing.T) {
 
 	// Run twice
 	InstallCursor()
-	firstData, _ := os.ReadFile(".cursor/rules/beads.mdc")
+	firstData, _ := os.ReadFile(".cursor/rules/beads.mdc") // best-effort read, nil on error
 
 	InstallCursor()
-	secondData, _ := os.ReadFile(".cursor/rules/beads.mdc")
+	secondData, _ := os.ReadFile(".cursor/rules/beads.mdc") // best-effort read, nil on error
 
 	if string(firstData) != string(secondData) {
 		t.Error("InstallCursor should be idempotent")

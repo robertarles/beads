@@ -32,7 +32,7 @@ func markDirtyBatch(ctx context.Context, conn *sql.Conn, issues []*types.Issue) 
 	if err != nil {
 		return fmt.Errorf("failed to prepare dirty statement: %w", err)
 	}
-	defer func() { _ = stmt.Close() }()
+	defer func() { _ = stmt.Close() }() // best-effort cleanup
 
 	dirtyTime := time.Now()
 	for _, issue := range issues {

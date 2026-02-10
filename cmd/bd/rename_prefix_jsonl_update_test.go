@@ -302,7 +302,7 @@ func TestRenamePrefixNoJSONL(t *testing.T) {
 	}
 
 	// Ensure no JSONL exists
-	_ = os.Remove(jsonlPath)
+	_ = os.Remove(jsonlPath) // best-effort cleanup
 
 	// Create store
 	st, err := sqlite.New(context.Background(), testDBPath)

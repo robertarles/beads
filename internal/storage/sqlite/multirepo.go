@@ -148,7 +148,7 @@ func (s *SQLiteStorage) importJSONLFile(ctx context.Context, jsonlPath, sourceRe
 	if err != nil {
 		return 0, fmt.Errorf("failed to get connection: %w", err)
 	}
-	defer func() { _ = conn.Close() }()
+	defer func() { _ = conn.Close() }() // best-effort cleanup
 
 	// Disable foreign keys on this connection to handle out-of-order deps
 	// (issue A may depend on issue B that appears later in the file)
@@ -428,7 +428,7 @@ func (s *SQLiteStorage) DeleteIssuesBySourceRepo(ctx context.Context, sourceRepo
 	if err != nil {
 		return 0, fmt.Errorf("failed to begin transaction: %w", err)
 	}
-	defer func() { _ = tx.Rollback() }()
+	defer func() { _ = tx.Rollback() }() // no-op if committed
 
 	// Get the list of issue IDs to delete
 	rows, err := tx.QueryContext(ctx, `SELECT id FROM issues WHERE source_repo = ?`, sourceRepo)
@@ -439,12 +439,12 @@ func (s *SQLiteStorage) DeleteIssuesBySourceRepo(ctx context.Context, sourceRepo
 	for rows.Next() {
 		var id string
 		if err := rows.Scan(&id); err != nil {
-			_ = rows.Close()
+			_ = rows.Close() // best-effort cleanup
 			return 0, fmt.Errorf("failed to scan issue ID: %w", err)
 		}
 		issueIDs = append(issueIDs, id)
 	}
-	_ = rows.Close()
+	_ = rows.Close() // best-effort cleanup
 	if err := rows.Err(); err != nil {
 		return 0, fmt.Errorf("failed to iterate issues: %w", err)
 	}

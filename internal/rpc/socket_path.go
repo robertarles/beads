@@ -89,7 +89,7 @@ func CleanupSocketDir(socketPath string) error {
 	// Only remove if it's a /tmp/beads-* directory we created
 	if strings.HasPrefix(dir, filepath.Join(tmpDir, "beads-")) {
 		// Remove socket file first
-		_ = os.Remove(socketPath)
+		_ = os.Remove(socketPath) // best-effort cleanup
 		// Remove directory (will fail if not empty, which is fine)
 		return os.Remove(dir)
 	}

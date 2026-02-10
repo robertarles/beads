@@ -36,11 +36,11 @@ func setupTestGitRepo(t *testing.T) string {
 	// Configure git user for commits
 	cmd = exec.Command("git", "config", "user.email", "test@test.com")
 	cmd.Dir = dir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	cmd = exec.Command("git", "config", "user.name", "Test User")
 	cmd.Dir = dir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	return dir
 }
@@ -149,7 +149,7 @@ func TestSyncBranchHealth_Validation(t *testing.T) {
 		// Create a commit on a different branch
 		cmd := exec.Command("git", "checkout", "-b", "other")
 		cmd.Dir = dir
-		_ = cmd.Run()
+		_ = cmd.Run() // test setup, errors not critical
 
 		// Create a file and commit
 		testFile := filepath.Join(dir, "test.txt")
@@ -158,10 +158,10 @@ func TestSyncBranchHealth_Validation(t *testing.T) {
 		}
 		cmd = exec.Command("git", "add", "test.txt")
 		cmd.Dir = dir
-		_ = cmd.Run()
+		_ = cmd.Run() // test setup, errors not critical
 		cmd = exec.Command("git", "commit", "-m", "initial")
 		cmd.Dir = dir
-		_ = cmd.Run()
+		_ = cmd.Run() // test setup, errors not critical
 
 		err := SyncBranchHealth(dir, "beads-sync")
 		if err == nil {
@@ -223,7 +223,7 @@ func TestMigrateTombstones(t *testing.T) {
 			Actor:     "testuser",
 			Reason:    "test deletion",
 		}
-		data, _ := json.Marshal(deletion)
+		data, _ := json.Marshal(deletion) // marshaling known types, error not possible // test setup, marshaling known types
 		if err := os.WriteFile(deletionsPath, append(data, '\n'), 0600); err != nil {
 			t.Fatalf("failed to create deletions.jsonl: %v", err)
 		}
@@ -283,7 +283,7 @@ func TestMigrateTombstones(t *testing.T) {
 			Timestamp: time.Now(),
 			Actor:     "testuser",
 		}
-		data, _ := json.Marshal(deletion)
+		data, _ := json.Marshal(deletion) // marshaling known types, error not possible // test setup, marshaling known types
 		if err := os.WriteFile(deletionsPath, append(data, '\n'), 0600); err != nil {
 			t.Fatalf("failed to create deletions.jsonl: %v", err)
 		}
@@ -294,12 +294,12 @@ func TestMigrateTombstones(t *testing.T) {
 			"id":     "test-123",
 			"status": "tombstone",
 		}
-		existingData, _ := json.Marshal(existingTombstone)
+		existingData, _ := json.Marshal(existingTombstone) // marshaling known types, error not possible // test setup, marshaling known types
 		if err := os.WriteFile(jsonlPath, append(existingData, '\n'), 0600); err != nil {
 			t.Fatalf("failed to create issues.jsonl: %v", err)
 		}
 
-		originalContent, _ := os.ReadFile(jsonlPath)
+		originalContent, _ := os.ReadFile(jsonlPath) // best-effort read, nil on error
 
 		err := MigrateTombstones(dir)
 		if err != nil {
@@ -307,7 +307,7 @@ func TestMigrateTombstones(t *testing.T) {
 		}
 
 		// Verify issues.jsonl was not modified (tombstone already exists)
-		newContent, _ := os.ReadFile(jsonlPath)
+		newContent, _ := os.ReadFile(jsonlPath) // best-effort read, nil on error
 		if string(newContent) != string(originalContent) {
 			t.Error("issues.jsonl should not have been modified when tombstone already exists")
 		}
@@ -336,7 +336,7 @@ func TestLoadLegacyDeletions(t *testing.T) {
 			Actor:     "user",
 			Reason:    "testing",
 		}
-		data, _ := json.Marshal(deletion)
+		data, _ := json.Marshal(deletion) // marshaling known types, error not possible // test setup, marshaling known types
 		if err := os.WriteFile(path, append(data, '\n'), 0600); err != nil {
 			t.Fatalf("failed to write file: %v", err)
 		}
@@ -551,7 +551,7 @@ func TestDBJSONLSync_MissingDatabase(t *testing.T) {
 		"title":  "No DB Test",
 		"status": "open",
 	}
-	data, _ := json.Marshal(issue)
+	data, _ := json.Marshal(issue) // marshaling known types, error not possible // test setup, marshaling known types
 	if err := os.WriteFile(jsonlPath, append(data, '\n'), 0600); err != nil {
 		t.Fatalf("failed to create jsonl: %v", err)
 	}

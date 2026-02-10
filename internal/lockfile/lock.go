@@ -49,7 +49,7 @@ func TryDaemonLock(beadsDir string) (running bool, pid int) {
 		// Fall back to PID file check for backward compatibility
 		return checkPIDFile(beadsDir)
 	}
-	defer func() { _ = f.Close() }()
+	defer func() { _ = f.Close() }() // best-effort cleanup
 
 	// Try to acquire lock non-blocking
 	if err := flockExclusive(f); err != nil {

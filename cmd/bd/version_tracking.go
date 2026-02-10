@@ -44,7 +44,7 @@ func trackBdVersion() {
 	// Update local version file (best effort)
 	// Only write if version actually changed to minimize I/O
 	if lastVersion != Version {
-		_ = writeLocalVersion(localVersionPath, Version)
+		_ = writeLocalVersion(localVersionPath, Version) // best-effort version tracking
 	}
 
 	// Also ensure metadata.json exists with proper defaults (for JSONL export name)
@@ -256,7 +256,7 @@ func autoMigrateOnVersionBump(beadsDir string) {
 	if err != nil {
 		// Failed to read version - skip migration
 		debug.Logf("auto-migrate: failed to read database version: %v", err)
-		_ = store.Close()
+		_ = store.Close() // best-effort cleanup
 		return
 	}
 
@@ -264,20 +264,20 @@ func autoMigrateOnVersionBump(beadsDir string) {
 	if dbVersion == Version {
 		// Database is already at current version
 		debug.Logf("auto-migrate: database already at version %s", Version)
-		_ = store.Close()
+		_ = store.Close() // best-effort cleanup
 		return
 	}
 
 	// Check for downgrade: refuse to overwrite a newer version with an older one (gt-e3uiy)
-	maxVersion, _ := store.GetMetadata(ctx, "bd_version_max")
+	maxVersion, _ := store.GetMetadata(ctx, "bd_version_max") // returns "" if not set
 	if dbVersion != "" && doctor.CompareVersions(Version, dbVersion) < 0 {
 		debug.Logf("auto-migrate: refusing downgrade from %s to %s", dbVersion, Version)
-		_ = store.Close()
+		_ = store.Close() // best-effort cleanup
 		return
 	}
 	if maxVersion != "" && doctor.CompareVersions(Version, maxVersion) < 0 {
 		debug.Logf("auto-migrate: refusing downgrade (max version %s > current %s)", maxVersion, Version)
-		_ = store.Close()
+		_ = store.Close() // best-effort cleanup
 		return
 	}
 
@@ -286,7 +286,7 @@ func autoMigrateOnVersionBump(beadsDir string) {
 	if err := store.SetMetadata(ctx, "bd_version", Version); err != nil {
 		// Migration failed - log and continue
 		debug.Logf("auto-migrate: failed to update database version: %v", err)
-		_ = store.Close()
+		_ = store.Close() // best-effort cleanup
 		return
 	}
 

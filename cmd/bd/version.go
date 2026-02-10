@@ -77,7 +77,7 @@ func showDaemonVersion() {
 		fmt.Fprintf(os.Stderr, "Hint: start daemon with 'bd daemon'\n")
 		os.Exit(1)
 	}
-	defer func() { _ = client.Close() }()
+	defer func() { _ = client.Close() }() // best-effort cleanup
 
 	health, err := client.Health()
 	if err != nil {

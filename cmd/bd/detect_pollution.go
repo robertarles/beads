@@ -149,7 +149,7 @@ NOTE: Review detected issues carefully before using --clean. False positives are
 		if !yes {
 			fmt.Printf("\nDelete %d test issues? [y/N] ", len(polluted))
 			var response string
-			_, _ = fmt.Scanln(&response)
+			_, _ = fmt.Scanln(&response) // interactive input, empty on error
 			if strings.ToLower(response) != "y" {
 				fmt.Println("Canceled.")
 				return

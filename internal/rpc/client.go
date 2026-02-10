@@ -121,14 +121,14 @@ func TryConnectWithTimeout(socketPath string, dialTimeout time.Duration) (*Clien
 	if err != nil {
 		debug.Logf("health check failed: %v", err)
 		rpcDebugLog("health check failed after %v: %v", healthDuration, err)
-		_ = conn.Close()
+		_ = conn.Close() // best-effort cleanup
 		return nil, nil
 	}
 
 	if health.Status == "unhealthy" {
 		debug.Logf("daemon unhealthy: %s", health.Error)
 		rpcDebugLog("daemon unhealthy (checked in %v): %s", healthDuration, health.Error)
-		_ = conn.Close()
+		_ = conn.Close() // best-effort cleanup
 		return nil, nil
 	}
 

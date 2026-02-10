@@ -299,7 +299,7 @@ func (s *Server) reqActor(req *Request) string {
 // Handler implementations
 
 func (s *Server) handlePing(_ *Request) Response {
-	data, _ := json.Marshal(PingResponse{
+	data, _ := json.Marshal(PingResponse{ // marshaling known types, error not possible
 		Message: "pong",
 		Version: ServerVersion,
 	})
@@ -351,7 +351,7 @@ func (s *Server) handleStatus(_ *Request) Response {
 		DaemonMode:          daemonMode,
 	}
 
-	data, _ := json.Marshal(statusResp)
+	data, _ := json.Marshal(statusResp) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -413,7 +413,7 @@ func (s *Server) handleHealth(req *Request) Response {
 		health.Error = dbError
 	}
 
-	data, _ := json.Marshal(health)
+	data, _ := json.Marshal(health) // marshaling known types, error not possible
 	return Response{
 		Success: status != "unhealthy",
 		Data:    data,
@@ -426,7 +426,7 @@ func (s *Server) handleMetrics(_ *Request) Response {
 		int(atomic.LoadInt32(&s.activeConns)),
 	)
 
-	data, _ := json.Marshal(snapshot)
+	data, _ := json.Marshal(snapshot) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -531,7 +531,7 @@ func (s *Server) handleGetWorkerStatus(req *Request) Response {
 		Workers: workers,
 	}
 
-	data, _ := json.Marshal(resp)
+	data, _ := json.Marshal(resp) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,

@@ -257,7 +257,7 @@ func TestFindConfigYAMLPath(t *testing.T) {
 	}
 
 	// Change to the temp dir
-	oldWd, _ := os.Getwd()
+	oldWd, _ := os.Getwd() // best-effort, unlikely to fail
 	defer func() {
 		if err := os.Chdir(oldWd); err != nil {
 			t.Logf("warning: failed to restore working directory: %v", err)

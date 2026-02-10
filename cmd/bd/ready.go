@@ -218,7 +218,7 @@ This is useful for agents executing molecules to see which steps can run next.`,
 			for i, issue := range issues {
 				issueIDs[i] = issue.ID
 			}
-			commentCounts, _ := store.GetCommentCounts(ctx, issueIDs)
+			commentCounts, _ := store.GetCommentCounts(ctx, issueIDs) // best-effort enrichment, nil on error
 			issuesWithCounts := make([]*types.IssueWithCounts, len(issues))
 			for i, issue := range issues {
 				issuesWithCounts[i] = &types.IssueWithCounts{
@@ -285,7 +285,7 @@ var blockedCmd = &cobra.Command{
 			if err != nil {
 				FatalErrorRespectJSON("failed to open database: %v", err)
 			}
-			defer func() { _ = store.Close() }()
+			defer func() { _ = store.Close() }() // best-effort cleanup
 		}
 		parentID, _ := cmd.Flags().GetString("parent")
 		var blockedFilter types.WorkFilter

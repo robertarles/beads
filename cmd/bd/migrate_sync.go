@@ -442,7 +442,7 @@ func runMigrateSync(ctx context.Context, branchName string, dryRun, force, orpha
 	fmt.Println()
 	// Clean up backup file on success (best-effort, ignore errors)
 	if backupJSONLPath != "" {
-		_ = os.Remove(backupJSONLPath)
+		_ = os.Remove(backupJSONLPath) // best-effort cleanup
 	}
 
 	fmt.Println("✓ Migration complete!")

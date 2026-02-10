@@ -273,7 +273,7 @@ func (s *SQLiteStorage) CreateIssuesWithFullOptions(ctx context.Context, issues 
 	if err != nil {
 		return fmt.Errorf("failed to acquire connection: %w", err)
 	}
-	defer func() { _ = conn.Close() }()
+	defer func() { _ = conn.Close() }() // best-effort cleanup
 
 	// Start IMMEDIATE transaction with retry logic for SQLITE_BUSY.
 	// Retries with exponential backoff handle cases where busy_timeout alone

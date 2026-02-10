@@ -83,7 +83,7 @@ func TestExternalBeadsDirE2E(t *testing.T) {
 		t.Fatalf("getRepoRootFromPath failed: %v", err)
 	}
 	// Normalize paths for comparison
-	resolvedExternal, _ := filepath.EvalSymlinks(externalDir)
+	resolvedExternal, _ := filepath.EvalSymlinks(externalDir) // best-effort symlink resolution
 	if repoRoot != resolvedExternal {
 		t.Errorf("getRepoRootFromPath = %q, want %q", repoRoot, resolvedExternal)
 	}
@@ -323,8 +323,8 @@ func setupGitRepoInDir(t *testing.T, dir string) error {
 	}
 
 	// Configure git
-	_ = exec.Command("git", "-C", dir, "config", "user.email", "test@test.com").Run()
-	_ = exec.Command("git", "-C", dir, "config", "user.name", "Test User").Run()
+	_ = exec.Command("git", "-C", dir, "config", "user.email", "test@test.com").Run() // test setup, errors not critical
+	_ = exec.Command("git", "-C", dir, "config", "user.name", "Test User").Run() // test setup, errors not critical
 
 	// Create initial commit
 	readmePath := filepath.Join(dir, "README.md")

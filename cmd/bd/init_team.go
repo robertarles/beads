@@ -48,7 +48,7 @@ func runTeamWizard(ctx context.Context, store storage.Storage) error {
 	fmt.Print("\nProtected main branch? [y/N]: ")
 
 	reader := bufio.NewReader(os.Stdin)
-	response, _ := reader.ReadString('\n')
+	response, _ := reader.ReadString('\n') // interactive input, handle empty on error
 	response = strings.TrimSpace(strings.ToLower(response))
 
 	protectedMain := (response == "y" || response == "yes")
@@ -61,7 +61,7 @@ func runTeamWizard(ctx context.Context, store storage.Storage) error {
 		fmt.Printf("  Default sync branch: %s\n", ui.RenderAccent("beads-metadata"))
 		fmt.Print("\n  Sync branch name [press Enter for default]: ")
 
-		branchName, _ := reader.ReadString('\n')
+		branchName, _ := reader.ReadString('\n') // interactive input, handle empty on error
 		branchName = strings.TrimSpace(branchName)
 
 		if branchName == "" {

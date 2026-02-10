@@ -198,7 +198,7 @@ func CheckDuplicateIssues(path string, gastownMode bool, gastownThreshold int) D
 			Message: "N/A (no database)",
 		}
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	issues, err := store.SearchIssues(ctx, "", types.IssueFilter{})
 	if err != nil {

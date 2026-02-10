@@ -23,7 +23,7 @@ func newTestStore(t *testing.T, dbPath string) *sqlite.SQLiteStorage {
 
 	// CRITICAL (bd-166): Set issue_prefix to prevent "database not initialized" errors
 	if err := store.SetConfig(ctx, "issue_prefix", "bd"); err != nil {
-		_ = store.Close()
+		_ = store.Close() // best-effort cleanup
 		t.Fatalf("Failed to set issue_prefix: %v", err)
 	}
 
@@ -38,7 +38,7 @@ func newTestSocketPath(t *testing.T) string {
 	if runtime.GOOS != "windows" {
 		d, err := os.MkdirTemp("/tmp", "beads-sock-")
 		if err == nil {
-			t.Cleanup(func() { _ = os.RemoveAll(d) })
+			t.Cleanup(func() { _ = os.RemoveAll(d) }) // best-effort cleanup
 			return filepath.Join(d, "rpc.sock")
 		}
 	}

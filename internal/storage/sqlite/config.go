@@ -52,7 +52,7 @@ func (s *SQLiteStorage) GetAllConfig(ctx context.Context) (map[string]string, er
 	if err != nil {
 		return nil, wrapDBError("query all config", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	config := make(map[string]string)
 	for rows.Next() {

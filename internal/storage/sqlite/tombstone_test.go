@@ -283,7 +283,7 @@ func TestDeleteIssuesCreatesTombstones(t *testing.T) {
 		}
 
 		// Both should exist as tombstones
-		tombstone1, _ := store.GetIssue(ctx, "bd-10")
+		tombstone1, _ := store.GetIssue(ctx, "bd-10") // test assertion handles nil
 		if tombstone1 == nil || tombstone1.Status != types.StatusTombstone {
 			t.Error("bd-10 should be tombstone")
 		}
@@ -291,7 +291,7 @@ func TestDeleteIssuesCreatesTombstones(t *testing.T) {
 			t.Errorf("bd-10: Expected OriginalType=bug, got %s", tombstone1.OriginalType)
 		}
 
-		tombstone2, _ := store.GetIssue(ctx, "bd-11")
+		tombstone2, _ := store.GetIssue(ctx, "bd-11") // test assertion handles nil
 		if tombstone2 == nil || tombstone2.Status != types.StatusTombstone {
 			t.Error("bd-11 should be tombstone")
 		}
@@ -344,7 +344,7 @@ func TestDeleteIssuesCreatesTombstones(t *testing.T) {
 		}
 
 		// Verify tombstones have closed_at = NULL (required by CHECK constraint)
-		tombstone1, _ := store.GetIssue(ctx, "bd-closed-10")
+		tombstone1, _ := store.GetIssue(ctx, "bd-closed-10") // test assertion handles nil
 		if tombstone1 == nil || tombstone1.Status != types.StatusTombstone {
 			t.Error("bd-closed-10 should be tombstone")
 		}
@@ -352,7 +352,7 @@ func TestDeleteIssuesCreatesTombstones(t *testing.T) {
 			t.Error("bd-closed-10 tombstone should have closed_at = NULL")
 		}
 
-		tombstone2, _ := store.GetIssue(ctx, "bd-closed-11")
+		tombstone2, _ := store.GetIssue(ctx, "bd-closed-11") // test assertion handles nil
 		if tombstone2 == nil || tombstone2.Status != types.StatusTombstone {
 			t.Error("bd-closed-11 should be tombstone")
 		}
@@ -398,7 +398,7 @@ func TestDeleteIssuesCreatesTombstones(t *testing.T) {
 
 		// All should exist as tombstones
 		for _, id := range []string{"bd-1", "bd-2", "bd-3"} {
-			tombstone, _ := store.GetIssue(ctx, id)
+			tombstone, _ := store.GetIssue(ctx, id) // test assertion handles nil
 			if tombstone == nil {
 				t.Errorf("%s should exist as tombstone", id)
 				continue

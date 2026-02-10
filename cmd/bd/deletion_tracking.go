@@ -72,7 +72,7 @@ func merge3WayAndPruneDeletions(ctx context.Context, store storage.Storage, json
 	// Ensure temp file cleanup on failure
 	defer func() {
 		if fileExists(tmpMerged) {
-			_ = os.Remove(tmpMerged)
+			_ = os.Remove(tmpMerged) // best-effort cleanup
 		}
 	}()
 

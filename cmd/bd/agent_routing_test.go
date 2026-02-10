@@ -406,7 +406,7 @@ func TestBeadsDirOverrideSkipsRouting(t *testing.T) {
 	}
 	if routedStore != nil {
 		t.Error("getRoutedStoreForID should return nil when BEADS_DIR is set")
-		_ = routedStore.Close()
+		_ = routedStore.Close() // best-effort cleanup
 	}
 
 	t.Log("BEADS_DIR override correctly skipped prefix routing (GH#663)")

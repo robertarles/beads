@@ -207,7 +207,7 @@ sync-branch: old-value
 	}
 
 	// Change to temp directory for the test
-	oldWd, _ := os.Getwd()
+	oldWd, _ := os.Getwd() // best-effort, unlikely to fail
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("Failed to chdir: %v", err)
 	}
@@ -257,7 +257,7 @@ sync-branch: test-value
 	}
 
 	// Change to temp directory for the test
-	oldWd, _ := os.Getwd()
+	oldWd, _ := os.Getwd() // best-effort, unlikely to fail
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("Failed to chdir: %v", err)
 	}
@@ -304,7 +304,7 @@ other-setting: value
 	}
 
 	// Change to temp directory for the test
-	oldWd, _ := os.Getwd()
+	oldWd, _ := os.Getwd() // best-effort, unlikely to fail
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("Failed to chdir: %v", err)
 	}

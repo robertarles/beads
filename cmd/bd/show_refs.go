@@ -60,7 +60,7 @@ func showIssueRefs(ctx context.Context, args []string, resolvedIDs []string, rou
 			if err := processIssue(id, dbStore); err != nil {
 				fmt.Fprintf(os.Stderr, "Error getting refs for %s: %v\n", id, err)
 			}
-			_ = dbStore.Close()
+			_ = dbStore.Close() // best-effort cleanup
 		}
 	} else {
 		// Direct mode - process each arg

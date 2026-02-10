@@ -297,7 +297,7 @@ func resolveSyncConflictsManually(ctx context.Context, jsonlPath, beadsDir strin
 			local := localMap[id]
 			remote := remoteMap[id]
 			base := baseMap[id]
-			merged, _, _ := MergeIssue(base, local, remote)
+			merged, _, _ := MergeIssue(base, local, remote) // conflicts not tracked in this context
 			if merged != nil {
 				mergedIssues = append(mergedIssues, merged)
 			}

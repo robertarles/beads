@@ -7,7 +7,7 @@ import (
 
 func TestSafeWorkspacePath(t *testing.T) {
 	root := t.TempDir()
-	absEscape, _ := filepath.Abs(filepath.Join(root, "..", "escape"))
+	absEscape, _ := filepath.Abs(filepath.Join(root, "..", "escape")) // best-effort path resolution
 
 	tests := []struct {
 		name    string

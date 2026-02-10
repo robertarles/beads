@@ -453,7 +453,7 @@ func TestMetricsOperation(t *testing.T) {
 
 	// Verify we have some basic metrics structure
 	var metricsMap map[string]interface{}
-	data, _ := json.Marshal(metrics)
+	data, _ := json.Marshal(metrics) // marshaling known types, error not possible // test setup, marshaling known types
 	json.Unmarshal(data, &metricsMap)
 
 	if len(metricsMap) == 0 {

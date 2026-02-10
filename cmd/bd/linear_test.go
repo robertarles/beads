@@ -1046,7 +1046,7 @@ func TestFetchIssueByIdentifierSendsNumericFilter(t *testing.T) {
 		if err != nil {
 			return nil, fmt.Errorf("read request body: %w", err)
 		}
-		_ = r.Body.Close()
+		_ = r.Body.Close() // best-effort cleanup // best-effort body close
 
 		var gqlReq linear.GraphQLRequest
 		if err := json.Unmarshal(body, &gqlReq); err != nil {
@@ -1133,7 +1133,7 @@ func TestDoPushToLinearPreferLocalForcesUpdate(t *testing.T) {
 		if err != nil {
 			return nil, fmt.Errorf("read request body: %w", err)
 		}
-		_ = r.Body.Close()
+		_ = r.Body.Close() // best-effort cleanup // best-effort body close
 
 		var gqlReq linear.GraphQLRequest
 		if err := json.Unmarshal(body, &gqlReq); err != nil {

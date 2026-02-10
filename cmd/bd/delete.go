@@ -392,7 +392,7 @@ func removeIssueFromJSONL(issueID string) error {
 		}
 	}
 	if err := scanner.Err(); err != nil {
-		_ = f.Close()
+		_ = f.Close() // best-effort cleanup
 		return fmt.Errorf("failed to read storage file: %w", err)
 	}
 	if err := f.Close(); err != nil {
@@ -408,18 +408,18 @@ func removeIssueFromJSONL(issueID string) error {
 	enc := json.NewEncoder(out)
 	for _, iss := range issues {
 		if err := enc.Encode(iss); err != nil {
-			_ = out.Close()
-			_ = os.Remove(temp)
+			_ = out.Close() // best-effort cleanup
+			_ = os.Remove(temp) // best-effort cleanup
 			return fmt.Errorf("failed to write issue: %w", err)
 		}
 	}
 	if err := out.Close(); err != nil {
-		_ = os.Remove(temp)
+		_ = os.Remove(temp) // best-effort cleanup
 		return fmt.Errorf("failed to close temp file: %w", err)
 	}
 	// Atomic rename
 	if err := os.Rename(temp, path); err != nil {
-		_ = os.Remove(temp)
+		_ = os.Remove(temp) // best-effort cleanup
 		return fmt.Errorf("failed to rename temp file: %w", err)
 	}
 	return nil
@@ -778,7 +778,7 @@ func readIssueIDsFromFile(filename string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer func() { _ = f.Close() }()
+	defer func() { _ = f.Close() }() // best-effort cleanup
 	var ids []string
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {

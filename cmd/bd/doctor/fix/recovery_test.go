@@ -60,7 +60,7 @@ func createTestJSONL(t *testing.T, dir string, issueCount int) string {
 			"title":  "Test Issue",
 			"status": "open",
 		}
-		data, _ := json.Marshal(issue)
+		data, _ := json.Marshal(issue) // marshaling known types, error not possible // test setup, marshaling known types
 		lines = append(lines, data...)
 		lines = append(lines, '\n')
 	}

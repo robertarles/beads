@@ -45,7 +45,7 @@ func TestWatchIssueInitialization(t *testing.T) {
 	}
 
 	// Verify we're in the right directory
-	cwd, _ := os.Getwd()
+	cwd, _ := os.Getwd() // best-effort, unlikely to fail
 	if cwd != tempDir {
 		t.Errorf("Working directory should be tempDir, got %s", cwd)
 	}

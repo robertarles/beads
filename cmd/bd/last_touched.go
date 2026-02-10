@@ -53,5 +53,5 @@ func ClearLastTouched() {
 	}
 
 	lastTouchedPath := filepath.Join(beadsDir, lastTouchedFile)
-	_ = os.Remove(lastTouchedPath)
+	_ = os.Remove(lastTouchedPath) // best-effort cleanup
 }

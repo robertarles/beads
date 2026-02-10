@@ -80,13 +80,13 @@ func TestDeleteIssues(t *testing.T) {
 		}
 
 		// Verify all converted to tombstones (bd-3b4)
-		if issue, _ := store.GetIssue(ctx, "bd-1"); issue == nil || issue.Status != types.StatusTombstone {
+		if issue, _ := store.GetIssue(ctx, "bd-1"); issue == nil || issue.Status != types.StatusTombstone { // test assertion handles nil
 			t.Error("bd-1 should be tombstone")
 		}
-		if issue, _ := store.GetIssue(ctx, "bd-2"); issue == nil || issue.Status != types.StatusTombstone {
+		if issue, _ := store.GetIssue(ctx, "bd-2"); issue == nil || issue.Status != types.StatusTombstone { // test assertion handles nil
 			t.Error("bd-2 should be tombstone")
 		}
-		if issue, _ := store.GetIssue(ctx, "bd-3"); issue == nil || issue.Status != types.StatusTombstone {
+		if issue, _ := store.GetIssue(ctx, "bd-3"); issue == nil || issue.Status != types.StatusTombstone { // test assertion handles nil
 			t.Error("bd-3 should be tombstone")
 		}
 	})
@@ -130,13 +130,13 @@ func TestDeleteIssues(t *testing.T) {
 		}
 
 		// Verify bd-1 is tombstone, bd-2 and bd-3 still active (bd-3b4)
-		if issue, _ := store.GetIssue(ctx, "bd-1"); issue == nil || issue.Status != types.StatusTombstone {
+		if issue, _ := store.GetIssue(ctx, "bd-1"); issue == nil || issue.Status != types.StatusTombstone { // test assertion handles nil
 			t.Error("bd-1 should be tombstone")
 		}
-		if issue, _ := store.GetIssue(ctx, "bd-2"); issue == nil || issue.Status == types.StatusTombstone {
+		if issue, _ := store.GetIssue(ctx, "bd-2"); issue == nil || issue.Status == types.StatusTombstone { // test assertion handles nil
 			t.Error("bd-2 should still be active")
 		}
-		if issue, _ := store.GetIssue(ctx, "bd-3"); issue == nil || issue.Status == types.StatusTombstone {
+		if issue, _ := store.GetIssue(ctx, "bd-3"); issue == nil || issue.Status == types.StatusTombstone { // test assertion handles nil
 			t.Error("bd-3 should still be active")
 		}
 	})
@@ -165,10 +165,10 @@ func TestDeleteIssues(t *testing.T) {
 		}
 
 		// But issues should still exist
-		if issue, _ := store.GetIssue(ctx, "bd-1"); issue == nil {
+		if issue, _ := store.GetIssue(ctx, "bd-1"); issue == nil { // test assertion handles nil
 			t.Error("bd-1 should still exist after dry run")
 		}
-		if issue, _ := store.GetIssue(ctx, "bd-2"); issue == nil {
+		if issue, _ := store.GetIssue(ctx, "bd-2"); issue == nil { // test assertion handles nil
 			t.Error("bd-2 should still exist after dry run")
 		}
 	})
@@ -195,10 +195,10 @@ func TestDeleteIssues(t *testing.T) {
 		}
 
 		// Verify both converted to tombstones (bd-3b4)
-		if issue, _ := store.GetIssue(ctx, "bd-10"); issue == nil || issue.Status != types.StatusTombstone {
+		if issue, _ := store.GetIssue(ctx, "bd-10"); issue == nil || issue.Status != types.StatusTombstone { // test assertion handles nil
 			t.Error("bd-10 should be tombstone")
 		}
-		if issue, _ := store.GetIssue(ctx, "bd-11"); issue == nil || issue.Status != types.StatusTombstone {
+		if issue, _ := store.GetIssue(ctx, "bd-11"); issue == nil || issue.Status != types.StatusTombstone { // test assertion handles nil
 			t.Error("bd-11 should be tombstone")
 		}
 	})
@@ -226,7 +226,7 @@ func TestDeleteIssue(t *testing.T) {
 	}
 
 	// Verify deleted
-	if issue, _ := store.GetIssue(ctx, "bd-1"); issue != nil {
+	if issue, _ := store.GetIssue(ctx, "bd-1"); issue != nil { // test assertion handles nil
 		t.Error("Issue should be deleted")
 	}
 
@@ -273,7 +273,7 @@ func TestDeleteIssueWithComments(t *testing.T) {
 	}
 
 	// Verify issue deleted
-	if issue, _ := store.GetIssue(ctx, "bd-1"); issue != nil {
+	if issue, _ := store.GetIssue(ctx, "bd-1"); issue != nil { // test assertion handles nil
 		t.Error("Issue should be deleted")
 	}
 

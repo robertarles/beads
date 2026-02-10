@@ -192,7 +192,7 @@ func runWorktreeCreate(cmd *cobra.Command, args []string) error {
 	// Helper to clean up worktree on failure
 	cleanupWorktree := func() {
 		cleanupCmd := gitCmdInDir(ctx, repoRoot, "worktree", "remove", "--force", worktreePath)
-		_ = cleanupCmd.Run()
+		_ = cleanupCmd.Run() // best-effort, ignore errors
 	}
 
 	// Create .beads directory in worktree
@@ -350,8 +350,8 @@ func runWorktreeRemove(cmd *cobra.Command, args []string) error {
 	}
 
 	// Don't allow removing the main repository
-	absWorktree, _ := filepath.Abs(worktreePath)
-	absMain, _ := filepath.Abs(repoRoot)
+	absWorktree, _ := filepath.Abs(worktreePath) // best-effort path resolution
+	absMain, _ := filepath.Abs(repoRoot) // best-effort path resolution
 	if absWorktree == absMain {
 		return fmt.Errorf("cannot remove main repository as worktree")
 	}
@@ -575,8 +575,8 @@ func getBeadsState(worktreePath, mainBeadsDir string) string {
 	}
 	if _, err := os.Stat(beadsDir); err == nil {
 		// Check if this is the main beads dir
-		absBeadsDir, _ := filepath.Abs(beadsDir)
-		absMainBeadsDir, _ := filepath.Abs(mainBeadsDir)
+		absBeadsDir, _ := filepath.Abs(beadsDir) // best-effort path resolution
+		absMainBeadsDir, _ := filepath.Abs(mainBeadsDir) // best-effort path resolution
 		if absBeadsDir == absMainBeadsDir {
 			return "shared"
 		}
@@ -598,7 +598,7 @@ func getRedirectTarget(worktreePath string) string {
 		beadsDir := filepath.Join(worktreePath, ".beads")
 		target = filepath.Join(beadsDir, target)
 	}
-	target, _ = filepath.Abs(target)
+	target, _ = filepath.Abs(target) // best-effort path resolution
 	return target
 }
 
@@ -611,7 +611,7 @@ func resolveWorktreePath(ctx context.Context, repoRoot, name string) (string, er
 	}
 
 	// Try relative to cwd
-	absPath, _ := filepath.Abs(name)
+	absPath, _ := filepath.Abs(name) // best-effort path resolution
 	if _, err := os.Stat(absPath); err == nil {
 		return absPath, nil
 	}

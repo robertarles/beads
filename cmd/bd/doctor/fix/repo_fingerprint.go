@@ -114,8 +114,8 @@ func RepoFingerprint(path string) error {
 				return fmt.Errorf("failed to remove database: %w", err)
 			}
 			// Also remove WAL and SHM files if they exist
-			_ = os.Remove(dbPath + "-wal")
-			_ = os.Remove(dbPath + "-shm")
+			_ = os.Remove(dbPath + "-wal") // best-effort cleanup
+			_ = os.Remove(dbPath + "-shm") // best-effort cleanup
 		}
 
 		fmt.Println("  → Running 'bd init'...")

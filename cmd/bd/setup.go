@@ -84,7 +84,7 @@ func runSetup(cmd *cobra.Command, args []string) {
 
 	// Require a recipe name for install/check/remove
 	if len(args) == 0 {
-		_ = cmd.Help()
+		_ = cmd.Help() // help output error not actionable
 		return
 	}
 

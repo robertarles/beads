@@ -225,11 +225,11 @@ func runNixHashCheck() CheckResult {
 
 	// Check for unstaged changes to go.sum
 	cmd := exec.Command("git", "diff", "--name-only", "HEAD", "--", "go.sum")
-	output, _ := cmd.Output()
+	output, _ := cmd.Output() // best-effort, ignore command errors
 
 	// Check for staged changes to go.sum
 	stagedCmd := exec.Command("git", "diff", "--name-only", "--cached", "--", "go.sum")
-	stagedOutput, _ := stagedCmd.Output()
+	stagedOutput, _ := stagedCmd.Output() // best-effort, ignore command errors
 
 	hasChanges := len(strings.TrimSpace(string(output))) > 0 || len(strings.TrimSpace(string(stagedOutput))) > 0
 

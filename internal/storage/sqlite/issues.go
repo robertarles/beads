@@ -155,7 +155,7 @@ func insertIssues(ctx context.Context, conn *sql.Conn, issues []*types.Issue) er
 	if err != nil {
 		return fmt.Errorf("failed to prepare statement: %w", err)
 	}
-	defer func() { _ = stmt.Close() }()
+	defer func() { _ = stmt.Close() }() // best-effort cleanup
 
 	for _, issue := range issues {
 		sourceRepo := issue.SourceRepo
@@ -225,7 +225,7 @@ func insertIssuesStrict(ctx context.Context, conn *sql.Conn, issues []*types.Iss
 	if err != nil {
 		return fmt.Errorf("failed to prepare statement: %w", err)
 	}
-	defer func() { _ = stmt.Close() }()
+	defer func() { _ = stmt.Close() }() // best-effort cleanup
 
 	for _, issue := range issues {
 		sourceRepo := issue.SourceRepo

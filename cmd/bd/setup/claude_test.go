@@ -611,7 +611,7 @@ func TestInstallClaudeErrors(t *testing.T) {
 	})
 
 	t.Run("ensure dir error", func(t *testing.T) {
-		env, _, _ := newClaudeTestEnv(t)
+		env, _, _ := newClaudeTestEnv(t) // test env setup, t.Fatal on error within
 		env.ensureDir = func(string, os.FileMode) error { return errors.New("boom") }
 		if err := installClaude(env, true, false); err == nil {
 			t.Fatal("expected ensureDir error")
@@ -747,7 +747,7 @@ func TestClaudeWrappersExit(t *testing.T) {
 
 	t.Run("install internal error", func(t *testing.T) {
 		cap := stubSetupExit(t)
-		env, _, _ := newClaudeTestEnv(t)
+		env, _, _ := newClaudeTestEnv(t) // test env setup, t.Fatal on error within
 		env.ensureDir = func(string, os.FileMode) error { return errors.New("boom") }
 		stubClaudeEnvProvider(t, env, nil)
 		InstallClaude(true, false)
@@ -758,7 +758,7 @@ func TestClaudeWrappersExit(t *testing.T) {
 
 	t.Run("check missing hooks", func(t *testing.T) {
 		cap := stubSetupExit(t)
-		env, _, _ := newClaudeTestEnv(t)
+		env, _, _ := newClaudeTestEnv(t) // test env setup, t.Fatal on error within
 		stubClaudeEnvProvider(t, env, nil)
 		CheckClaude()
 		if !cap.called || cap.code != 1 {
@@ -768,7 +768,7 @@ func TestClaudeWrappersExit(t *testing.T) {
 
 	t.Run("remove parse error", func(t *testing.T) {
 		cap := stubSetupExit(t)
-		env, _, _ := newClaudeTestEnv(t)
+		env, _, _ := newClaudeTestEnv(t) // test env setup, t.Fatal on error within
 		path := globalSettingsPath(env.homeDir)
 		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 			t.Fatalf("mkdir: %v", err)

@@ -383,7 +383,7 @@ func runLinearStatus(cmd *cobra.Command, args []string) {
 
 	apiKey, _ := getLinearConfig(ctx, "linear.api_key")
 	teamID, _ := getLinearConfig(ctx, "linear.team_id")
-	lastSync, _ := store.GetConfig(ctx, "linear.last_sync")
+	lastSync, _ := store.GetConfig(ctx, "linear.last_sync") // returns "" if not set
 
 	configured := apiKey != "" && teamID != ""
 
@@ -543,15 +543,15 @@ func maskAPIKey(key string) string {
 func getLinearConfig(ctx context.Context, key string) (value string, source string) {
 	// Try to read from store (works in direct mode)
 	if store != nil {
-		value, _ = store.GetConfig(ctx, key)
+		value, _ = store.GetConfig(ctx, key) // returns "" if not set
 		if value != "" {
 			return value, "project config (bd config)"
 		}
 	} else if dbPath != "" {
 		tempStore, err := sqlite.NewWithTimeout(ctx, dbPath, 5*time.Second)
 		if err == nil {
-			defer func() { _ = tempStore.Close() }()
-			value, _ = tempStore.GetConfig(ctx, key)
+			defer func() { _ = tempStore.Close() }() // best-effort cleanup
+			value, _ = tempStore.GetConfig(ctx, key) // returns "" if not set
 			if value != "" {
 				return value, "project config (bd config)"
 			}
@@ -597,11 +597,11 @@ func getLinearClient(ctx context.Context) (*linear.Client, error) {
 	client := linear.NewClient(apiKey, teamID)
 
 	if store != nil {
-		if endpoint, _ := store.GetConfig(ctx, "linear.api_endpoint"); endpoint != "" {
+		if endpoint, _ := store.GetConfig(ctx, "linear.api_endpoint"); endpoint != "" { // returns "" if not set
 			client = client.WithEndpoint(endpoint)
 		}
 		// Filter to specific project if configured
-		if projectID, _ := store.GetConfig(ctx, "linear.project_id"); projectID != "" {
+		if projectID, _ := store.GetConfig(ctx, "linear.project_id"); projectID != "" { // returns "" if not set
 			client = client.WithProjectID(projectID)
 		}
 	}

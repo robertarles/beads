@@ -253,7 +253,7 @@ func (s *SQLiteStorage) GetDependenciesWithMetadata(ctx context.Context, issueID
 	if err != nil {
 		return nil, fmt.Errorf("failed to get dependencies with metadata: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	return s.scanIssuesWithDependencyType(ctx, rows)
 }
@@ -276,7 +276,7 @@ func (s *SQLiteStorage) GetDependentsWithMetadata(ctx context.Context, issueID s
 	if err != nil {
 		return nil, fmt.Errorf("failed to get dependents with metadata: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	return s.scanIssuesWithDependencyType(ctx, rows)
 }
@@ -361,7 +361,7 @@ func (s *SQLiteStorage) GetDependencyCounts(ctx context.Context, issueIDs []stri
 	if err != nil {
 		return nil, fmt.Errorf("failed to get dependency counts: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	result := make(map[string]*types.DependencyCounts)
 	for rows.Next() {
@@ -407,7 +407,7 @@ func (s *SQLiteStorage) GetDependencyRecords(ctx context.Context, issueID string
 	if err != nil {
 		return nil, fmt.Errorf("failed to get dependency records: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	var deps []*types.Dependency
 	for rows.Next() {
@@ -447,7 +447,7 @@ func (s *SQLiteStorage) GetAllDependencyRecords(ctx context.Context) (map[string
 	if err != nil {
 		return nil, fmt.Errorf("failed to get all dependency records: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	// Group dependencies by issue ID
 	depsMap := make(map[string][]*types.Dependency)
@@ -505,7 +505,7 @@ func (s *SQLiteStorage) GetDependencyRecordsForIssues(ctx context.Context, issue
 	if err != nil {
 		return nil, fmt.Errorf("failed to get dependency records for issues: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	// Group dependencies by issue ID
 	depsMap := make(map[string][]*types.Dependency)
@@ -638,7 +638,7 @@ func (s *SQLiteStorage) GetDependencyTree(ctx context.Context, issueID string, m
 	if err != nil {
 		return nil, fmt.Errorf("failed to get dependency tree: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	// Use a map to track nodes we've seen and deduplicate
 	// Key: issue ID, Value: minimum depth where we saw it
@@ -806,7 +806,7 @@ func (s *SQLiteStorage) loadDependencyGraph(ctx context.Context) (map[string][]s
 	if err != nil {
 		return nil, fmt.Errorf("failed to load dependency graph: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	for rows.Next() {
 		var from, to string

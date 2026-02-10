@@ -62,8 +62,8 @@ func TestDoctorRepair_CorruptDatabase_NoJSONL_FixFails(t *testing.T) {
 	}
 
 	// Some workflows keep JSONL in sync automatically; force it to be missing.
-	_ = os.Remove(filepath.Join(ws, ".beads", "issues.jsonl"))
-	_ = os.Remove(filepath.Join(ws, ".beads", "beads.jsonl"))
+	_ = os.Remove(filepath.Join(ws, ".beads", "issues.jsonl")) // best-effort cleanup
+	_ = os.Remove(filepath.Join(ws, ".beads", "beads.jsonl")) // best-effort cleanup
 
 	// Corrupt without providing JSONL source-of-truth.
 	if err := os.Truncate(dbPath, 64); err != nil {
@@ -214,10 +214,10 @@ func TestDoctorRepair_JSONLIntegrity_MalformedLine_ReexportFromDB(t *testing.T) 
 		t.Fatalf("open jsonl: %v", err)
 	}
 	if _, err := f.WriteString("{not json}\n"); err != nil {
-		_ = f.Close()
+		_ = f.Close() // best-effort cleanup
 		t.Fatalf("append corrupt jsonl: %v", err)
 	}
-	_ = f.Close()
+	_ = f.Close() // best-effort cleanup
 
 	if _, err := runBDSideDB(t, bdExe, ws, dbPath, "doctor", "--fix", "--yes"); err != nil {
 		t.Fatalf("bd doctor --fix failed: %v", err)
@@ -263,7 +263,7 @@ func TestDoctorRepair_DatabaseIntegrity_DBWriteLocked_ImportFailsFast(t *testing
 		_ = tx.Rollback()
 		t.Fatalf("insert lock row: %v", err)
 	}
-	defer func() { _ = tx.Rollback() }()
+	defer func() { _ = tx.Rollback() }() // no-op if committed
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

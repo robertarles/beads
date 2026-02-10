@@ -39,8 +39,8 @@ func setupGitRepoWithBeads(t *testing.T) (repoPath string, cleanup func()) {
 	beads.ResetCaches()
 
 	// Configure git
-	_ = exec.Command("git", "config", "user.email", "test@test.com").Run()
-	_ = exec.Command("git", "config", "user.name", "Test User").Run()
+	_ = exec.Command("git", "config", "user.email", "test@test.com").Run() // test setup, errors not critical
+	_ = exec.Command("git", "config", "user.name", "Test User").Run() // test setup, errors not critical
 
 	// Create .beads directory with issues.jsonl
 	beadsDir := filepath.Join(tmpDir, ".beads")
@@ -56,7 +56,7 @@ func setupGitRepoWithBeads(t *testing.T) (repoPath string, cleanup func()) {
 	}
 
 	// Create initial commit
-	_ = exec.Command("git", "add", ".beads").Run()
+	_ = exec.Command("git", "add", ".beads").Run() // test setup, errors not critical
 	if err := exec.Command("git", "commit", "-m", "initial").Run(); err != nil {
 		_ = os.Chdir(originalWd)
 		t.Fatalf("failed to create initial commit: %v", err)
@@ -102,11 +102,11 @@ func setupRedirectedBeadsRepo(t *testing.T) (sourcePath, targetPath string, clea
 
 	cmd = exec.Command("git", "config", "user.email", "test@test.com")
 	cmd.Dir = targetPath
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	cmd = exec.Command("git", "config", "user.name", "Test User")
 	cmd.Dir = targetPath
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	// Write issues.jsonl in target
 	jsonlPath := filepath.Join(targetBeadsDir, "issues.jsonl")
@@ -117,7 +117,7 @@ func setupRedirectedBeadsRepo(t *testing.T) (sourcePath, targetPath string, clea
 	// Commit in target
 	cmd = exec.Command("git", "add", ".beads")
 	cmd.Dir = targetPath
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	cmd = exec.Command("git", "commit", "-m", "initial")
 	cmd.Dir = targetPath
@@ -152,16 +152,16 @@ func setupRedirectedBeadsRepo(t *testing.T) (sourcePath, targetPath string, clea
 
 	cmd = exec.Command("git", "config", "user.email", "test@test.com")
 	cmd.Dir = sourcePath
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	cmd = exec.Command("git", "config", "user.name", "Test User")
 	cmd.Dir = sourcePath
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	// Commit redirect in source
 	cmd = exec.Command("git", "add", ".beads")
 	cmd.Dir = sourcePath
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	cmd = exec.Command("git", "commit", "-m", "initial with redirect")
 	cmd.Dir = sourcePath
@@ -516,7 +516,7 @@ func TestGitBranchHasUpstream(t *testing.T) {
 	}
 
 	// Save current dir and change to local repo
-	origDir, _ := os.Getwd()
+	origDir, _ := os.Getwd() // best-effort, unlikely to fail
 	if err := os.Chdir(localDir); err != nil {
 		t.Fatalf("Failed to chdir: %v", err)
 	}
@@ -609,7 +609,7 @@ func TestConfigPreservedDuringSync(t *testing.T) {
 		}
 
 		// Commit the config
-		_ = exec.Command("git", "add", ".beads/config.yaml").Run()
+		_ = exec.Command("git", "add", ".beads/config.yaml").Run() // test setup, errors not critical
 		if err := exec.Command("git", "commit", "-m", "add config").Run(); err != nil {
 			t.Fatalf("failed to commit config: %v", err)
 		}
@@ -742,7 +742,7 @@ func TestGetCurrentBranchOrHEAD(t *testing.T) {
 	}
 
 	// Save current dir and change to test repo
-	origDir, _ := os.Getwd()
+	origDir, _ := os.Getwd() // best-effort, unlikely to fail
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("Failed to chdir: %v", err)
 	}

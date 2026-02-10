@@ -185,7 +185,7 @@ func TestJSONLLock_ExportLockAcquisitionFailure(t *testing.T) {
 	defer exportLock.Unlock()
 
 	// Write the export
-	issues, _ := testStore.SearchIssues(ctx, "", types.IssueFilter{})
+	issues, _ := testStore.SearchIssues(ctx, "", types.IssueFilter{}) // best-effort search, nil on error
 	if _, err := writeJSONLAtomic(jsonlPath, issues); err != nil {
 		t.Fatalf("failed to write JSONL: %v", err)
 	}
@@ -496,7 +496,7 @@ func TestJSONLLock_ConcurrentSyncOperations(t *testing.T) {
 	}
 
 	// Initial export
-	issues, _ := testStore.SearchIssues(ctx, "", types.IssueFilter{})
+	issues, _ := testStore.SearchIssues(ctx, "", types.IssueFilter{}) // best-effort search, nil on error
 	if _, err := writeJSONLAtomic(jsonlPath, issues); err != nil {
 		t.Fatalf("failed to create initial JSONL: %v", err)
 	}

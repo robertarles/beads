@@ -26,7 +26,7 @@ func TestReadIssueFromJSONL(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, issue := range issues {
-		data, _ := json.Marshal(issue)
+		data, _ := json.Marshal(issue) // marshaling known types, error not possible // test setup, marshaling known types
 		file.Write(data)
 		file.WriteString("\n")
 	}

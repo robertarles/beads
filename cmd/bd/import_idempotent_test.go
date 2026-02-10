@@ -371,8 +371,8 @@ func TestImportMultipleUnchangedIssues(t *testing.T) {
 	}
 
 	// Get initial timestamps
-	unchanged, _ := testStore.GetIssue(ctx, "bd-1")
-	changed, _ := testStore.GetIssue(ctx, "bd-2")
+	unchanged, _ := testStore.GetIssue(ctx, "bd-1") // test assertion handles nil
+	changed, _ := testStore.GetIssue(ctx, "bd-2") // test assertion handles nil
 	unchangedInitialTS := unchanged.UpdatedAt
 	changedInitialTS := changed.UpdatedAt
 
@@ -397,8 +397,8 @@ func TestImportMultipleUnchangedIssues(t *testing.T) {
 	autoImportIfNewer()
 
 	// Check timestamps - neither should have changed
-	issue1After, _ := testStore.GetIssue(ctx, "bd-1")
-	issue2After, _ := testStore.GetIssue(ctx, "bd-2")
+	issue1After, _ := testStore.GetIssue(ctx, "bd-1") // test assertion handles nil
+	issue2After, _ := testStore.GetIssue(ctx, "bd-2") // test assertion handles nil
 
 	// bd-1 should have same timestamp
 	if !issue1After.UpdatedAt.Equal(unchangedInitialTS) {

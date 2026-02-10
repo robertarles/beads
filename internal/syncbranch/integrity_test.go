@@ -96,7 +96,7 @@ func newTestStoreIntegrity(t *testing.T) *sqlite.SQLiteStorage {
 	}
 	ctx := context.Background()
 	if err := store.SetConfig(ctx, "issue_prefix", "bd"); err != nil {
-		_ = store.Close()
+		_ = store.Close() // best-effort cleanup
 		t.Fatalf("Failed to set issue_prefix: %v", err)
 	}
 	return store

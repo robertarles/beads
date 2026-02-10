@@ -95,7 +95,7 @@ func TestAutoImportIfNewer_UnchangedHash(t *testing.T) {
 	f.Close()
 
 	// Compute hash
-	data, _ := os.ReadFile(jsonlPath)
+	data, _ := os.ReadFile(jsonlPath) // best-effort read, nil on error
 	hasher := sha256.New()
 	hasher.Write(data)
 	hash := hex.EncodeToString(hasher.Sum(nil))

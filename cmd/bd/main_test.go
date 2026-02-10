@@ -197,12 +197,12 @@ func TestAutoFlushJSONLContent(t *testing.T) {
 	// Verify JSONL file exists
 	if _, err := os.Stat(expectedJSONLPath); os.IsNotExist(err) {
 		// Debug: list all files in tmpDir to see what was actually created
-		entries, _ := os.ReadDir(tmpDir)
+		entries, _ := os.ReadDir(tmpDir) // best-effort read, nil on error
 		t.Logf("Contents of %s:", tmpDir)
 		for _, entry := range entries {
 			t.Logf("  - %s (isDir: %v)", entry.Name(), entry.IsDir())
 			if entry.IsDir() && entry.Name() == ".beads" {
-				beadsEntries, _ := os.ReadDir(filepath.Join(tmpDir, ".beads"))
+				beadsEntries, _ := os.ReadDir(filepath.Join(tmpDir, ".beads")) // best-effort read, nil on error
 				for _, be := range beadsEntries {
 					t.Logf("    - .beads/%s", be.Name())
 				}
@@ -673,7 +673,7 @@ func TestAutoImportMergeConflict(t *testing.T) {
 
 	// Capture stderr to check for merge conflict message
 	oldStderr := os.Stderr
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stderr = w
 
 	// Run auto-import - should detect conflict and abort
@@ -757,7 +757,7 @@ func TestAutoImportConflictMarkerFalsePositive(t *testing.T) {
 
 	// Capture stderr
 	oldStderr := os.Stderr
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stderr = w
 
 	// Run auto-import - should succeed without conflict detection

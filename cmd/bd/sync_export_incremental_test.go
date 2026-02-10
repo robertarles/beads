@@ -24,7 +24,7 @@ func TestReadJSONLToMap(t *testing.T) {
 
 	var content strings.Builder
 	for _, issue := range issues {
-		data, _ := json.Marshal(issue)
+		data, _ := json.Marshal(issue) // marshaling known types, error not possible // test setup, marshaling known types
 		content.Write(data)
 		content.WriteString("\n")
 	}
@@ -134,7 +134,7 @@ func TestShouldUseIncrementalExport(t *testing.T) {
 		var content strings.Builder
 		for i := 0; i < 10; i++ {
 			issue := types.Issue{ID: "test-" + string(rune('a'+i)), Title: "Test"}
-			data, _ := json.Marshal(issue)
+			data, _ := json.Marshal(issue) // marshaling known types, error not possible // test setup, marshaling known types
 			content.Write(data)
 			content.WriteString("\n")
 		}

@@ -58,7 +58,7 @@ func CheckFederationRemotesAPI(path string) DoctorCheck {
 				Category: CategoryFederation,
 			}
 		}
-		defer func() { _ = store.Close() }()
+		defer func() { _ = store.Close() }() // best-effort cleanup
 
 		fedStore, ok := storage.AsFederated(store)
 		if !ok {
@@ -108,7 +108,7 @@ func CheckFederationRemotesAPI(path string) DoctorCheck {
 			Category: CategoryFederation,
 		}
 	}
-	_ = conn.Close()
+	_ = conn.Close() // best-effort cleanup
 
 	return DoctorCheck{
 		Name:     "Federation remotesapi",
@@ -154,7 +154,7 @@ func CheckFederationPeerConnectivity(path string) DoctorCheck {
 			Category: CategoryFederation,
 		}
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	fedStore, ok := storage.AsFederated(store)
 	if !ok {
@@ -281,7 +281,7 @@ func CheckFederationSyncStaleness(path string) DoctorCheck {
 			Category: CategoryFederation,
 		}
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	fedStore, ok := storage.AsFederated(store)
 	if !ok {
@@ -384,7 +384,7 @@ func CheckFederationConflicts(path string) DoctorCheck {
 			Category: CategoryFederation,
 		}
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	// Check if storage supports versioning (needed for conflict detection)
 	verStore, ok := storage.AsVersioned(store)
@@ -502,7 +502,7 @@ func CheckDoltServerModeMismatch(path string) DoctorCheck {
 			Category: CategoryFederation,
 		}
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	// Check if storage supports federation
 	fedStore, isFederated := storage.AsFederated(store)

@@ -247,7 +247,7 @@ func CheckMigrationCompletion(path string) (DoctorCheck, MigrationValidationResu
 			Category: CategoryMaintenance,
 		}, result
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	// Get Dolt issue count
 	stats, err := store.GetStatistics(ctx)
@@ -571,7 +571,7 @@ func checkDoltLocks(beadsDir string) (bool, string) {
 // Returns: foreignCount, foreignPrefixes map, ephemeralCount.
 func categorizeDoltExtras(ctx context.Context, store storage.Storage, jsonlIDs map[string]bool) (int, map[string]int, int) {
 	// Get the configured prefix for this rig
-	localPrefix, _ := store.GetConfig(ctx, "issue_prefix")
+	localPrefix, _ := store.GetConfig(ctx, "issue_prefix") // returns "" if not set
 
 	// Query all issue IDs from Dolt
 	db := store.UnderlyingDB()

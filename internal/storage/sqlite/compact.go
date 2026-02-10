@@ -86,7 +86,7 @@ func (s *SQLiteStorage) GetTier1Candidates(ctx context.Context) ([]*types.Compac
 	if err != nil {
 		return nil, fmt.Errorf("failed to query tier1 candidates: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	var candidates []*types.CompactionCandidate
 	for rows.Next() {
@@ -164,7 +164,7 @@ func (s *SQLiteStorage) GetTier2Candidates(ctx context.Context) ([]*types.Compac
 	if err != nil {
 		return nil, fmt.Errorf("failed to query tier2 candidates: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	var candidates []*types.CompactionCandidate
 	for rows.Next() {

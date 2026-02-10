@@ -259,7 +259,7 @@ func handlePrefixMismatch(ctx context.Context, store storage.Storage, issues []*
 	result.ExpectedPrefix = configuredPrefix
 
 	// Read allowed_prefixes config for additional valid prefixes (e.g., mol-*)
-	allowedPrefixesConfig, _ := store.GetConfig(ctx, "allowed_prefixes")
+	allowedPrefixesConfig, _ := store.GetConfig(ctx, "allowed_prefixes") // returns "" if not set
 
 	// Get beads directory from database path for route lookup
 	beadsDir := filepath.Dir(store.Path())
@@ -1357,7 +1357,7 @@ func findIssueInLocalJSONL(jsonlPath, issueID string) (*types.Issue, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer func() { _ = f.Close() }()
+	defer func() { _ = f.Close() }() // best-effort cleanup
 
 	scanner := bufio.NewScanner(f)
 	scanner.Buffer(make([]byte, 0, 64*1024), 1024*1024)

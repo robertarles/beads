@@ -224,7 +224,7 @@ NOTE: This is a rare operation. Most users never need this command.`,
 			} else {
 				// Get dependencies for each issue
 				for _, issue := range renamedIssues {
-					deps, _ := store.GetDependencyRecords(ctx, issue.ID)
+					deps, _ := store.GetDependencyRecords(ctx, issue.ID) // best-effort enrichment, nil on error
 					issue.Dependencies = deps
 				}
 				// Write directly to JSONL
@@ -329,7 +329,7 @@ func repairPrefixes(ctx context.Context, st storage.Storage, actorName string, t
 	if err != nil {
 		return fmt.Errorf("failed to get database connection: %w", err)
 	}
-	defer func() { _ = conn.Close() }()
+	defer func() { _ = conn.Close() }() // best-effort cleanup
 
 	// Build a map of all renames for text replacement using hash IDs
 	// Track used IDs to avoid collisions within the batch
@@ -453,7 +453,7 @@ func repairPrefixes(ctx context.Context, st storage.Storage, actorName string, t
 		} else {
 			// Get dependencies for each issue
 			for _, issue := range renamedIssues {
-				deps, _ := st.GetDependencyRecords(ctx, issue.ID)
+				deps, _ := st.GetDependencyRecords(ctx, issue.ID) // best-effort enrichment, nil on error
 				issue.Dependencies = deps
 			}
 			// Write directly to JSONL

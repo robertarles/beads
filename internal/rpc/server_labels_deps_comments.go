@@ -87,7 +87,7 @@ func (s *Server) handleDepAdd(req *Request) Response {
 		"depends_on_id": depArgs.ToID,
 		"type":          depArgs.DepType,
 	}
-	data, _ := json.Marshal(result)
+	data, _ := json.Marshal(result) // marshaling known types, error not possible
 	return Response{Success: true, Data: data}
 }
 
@@ -127,7 +127,7 @@ func (s *Server) handleSimpleStoreOp(req *Request, argsPtr interface{}, argDesc 
 	s.emitMutation(MutationUpdate, issueID, title, assignee)
 
 	if responseData != nil {
-		data, _ := json.Marshal(responseData())
+		data, _ := json.Marshal(responseData()) // marshaling known types, error not possible
 		return Response{Success: true, Data: data}
 	}
 	return Response{Success: true}
@@ -165,7 +165,7 @@ func (s *Server) handleDepTree(req *Request) Response {
 		}
 	}
 
-	data, _ := json.Marshal(tree)
+	data, _ := json.Marshal(tree) // marshaling known types, error not possible
 	return Response{Success: true, Data: data}
 }
 
@@ -227,7 +227,7 @@ func (s *Server) handleCommentList(req *Request) Response {
 		}
 	}
 
-	data, _ := json.Marshal(comments)
+	data, _ := json.Marshal(comments) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -265,7 +265,7 @@ func (s *Server) handleCommentAdd(req *Request) Response {
 	title, assignee := s.lookupIssueMeta(ctx, commentArgs.ID)
 	s.emitMutation(MutationComment, commentArgs.ID, title, assignee)
 
-	data, _ := json.Marshal(comment)
+	data, _ := json.Marshal(comment) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -315,7 +315,7 @@ func (s *Server) handleBatch(req *Request) Response {
 	}
 
 	batchResp := BatchResponse{Results: results}
-	data, _ := json.Marshal(batchResp)
+	data, _ := json.Marshal(batchResp) // marshaling known types, error not possible
 
 	return Response{
 		Success: true,

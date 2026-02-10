@@ -310,7 +310,7 @@ func runRepair(cmd *cobra.Command, args []string) {
 		if err != nil {
 			repairErr = fmt.Errorf("deleting orphaned deps (issue_id): %w", err)
 		} else if !repairJSON {
-			deleted, _ := result.RowsAffected()
+			deleted, _ := result.RowsAffected() // informational only, error not critical
 			fmt.Printf("  %s Deleted %d dependencies with missing issue_id\n", ui.RenderPass("✓"), deleted)
 		}
 	}
@@ -330,7 +330,7 @@ func runRepair(cmd *cobra.Command, args []string) {
 		if err != nil {
 			repairErr = fmt.Errorf("deleting orphaned deps (depends_on_id): %w", err)
 		} else if !repairJSON {
-			deleted, _ := result.RowsAffected()
+			deleted, _ := result.RowsAffected() // informational only, error not critical
 			fmt.Printf("  %s Deleted %d dependencies with missing depends_on_id\n", ui.RenderPass("✓"), deleted)
 		}
 	}
@@ -345,7 +345,7 @@ func runRepair(cmd *cobra.Command, args []string) {
 		if err != nil {
 			repairErr = fmt.Errorf("deleting orphaned labels: %w", err)
 		} else if !repairJSON {
-			deleted, _ := result.RowsAffected()
+			deleted, _ := result.RowsAffected() // informational only, error not critical
 			fmt.Printf("  %s Deleted %d labels with missing issue_id\n", ui.RenderPass("✓"), deleted)
 		}
 	}
@@ -360,7 +360,7 @@ func runRepair(cmd *cobra.Command, args []string) {
 		if err != nil {
 			repairErr = fmt.Errorf("deleting orphaned comments: %w", err)
 		} else if !repairJSON {
-			deleted, _ := result.RowsAffected()
+			deleted, _ := result.RowsAffected() // informational only, error not critical
 			fmt.Printf("  %s Deleted %d comments with missing issue_id\n", ui.RenderPass("✓"), deleted)
 		}
 	}
@@ -375,7 +375,7 @@ func runRepair(cmd *cobra.Command, args []string) {
 		if err != nil {
 			repairErr = fmt.Errorf("deleting orphaned events: %w", err)
 		} else if !repairJSON {
-			deleted, _ := result.RowsAffected()
+			deleted, _ := result.RowsAffected() // informational only, error not critical
 			fmt.Printf("  %s Deleted %d events with missing issue_id\n", ui.RenderPass("✓"), deleted)
 		}
 	}

@@ -62,7 +62,7 @@ func StaleClosedIssues(path string) error {
 	if err != nil {
 		return fmt.Errorf("failed to open database: %w", err)
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	// Find closed issues older than configured threshold
 	cutoff := time.Now().AddDate(0, 0, -thresholdDays)
@@ -137,7 +137,7 @@ func ExpiredTombstones(path string) error {
 		issue.SetDefaults()
 		allIssues = append(allIssues, &issue)
 	}
-	_ = file.Close()
+	_ = file.Close() // best-effort cleanup
 
 	ttl := types.DefaultTombstoneTTL
 
@@ -167,16 +167,16 @@ func ExpiredTombstones(path string) error {
 	encoder := json.NewEncoder(tempFile)
 	for _, issue := range kept {
 		if err := encoder.Encode(issue); err != nil {
-			_ = tempFile.Close()
-			_ = os.Remove(tempPath)
+			_ = tempFile.Close() // best-effort cleanup
+			_ = os.Remove(tempPath) // best-effort cleanup
 			return fmt.Errorf("failed to write issue %s: %w", issue.ID, err)
 		}
 	}
-	_ = tempFile.Close()
+	_ = tempFile.Close() // best-effort cleanup
 
 	// Atomically replace
 	if err := os.Rename(tempPath, jsonlPath); err != nil {
-		_ = os.Remove(tempPath)
+		_ = os.Remove(tempPath) // best-effort cleanup
 		return fmt.Errorf("failed to replace issues.jsonl: %w", err)
 	}
 
@@ -212,7 +212,7 @@ func PatrolPollution(path string) error {
 	if err != nil {
 		return fmt.Errorf("failed to open database: %w", err)
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	// Get all issues and identify pollution
 	issues, err := store.SearchIssues(ctx, "", types.IssueFilter{})

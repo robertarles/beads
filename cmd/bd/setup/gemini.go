@@ -71,21 +71,21 @@ func installGemini(env geminiEnv, project bool, stealth bool) error {
 	var settingsPath string
 	if project {
 		settingsPath = geminiProjectSettingsPath(env.projectDir)
-		_, _ = fmt.Fprintln(env.stdout, "Installing Gemini CLI hooks for this project...")
+		_, _ = fmt.Fprintln(env.stdout, "Installing Gemini CLI hooks for this project...") // output error not actionable
 	} else {
 		settingsPath = geminiGlobalSettingsPath(env.homeDir)
-		_, _ = fmt.Fprintln(env.stdout, "Installing Gemini CLI hooks globally...")
+		_, _ = fmt.Fprintln(env.stdout, "Installing Gemini CLI hooks globally...") // output error not actionable
 	}
 
 	if err := env.ensureDir(filepath.Dir(settingsPath), 0o755); err != nil {
-		_, _ = fmt.Fprintf(env.stderr, "Error: %v\n", err)
+		_, _ = fmt.Fprintf(env.stderr, "Error: %v\n", err) // output error not actionable
 		return err
 	}
 
 	settings := make(map[string]interface{})
 	if data, err := env.readFile(settingsPath); err == nil {
 		if err := json.Unmarshal(data, &settings); err != nil {
-			_, _ = fmt.Fprintf(env.stderr, "Error: failed to parse settings.json: %v\n", err)
+			_, _ = fmt.Fprintf(env.stderr, "Error: failed to parse settings.json: %v\n", err) // output error not actionable
 			return err
 		}
 	}
@@ -103,26 +103,26 @@ func installGemini(env geminiEnv, project bool, stealth bool) error {
 
 	// Gemini CLI uses "PreCompress" instead of Claude's "PreCompact"
 	if addHookCommand(hooks, "SessionStart", command) {
-		_, _ = fmt.Fprintln(env.stdout, "✓ Registered SessionStart hook")
+		_, _ = fmt.Fprintln(env.stdout, "✓ Registered SessionStart hook") // output error not actionable
 	}
 	if addHookCommand(hooks, "PreCompress", command) {
-		_, _ = fmt.Fprintln(env.stdout, "✓ Registered PreCompress hook")
+		_, _ = fmt.Fprintln(env.stdout, "✓ Registered PreCompress hook") // output error not actionable
 	}
 
 	data, err := json.MarshalIndent(settings, "", "  ")
 	if err != nil {
-		_, _ = fmt.Fprintf(env.stderr, "Error: marshal settings: %v\n", err)
+		_, _ = fmt.Fprintf(env.stderr, "Error: marshal settings: %v\n", err) // output error not actionable
 		return err
 	}
 
 	if err := env.writeFile(settingsPath, data); err != nil {
-		_, _ = fmt.Fprintf(env.stderr, "Error: write settings: %v\n", err)
+		_, _ = fmt.Fprintf(env.stderr, "Error: write settings: %v\n", err) // output error not actionable
 		return err
 	}
 
-	_, _ = fmt.Fprintln(env.stdout, "\n✓ Gemini CLI integration installed")
-	_, _ = fmt.Fprintf(env.stdout, "  Settings: %s\n", settingsPath)
-	_, _ = fmt.Fprintln(env.stdout, "\nRestart Gemini CLI for changes to take effect.")
+	_, _ = fmt.Fprintln(env.stdout, "\n✓ Gemini CLI integration installed") // output error not actionable
+	_, _ = fmt.Fprintf(env.stdout, "  Settings: %s\n", settingsPath) // output error not actionable
+	_, _ = fmt.Fprintln(env.stdout, "\nRestart Gemini CLI for changes to take effect.") // output error not actionable
 	return nil
 }
 
@@ -145,14 +145,14 @@ func checkGemini(env geminiEnv) error {
 
 	switch {
 	case hasGeminiBeadsHooks(globalSettings):
-		_, _ = fmt.Fprintf(env.stdout, "✓ Global hooks installed: %s\n", globalSettings)
+		_, _ = fmt.Fprintf(env.stdout, "✓ Global hooks installed: %s\n", globalSettings) // output error not actionable
 		return nil
 	case hasGeminiBeadsHooks(projectSettings):
-		_, _ = fmt.Fprintf(env.stdout, "✓ Project hooks installed: %s\n", projectSettings)
+		_, _ = fmt.Fprintf(env.stdout, "✓ Project hooks installed: %s\n", projectSettings) // output error not actionable
 		return nil
 	default:
-		_, _ = fmt.Fprintln(env.stdout, "✗ No hooks installed")
-		_, _ = fmt.Fprintln(env.stdout, "  Run: bd setup gemini")
+		_, _ = fmt.Fprintln(env.stdout, "✗ No hooks installed") // output error not actionable
+		_, _ = fmt.Fprintln(env.stdout, "  Run: bd setup gemini") // output error not actionable
 		return errGeminiHooksMissing
 	}
 }
@@ -174,27 +174,27 @@ func removeGemini(env geminiEnv, project bool) error {
 	var settingsPath string
 	if project {
 		settingsPath = geminiProjectSettingsPath(env.projectDir)
-		_, _ = fmt.Fprintln(env.stdout, "Removing Gemini CLI hooks from project...")
+		_, _ = fmt.Fprintln(env.stdout, "Removing Gemini CLI hooks from project...") // output error not actionable
 	} else {
 		settingsPath = geminiGlobalSettingsPath(env.homeDir)
-		_, _ = fmt.Fprintln(env.stdout, "Removing Gemini CLI hooks globally...")
+		_, _ = fmt.Fprintln(env.stdout, "Removing Gemini CLI hooks globally...") // output error not actionable
 	}
 
 	data, err := env.readFile(settingsPath)
 	if err != nil {
-		_, _ = fmt.Fprintln(env.stdout, "No settings file found")
+		_, _ = fmt.Fprintln(env.stdout, "No settings file found") // output error not actionable
 		return nil
 	}
 
 	var settings map[string]interface{}
 	if err := json.Unmarshal(data, &settings); err != nil {
-		_, _ = fmt.Fprintf(env.stderr, "Error: failed to parse settings.json: %v\n", err)
+		_, _ = fmt.Fprintf(env.stderr, "Error: failed to parse settings.json: %v\n", err) // output error not actionable
 		return err
 	}
 
 	hooks, ok := settings["hooks"].(map[string]interface{})
 	if !ok {
-		_, _ = fmt.Fprintln(env.stdout, "No hooks found")
+		_, _ = fmt.Fprintln(env.stdout, "No hooks found") // output error not actionable
 		return nil
 	}
 
@@ -206,16 +206,16 @@ func removeGemini(env geminiEnv, project bool) error {
 
 	data, err = json.MarshalIndent(settings, "", "  ")
 	if err != nil {
-		_, _ = fmt.Fprintf(env.stderr, "Error: marshal settings: %v\n", err)
+		_, _ = fmt.Fprintf(env.stderr, "Error: marshal settings: %v\n", err) // output error not actionable
 		return err
 	}
 
 	if err := env.writeFile(settingsPath, data); err != nil {
-		_, _ = fmt.Fprintf(env.stderr, "Error: write settings: %v\n", err)
+		_, _ = fmt.Fprintf(env.stderr, "Error: write settings: %v\n", err) // output error not actionable
 		return err
 	}
 
-	_, _ = fmt.Fprintln(env.stdout, "✓ Gemini CLI hooks removed")
+	_, _ = fmt.Fprintln(env.stdout, "✓ Gemini CLI hooks removed") // output error not actionable
 	return nil
 }
 

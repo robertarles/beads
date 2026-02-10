@@ -85,7 +85,7 @@ func importFromJSONLInline(ctx context.Context, jsonlPath string, renameOnImport
 	if err != nil {
 		return fmt.Errorf("failed to open JSONL file: %w", err)
 	}
-	defer func() { _ = f.Close() }()
+	defer func() { _ = f.Close() }() // best-effort cleanup
 
 	var allIssues []*types.Issue
 	scanner := bufio.NewScanner(f)

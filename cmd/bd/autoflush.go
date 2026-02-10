@@ -601,8 +601,8 @@ func writeJSONLAtomic(jsonlPath string, issues []*types.Issue) ([]string, error)
 	// Ensure cleanup on failure
 	defer func() {
 		if f != nil {
-			_ = f.Close()
-			_ = os.Remove(tempPath)
+			_ = f.Close() // best-effort cleanup
+			_ = os.Remove(tempPath) // best-effort cleanup
 		}
 	}()
 
@@ -787,15 +787,15 @@ func filterByMultiRepoPrefix(ctx context.Context, s storage.Storage, issues []*t
 	}
 
 	// Determine if we're the primary repo
-	cwd, _ := os.Getwd()
+	cwd, _ := os.Getwd() // best-effort, unlikely to fail
 	primaryPath := multiRepo.Primary
 	if primaryPath == "" || primaryPath == "." {
 		primaryPath = cwd
 	}
 
 	// Normalize paths for comparison
-	absCwd, _ := filepath.Abs(cwd)
-	absPrimary, _ := filepath.Abs(primaryPath)
+	absCwd, _ := filepath.Abs(cwd) // best-effort path resolution
+	absPrimary, _ := filepath.Abs(primaryPath) // best-effort path resolution
 
 	if absCwd == absPrimary {
 		return issues // Primary repo exports all issues

@@ -35,7 +35,7 @@ func TestShouldSkipDatabase(t *testing.T) {
 			StartedAt: time.Now(),
 			Version:   "1.0.0",
 		}
-		data, _ := json.Marshal(lock)
+		data, _ := json.Marshal(lock) // marshaling known types, error not possible // test setup, marshaling known types
 		if err := os.WriteFile(lockPath, data, 0600); err != nil {
 			t.Fatal(err)
 		}
@@ -68,7 +68,7 @@ func TestShouldSkipDatabase(t *testing.T) {
 			StartedAt: time.Now(),
 			Version:   "1.0.0",
 		}
-		data, _ := json.Marshal(lock)
+		data, _ := json.Marshal(lock) // marshaling known types, error not possible // test setup, marshaling known types
 		if err := os.WriteFile(lockPath, data, 0600); err != nil {
 			t.Fatal(err)
 		}
@@ -114,7 +114,7 @@ func TestShouldSkipDatabase(t *testing.T) {
 			StartedAt: time.Now(),
 			Version:   "1.0.0",
 		}
-		data, _ := json.Marshal(lock)
+		data, _ := json.Marshal(lock) // marshaling known types, error not possible // test setup, marshaling known types
 		if err := os.WriteFile(lockPath, data, 0600); err != nil {
 			t.Fatal(err)
 		}
@@ -141,7 +141,7 @@ func TestShouldSkipDatabase(t *testing.T) {
 			StartedAt: time.Now(),
 			Version:   "1.0.0",
 		}
-		data, _ := json.Marshal(lock)
+		data, _ := json.Marshal(lock) // marshaling known types, error not possible // test setup, marshaling known types
 		if err := os.WriteFile(lockPath, data, 0600); err != nil {
 			t.Fatal(err)
 		}

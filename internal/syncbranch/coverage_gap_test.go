@@ -809,7 +809,7 @@ func TestGetRepoRoot_DotGitDirectory(t *testing.T) {
 		runGit(t, repoDir, "add", ".")
 		runGit(t, repoDir, "commit", "-m", "initial")
 
-		origWd, _ := os.Getwd()
+		origWd, _ := os.Getwd() // best-effort, unlikely to fail
 		os.Chdir(repoDir)
 		defer os.Chdir(origWd)
 
@@ -818,8 +818,8 @@ func TestGetRepoRoot_DotGitDirectory(t *testing.T) {
 			t.Fatalf("GetRepoRoot() error = %v", err)
 		}
 
-		expectedRoot, _ := filepath.EvalSymlinks(repoDir)
-		actualRoot, _ := filepath.EvalSymlinks(root)
+		expectedRoot, _ := filepath.EvalSymlinks(repoDir) // best-effort symlink resolution
+		actualRoot, _ := filepath.EvalSymlinks(root) // best-effort symlink resolution
 
 		if actualRoot != expectedRoot {
 			t.Errorf("GetRepoRoot() = %q, want %q", actualRoot, expectedRoot)

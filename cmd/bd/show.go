@@ -157,10 +157,10 @@ var showCmd = &cobra.Command{
 				if jsonOutput {
 					// Get labels and deps for JSON output
 					details := &types.IssueDetails{Issue: *issue}
-					details.Labels, _ = issueStore.GetLabels(ctx, issue.ID)
-					details.Dependencies, _ = issueStore.GetDependenciesWithMetadata(ctx, issue.ID)
-					details.Dependents, _ = issueStore.GetDependentsWithMetadata(ctx, issue.ID)
-					details.Comments, _ = issueStore.GetIssueComments(ctx, issue.ID)
+					details.Labels, _ = issueStore.GetLabels(ctx, issue.ID) // best-effort enrichment, nil on error
+					details.Dependencies, _ = issueStore.GetDependenciesWithMetadata(ctx, issue.ID) // best-effort enrichment, nil on error
+					details.Dependents, _ = issueStore.GetDependentsWithMetadata(ctx, issue.ID) // best-effort enrichment, nil on error
+					details.Comments, _ = issueStore.GetIssueComments(ctx, issue.ID) // best-effort enrichment, nil on error
 					// Compute parent from dependencies
 					for _, dep := range details.Dependencies {
 						if dep.DependencyType == types.DepParentChild {
@@ -434,13 +434,13 @@ var showCmd = &cobra.Command{
 			if jsonOutput {
 				// Include labels, dependencies (with metadata), dependents (with metadata), and comments in JSON output
 				details := &types.IssueDetails{Issue: *issue}
-				details.Labels, _ = issueStore.GetLabels(ctx, issue.ID)
+				details.Labels, _ = issueStore.GetLabels(ctx, issue.ID) // best-effort enrichment, nil on error
 
 				// Get dependencies with metadata (dependency_type field)
-				details.Dependencies, _ = issueStore.GetDependenciesWithMetadata(ctx, issue.ID)
-				details.Dependents, _ = issueStore.GetDependentsWithMetadata(ctx, issue.ID)
+				details.Dependencies, _ = issueStore.GetDependenciesWithMetadata(ctx, issue.ID) // best-effort enrichment, nil on error
+				details.Dependents, _ = issueStore.GetDependentsWithMetadata(ctx, issue.ID) // best-effort enrichment, nil on error
 
-				details.Comments, _ = issueStore.GetIssueComments(ctx, issue.ID)
+				details.Comments, _ = issueStore.GetIssueComments(ctx, issue.ID) // best-effort enrichment, nil on error
 				// Compute parent from dependencies
 				for _, dep := range details.Dependencies {
 					if dep.DependencyType == types.DepParentChild {
@@ -491,7 +491,7 @@ var showCmd = &cobra.Command{
 			}
 
 			// Show labels
-			labels, _ := issueStore.GetLabels(ctx, issue.ID)
+			labels, _ := issueStore.GetLabels(ctx, issue.ID) // best-effort enrichment, nil on error
 			if len(labels) > 0 {
 				fmt.Printf("\n%s %s\n", ui.RenderBold("LABELS:"), strings.Join(labels, ", "))
 			}
@@ -501,7 +501,7 @@ var showCmd = &cobra.Command{
 			relatedSeen := make(map[string]*types.IssueWithDependencyMetadata)
 
 			// Show dependencies - grouped by dependency type for clarity
-			depsWithMeta, _ := issueStore.GetDependenciesWithMetadata(ctx, issue.ID)
+			depsWithMeta, _ := issueStore.GetDependenciesWithMetadata(ctx, issue.ID) // best-effort enrichment, nil on error
 			if len(depsWithMeta) > 0 {
 				// Group by dependency type
 				var blocks, parent, discovered []*types.IssueWithDependencyMetadata
@@ -589,7 +589,7 @@ var showCmd = &cobra.Command{
 			}
 
 			// Show comments
-			comments, _ := issueStore.GetIssueComments(ctx, issue.ID)
+			comments, _ := issueStore.GetIssueComments(ctx, issue.ID) // best-effort enrichment, nil on error
 			if len(comments) > 0 {
 				fmt.Printf("\n%s\n", ui.RenderBold("COMMENTS"))
 				for _, comment := range comments {

@@ -43,7 +43,7 @@ func (wm *WorktreeManager) CreateBeadsWorktree(branch, worktreePath string) erro
 			// Health check failed, try to repair by removing and recreating
 			if err := wm.RemoveBeadsWorktree(worktreePath); err != nil {
 				// Log but continue - we'll try to recreate anyway
-				_ = os.RemoveAll(worktreePath)
+				_ = os.RemoveAll(worktreePath) // best-effort cleanup
 			}
 		} else {
 			// Path exists but isn't a valid worktree, remove it
@@ -296,7 +296,7 @@ func (wm *WorktreeManager) mergeJSONLFiles(srcData, dstData []byte) ([]byte, err
 	if err != nil {
 		return nil, fmt.Errorf("failed to create temp dir: %w", err)
 	}
-	defer func() { _ = os.RemoveAll(tmpDir) }()
+	defer func() { _ = os.RemoveAll(tmpDir) }() // best-effort cleanup
 
 	baseFile := filepath.Join(tmpDir, "base.jsonl")
 	leftFile := filepath.Join(tmpDir, "left.jsonl")   // source (local)

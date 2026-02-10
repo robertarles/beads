@@ -70,7 +70,7 @@ func showMessageThread(ctx context.Context, messageID string, jsonOutput bool) {
 				break
 			}
 		} else {
-			parentMsg, _ = store.GetIssue(ctx, parentID)
+			parentMsg, _ = store.GetIssue(ctx, parentID) // nil if not found
 		}
 		if parentMsg == nil {
 			break

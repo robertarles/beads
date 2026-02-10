@@ -38,7 +38,7 @@ func TestAppend_CreatesFileAndWritesJSONL(t *testing.T) {
 	if err != nil {
 		t.Fatalf("open: %v", err)
 	}
-	defer func() { _ = f.Close() }()
+	defer func() { _ = f.Close() }() // best-effort cleanup
 
 	sc := bufio.NewScanner(f)
 	lines := 0

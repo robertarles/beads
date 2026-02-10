@@ -117,7 +117,7 @@ func TestEnsureSocketDir(t *testing.T) {
 	}
 
 	// Clean up
-	_ = os.RemoveAll(filepath.Dir(testSocketPath))
+	_ = os.RemoveAll(filepath.Dir(testSocketPath)) // best-effort cleanup
 }
 
 func TestCleanupSocketDir(t *testing.T) {

@@ -148,10 +148,10 @@ func TestInstallAiderIdempotent(t *testing.T) {
 
 	// Run twice
 	InstallAider()
-	firstData, _ := os.ReadFile(".aider.conf.yml")
+	firstData, _ := os.ReadFile(".aider.conf.yml") // best-effort read, nil on error
 
 	InstallAider()
-	secondData, _ := os.ReadFile(".aider.conf.yml")
+	secondData, _ := os.ReadFile(".aider.conf.yml") // best-effort read, nil on error
 
 	if string(firstData) != string(secondData) {
 		t.Error("InstallAider should be idempotent")

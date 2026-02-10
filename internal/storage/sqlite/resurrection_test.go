@@ -200,7 +200,7 @@ func TestTryResurrectParent_MalformedJSONL(t *testing.T) {
 		UpdatedAt: time.Now(),
 	}
 
-	validJSON, _ := json.Marshal(validIssue)
+	validJSON, _ := json.Marshal(validIssue) // marshaling known types, error not possible // test setup, marshaling known types
 
 	content := "this is not valid json\n" +
 		"{\"id\": \"incomplete\"\n" +
@@ -579,7 +579,7 @@ func TestTryResurrectParent_MultipleVersionsInJSONL(t *testing.T) {
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
-	v1JSON, _ := json.Marshal(v1)
+	v1JSON, _ := json.Marshal(v1) // marshaling known types, error not possible // test setup, marshaling known types
 
 	// Second version: priority 2, title "Updated Version"
 	time.Sleep(10 * time.Millisecond) // Ensure different timestamp
@@ -592,7 +592,7 @@ func TestTryResurrectParent_MultipleVersionsInJSONL(t *testing.T) {
 		CreatedAt: v1.CreatedAt, // Same creation time
 		UpdatedAt: time.Now(),
 	}
-	v2JSON, _ := json.Marshal(v2)
+	v2JSON, _ := json.Marshal(v2) // marshaling known types, error not possible // test setup, marshaling known types
 
 	// Third version: priority 1, title "Latest Version"
 	time.Sleep(10 * time.Millisecond)
@@ -605,7 +605,7 @@ func TestTryResurrectParent_MultipleVersionsInJSONL(t *testing.T) {
 		CreatedAt: v1.CreatedAt,
 		UpdatedAt: time.Now(),
 	}
-	v3JSON, _ := json.Marshal(v3)
+	v3JSON, _ := json.Marshal(v3) // marshaling known types, error not possible // test setup, marshaling known types
 
 	// Write all three versions (append-only)
 	content := string(v1JSON) + "\n" + string(v2JSON) + "\n" + string(v3JSON) + "\n"

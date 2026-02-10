@@ -489,7 +489,7 @@ func TestOutputMermaidTree(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Capture stdout
 			old := os.Stdout
-			r, w, _ := os.Pipe()
+			r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 			os.Stdout = w
 
 			outputMermaidTree(tt.tree, tt.rootID)
@@ -549,7 +549,7 @@ func TestOutputMermaidTree_Siblings(t *testing.T) {
 
 	// Capture stdout
 	old := os.Stdout
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stdout = w
 
 	outputMermaidTree(tree, "BD-1")
@@ -801,7 +801,7 @@ func TestRenderTreeOutput(t *testing.T) {
 
 	// Capture stdout
 	old := os.Stdout
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stdout = w
 
 	renderTree(tree, 50, "down")

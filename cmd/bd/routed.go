@@ -66,14 +66,14 @@ func resolveAndGetIssueWithRouting(ctx context.Context, localStore storage.Stora
 		// Step 2: Resolve and get from routed store
 		result, err := resolveAndGetFromStore(ctx, routedStorage.Storage, id, true)
 		if err != nil {
-			_ = routedStorage.Close()
+			_ = routedStorage.Close() // best-effort cleanup
 			return nil, err
 		}
 		if result != nil {
-			result.closeFn = func() { _ = routedStorage.Close() }
+			result.closeFn = func() { _ = routedStorage.Close() } // best-effort cleanup
 			return result, nil
 		}
-		_ = routedStorage.Close()
+		_ = routedStorage.Close() // best-effort cleanup
 	}
 
 	// Step 3: Fall back to local store
@@ -150,7 +150,7 @@ func getIssueWithRouting(ctx context.Context, localStore storage.Storage, id str
 	// Step 3: Try the routed storage
 	routedIssue, routedErr := routedStorage.Storage.GetIssue(ctx, id)
 	if routedErr != nil || routedIssue == nil {
-		_ = routedStorage.Close()
+		_ = routedStorage.Close() // best-effort cleanup
 		// Return the original error if routing also failed
 		if err != nil {
 			return nil, err
@@ -165,7 +165,7 @@ func getIssueWithRouting(ctx context.Context, localStore storage.Storage, id str
 		Routed:     true,
 		ResolvedID: id,
 		closeFn: func() {
-			_ = routedStorage.Close()
+			_ = routedStorage.Close() // best-effort cleanup
 		},
 	}, nil
 }

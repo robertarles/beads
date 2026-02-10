@@ -29,8 +29,8 @@ func WriteManifest(jsonlPath string, manifest *Manifest) error {
 	}
 	tempPath := tempFile.Name()
 	defer func() {
-		_ = tempFile.Close()
-		_ = os.Remove(tempPath)
+		_ = tempFile.Close() // best-effort cleanup
+		_ = os.Remove(tempPath) // best-effort cleanup
 	}()
 
 	// Write manifest
@@ -39,7 +39,7 @@ func WriteManifest(jsonlPath string, manifest *Manifest) error {
 	}
 
 	// Close before rename
-	_ = tempFile.Close()
+	_ = tempFile.Close() // best-effort cleanup
 
 	// Atomic replace
 	if err := os.Rename(tempPath, manifestPath); err != nil {

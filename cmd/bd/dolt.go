@@ -341,6 +341,6 @@ func testServerConnection(cfg *configfile.Config) bool {
 	if err != nil {
 		return false
 	}
-	_ = conn.Close()
+	_ = conn.Close() // best-effort cleanup
 	return true
 }

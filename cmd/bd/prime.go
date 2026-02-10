@@ -31,7 +31,7 @@ var isDaemonAutoSyncing = func() bool {
 	if err != nil || client == nil {
 		return false
 	}
-	defer func() { _ = client.Close() }()
+	defer func() { _ = client.Close() }() // best-effort cleanup
 
 	status, err := client.Status()
 	if err != nil {
@@ -251,7 +251,7 @@ func outputMCPContext(w io.Writer, stealthMode bool) error {
 
 Start: Check ` + "`ready`" + ` tool for available work.
 `
-	_, _ = fmt.Fprint(w, context)
+	_, _ = fmt.Fprint(w, context) // output error not actionable
 	return nil
 }
 
@@ -429,6 +429,6 @@ bd create --title="Write tests for X" --description="Why this issue exists and w
 bd dep add beads-yyy beads-xxx  # Tests depend on Feature (Feature blocks tests)
 ` + "```" + `
 `
-	_, _ = fmt.Fprint(w, context)
+	_, _ = fmt.Fprint(w, context) // output error not actionable
 	return nil
 }

@@ -358,7 +358,7 @@ func TestSyncModeValidation(t *testing.T) {
 func captureSyncModeListOutput(t *testing.T) string {
 	t.Helper()
 	oldStdout := os.Stdout
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stdout = w
 
 	syncModeListCmd.Run(syncModeListCmd, []string{})
@@ -375,7 +375,7 @@ func captureSyncModeListOutput(t *testing.T) string {
 func captureSyncModeCurrentOutput(t *testing.T) string {
 	t.Helper()
 	oldStdout := os.Stdout
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stdout = w
 
 	syncModeCurrentCmd.Run(syncModeCurrentCmd, []string{})

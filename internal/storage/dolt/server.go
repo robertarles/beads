@@ -141,9 +141,9 @@ func (s *Server) Start(ctx context.Context) error {
 	if err := s.waitForReady(ctx); err != nil {
 		// Server failed to start, clean up
 		_ = s.cmd.Process.Kill()
-		_ = os.Remove(s.pidFile)
+		_ = os.Remove(s.pidFile) // best-effort cleanup
 		if s.logFile != nil {
-			_ = s.logFile.Close()
+			_ = s.logFile.Close() // best-effort cleanup
 			s.logFile = nil
 		}
 		return fmt.Errorf("server failed to become ready: %w", err)
@@ -182,9 +182,9 @@ func (s *Server) Stop() error {
 	}
 
 	// Clean up PID file and log file
-	_ = os.Remove(s.pidFile)
+	_ = os.Remove(s.pidFile) // best-effort cleanup
 	if s.logFile != nil {
-		_ = s.logFile.Close()
+		_ = s.logFile.Close() // best-effort cleanup
 		s.logFile = nil
 	}
 	s.running = false
@@ -228,7 +228,7 @@ func (s *Server) checkPortAvailable(port int) error {
 	if err != nil {
 		return err
 	}
-	_ = listener.Close()
+	_ = listener.Close() // best-effort cleanup
 	return nil
 }
 
@@ -252,7 +252,7 @@ func (s *Server) waitForReady(ctx context.Context) error {
 		// Try to connect
 		conn, err := net.DialTimeout("tcp", addr, 1*time.Second)
 		if err == nil {
-			_ = conn.Close()
+			_ = conn.Close() // best-effort cleanup
 			return nil
 		}
 
@@ -284,7 +284,7 @@ func GetRunningServerPID(dataDir string) int {
 
 	// Best-effort liveness check (platform-specific).
 	if !processMayBeAlive(process) {
-		_ = os.Remove(pidFile)
+		_ = os.Remove(pidFile) // best-effort cleanup
 		return 0
 	}
 
@@ -338,6 +338,6 @@ func isServerListening(host string, port int) bool {
 	if err != nil {
 		return false
 	}
-	_ = conn.Close()
+	_ = conn.Close() // best-effort cleanup
 	return true
 }

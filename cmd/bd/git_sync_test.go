@@ -241,7 +241,7 @@ func exportIssuesToJSONL(ctx context.Context, store *sqlite.SQLiteStorage, jsonl
 	}
 	for _, issue := range issues {
 		issue.Dependencies = allDeps[issue.ID]
-		labels, _ := store.GetLabels(ctx, issue.ID)
+		labels, _ := store.GetLabels(ctx, issue.ID) // best-effort enrichment, nil on error
 		issue.Labels = labels
 	}
 
@@ -281,7 +281,7 @@ func importJSONLToStore(ctx context.Context, store *sqlite.SQLiteStorage, dbPath
 
 	// Import each issue
 	for _, issue := range issues {
-		existing, _ := store.GetIssue(ctx, issue.ID)
+		existing, _ := store.GetIssue(ctx, issue.ID) // test assertion handles nil
 		if existing != nil {
 			// Update
 			updates := map[string]interface{}{

@@ -190,7 +190,7 @@ WARNING: Direct database access bypasses the storage layer. Use with caution.`,
 				FatalErrorRespectJSON("exec error: %v", err)
 			}
 
-			affected, _ := result.RowsAffected()
+			affected, _ := result.RowsAffected() // informational only, error not critical
 
 			if jsonOutput {
 				outputJSON(map[string]interface{}{

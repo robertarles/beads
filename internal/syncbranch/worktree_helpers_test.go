@@ -372,7 +372,7 @@ func TestGetRepoRoot(t *testing.T) {
 		runGit(t, repoDir, "commit", "-m", "initial")
 
 		// Change to repo directory
-		origWd, _ := os.Getwd()
+		origWd, _ := os.Getwd() // best-effort, unlikely to fail
 		os.Chdir(repoDir)
 		defer os.Chdir(origWd)
 
@@ -382,8 +382,8 @@ func TestGetRepoRoot(t *testing.T) {
 		}
 
 		// Resolve symlinks for comparison
-		expectedRoot, _ := filepath.EvalSymlinks(repoDir)
-		actualRoot, _ := filepath.EvalSymlinks(root)
+		expectedRoot, _ := filepath.EvalSymlinks(repoDir) // best-effort symlink resolution
+		actualRoot, _ := filepath.EvalSymlinks(root) // best-effort symlink resolution
 
 		if actualRoot != expectedRoot {
 			t.Errorf("GetRepoRoot() = %q, want %q", actualRoot, expectedRoot)
@@ -394,7 +394,7 @@ func TestGetRepoRoot(t *testing.T) {
 		tmpDir, _ := os.MkdirTemp("", "non-git-*")
 		defer os.RemoveAll(tmpDir)
 
-		origWd, _ := os.Getwd()
+		origWd, _ := os.Getwd() // best-effort, unlikely to fail
 		os.Chdir(tmpDir)
 		defer os.Chdir(origWd)
 
@@ -417,7 +417,7 @@ func TestGetRepoRoot(t *testing.T) {
 		subDir := filepath.Join(repoDir, "subdir", "nested")
 		os.MkdirAll(subDir, 0750)
 
-		origWd, _ := os.Getwd()
+		origWd, _ := os.Getwd() // best-effort, unlikely to fail
 		os.Chdir(subDir)
 		defer os.Chdir(origWd)
 
@@ -427,8 +427,8 @@ func TestGetRepoRoot(t *testing.T) {
 		}
 
 		// Resolve symlinks for comparison
-		expectedRoot, _ := filepath.EvalSymlinks(repoDir)
-		actualRoot, _ := filepath.EvalSymlinks(root)
+		expectedRoot, _ := filepath.EvalSymlinks(repoDir) // best-effort symlink resolution
+		actualRoot, _ := filepath.EvalSymlinks(root) // best-effort symlink resolution
 
 		if actualRoot != expectedRoot {
 			t.Errorf("GetRepoRoot() from subdirectory = %q, want %q", actualRoot, expectedRoot)
@@ -451,7 +451,7 @@ func TestGetRepoRoot(t *testing.T) {
 		runGit(t, mainRepoDir, "worktree", "add", worktreeDir, "-b", "feature")
 
 		// Test from worktree - should return main repo root
-		origWd, _ := os.Getwd()
+		origWd, _ := os.Getwd() // best-effort, unlikely to fail
 		os.Chdir(worktreeDir)
 		defer os.Chdir(origWd)
 
@@ -461,8 +461,8 @@ func TestGetRepoRoot(t *testing.T) {
 		}
 
 		// Should return the main repo root, not the worktree
-		expectedRoot, _ := filepath.EvalSymlinks(mainRepoDir)
-		actualRoot, _ := filepath.EvalSymlinks(root)
+		expectedRoot, _ := filepath.EvalSymlinks(mainRepoDir) // best-effort symlink resolution
+		actualRoot, _ := filepath.EvalSymlinks(root) // best-effort symlink resolution
 
 		if actualRoot != expectedRoot {
 			t.Errorf("GetRepoRoot() from worktree = %q, want main repo %q", actualRoot, expectedRoot)
@@ -487,7 +487,7 @@ func TestHasGitRemote(t *testing.T) {
 		runGit(t, repoDir, "add", ".")
 		runGit(t, repoDir, "commit", "-m", "initial")
 
-		origWd, _ := os.Getwd()
+		origWd, _ := os.Getwd() // best-effort, unlikely to fail
 		os.Chdir(repoDir)
 		defer os.Chdir(origWd)
 
@@ -508,7 +508,7 @@ func TestHasGitRemote(t *testing.T) {
 		// Add a remote
 		runGit(t, repoDir, "remote", "add", "origin", "https://github.com/test/repo.git")
 
-		origWd, _ := os.Getwd()
+		origWd, _ := os.Getwd() // best-effort, unlikely to fail
 		os.Chdir(repoDir)
 		defer os.Chdir(origWd)
 
@@ -521,7 +521,7 @@ func TestHasGitRemote(t *testing.T) {
 		tmpDir, _ := os.MkdirTemp("", "non-git-*")
 		defer os.RemoveAll(tmpDir)
 
-		origWd, _ := os.Getwd()
+		origWd, _ := os.Getwd() // best-effort, unlikely to fail
 		os.Chdir(tmpDir)
 		defer os.Chdir(origWd)
 
@@ -548,7 +548,7 @@ func TestGetCurrentBranch(t *testing.T) {
 		runGit(t, repoDir, "add", ".")
 		runGit(t, repoDir, "commit", "-m", "initial")
 
-		origWd, _ := os.Getwd()
+		origWd, _ := os.Getwd() // best-effort, unlikely to fail
 		os.Chdir(repoDir)
 		defer os.Chdir(origWd)
 
@@ -578,7 +578,7 @@ func TestGetCurrentBranch(t *testing.T) {
 		// Create and checkout new branch
 		runGit(t, repoDir, "checkout", "-b", "feature-branch")
 
-		origWd, _ := os.Getwd()
+		origWd, _ := os.Getwd() // best-effort, unlikely to fail
 		os.Chdir(repoDir)
 		defer os.Chdir(origWd)
 

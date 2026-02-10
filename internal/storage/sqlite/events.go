@@ -81,7 +81,7 @@ func (s *SQLiteStorage) GetEvents(ctx context.Context, issueID string, limit int
 	if err != nil {
 		return nil, fmt.Errorf("failed to get events: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	var events []*types.Event
 	for rows.Next() {
@@ -126,7 +126,7 @@ func (s *SQLiteStorage) GetAllEventsSince(ctx context.Context, sinceID int64) ([
 	if err != nil {
 		return nil, fmt.Errorf("failed to get events since %d: %w", sinceID, err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	var events []*types.Event
 	for rows.Next() {

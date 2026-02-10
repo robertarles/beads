@@ -147,7 +147,7 @@ func (c *Client) Execute(ctx context.Context, req *GraphQLRequest) (json.RawMess
 		}
 
 		respBody, err := io.ReadAll(resp.Body)
-		_ = resp.Body.Close()
+		_ = resp.Body.Close() // best-effort cleanup
 		if err != nil {
 			lastErr = fmt.Errorf("failed to read response (attempt %d/%d): %w", attempt+1, MaxRetries+1, err)
 			continue

@@ -245,8 +245,8 @@ func TestRepairDeps_FixOrphans(t *testing.T) {
 	db.Exec("PRAGMA foreign_keys = ON")
 
 	// Find and fix orphans
-	allDeps, _ := store.GetAllDependencyRecords(ctx)
-	issues, _ := store.SearchIssues(ctx, "", types.IssueFilter{})
+	allDeps, _ := store.GetAllDependencyRecords(ctx) // best-effort enrichment, nil on error
+	issues, _ := store.SearchIssues(ctx, "", types.IssueFilter{}) // best-effort search, nil on error
 
 	validIDs := make(map[string]bool)
 	for _, issue := range issues {
@@ -287,7 +287,7 @@ func TestRepairDeps_FixOrphans(t *testing.T) {
 	}
 
 	// Verify orphans removed
-	allDeps, _ = store.GetAllDependencyRecords(ctx)
+	allDeps, _ = store.GetAllDependencyRecords(ctx) // best-effort enrichment, nil on error
 	orphanCount := 0
 	for issueID, deps := range allDeps {
 		if !validIDs[issueID] {
@@ -359,8 +359,8 @@ func TestRepairDeps_MultipleTypes(t *testing.T) {
 	db.Exec("PRAGMA foreign_keys = ON")
 
 	// Find orphans
-	allDeps, _ := store.GetAllDependencyRecords(ctx)
-	issues, _ := store.SearchIssues(ctx, "", types.IssueFilter{})
+	allDeps, _ := store.GetAllDependencyRecords(ctx) // best-effort enrichment, nil on error
+	issues, _ := store.SearchIssues(ctx, "", types.IssueFilter{}) // best-effort search, nil on error
 
 	validIDs := make(map[string]bool)
 	for _, issue := range issues {

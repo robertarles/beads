@@ -101,7 +101,7 @@ func TestBackendShowSQLite(t *testing.T) {
 	}
 
 	// Change to temp dir
-	oldCwd, _ := os.Getwd()
+	oldCwd, _ := os.Getwd() // best-effort, unlikely to fail
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
@@ -161,7 +161,7 @@ func TestBackendShowJSONL(t *testing.T) {
 	}
 
 	// Change to temp dir
-	oldCwd, _ := os.Getwd()
+	oldCwd, _ := os.Getwd() // best-effort, unlikely to fail
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
@@ -239,7 +239,7 @@ func TestAvailableBackendsStructure(t *testing.T) {
 func captureBackendListOutput(t *testing.T) string {
 	t.Helper()
 	oldStdout := os.Stdout
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stdout = w
 
 	backendListCmd.Run(backendListCmd, []string{})
@@ -257,7 +257,7 @@ func captureBackendShowOutput(t *testing.T) string {
 	t.Helper()
 	oldStdout := os.Stdout
 	oldStderr := os.Stderr
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stdout = w
 	os.Stderr = w
 

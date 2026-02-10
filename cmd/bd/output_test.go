@@ -11,7 +11,7 @@ import (
 func TestOutputJSON(t *testing.T) {
 	// Capture stdout
 	oldStdout := os.Stdout
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stdout = w
 
 	// Test data
@@ -56,7 +56,7 @@ func TestOutputJSON(t *testing.T) {
 func TestOutputJSONArray(t *testing.T) {
 	// Capture stdout
 	oldStdout := os.Stdout
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stdout = w
 
 	// Test data - array of issues

@@ -136,7 +136,7 @@ func TestInstallGemini_Project(t *testing.T) {
 }
 
 func TestInstallGemini_Stealth(t *testing.T) {
-	env, _, _ := newGeminiTestEnv(t)
+	env, _, _ := newGeminiTestEnv(t) // test env setup, t.Fatal on error within
 
 	err := installGemini(env, false, true)
 	if err != nil {
@@ -157,7 +157,7 @@ func TestInstallGemini_Stealth(t *testing.T) {
 }
 
 func TestInstallGemini_Idempotent(t *testing.T) {
-	env, _, _ := newGeminiTestEnv(t)
+	env, _, _ := newGeminiTestEnv(t) // test env setup, t.Fatal on error within
 
 	// Install twice
 	if err := installGemini(env, false, false); err != nil {
@@ -179,7 +179,7 @@ func TestInstallGemini_Idempotent(t *testing.T) {
 }
 
 func TestInstallGemini_PreservesExistingSettings(t *testing.T) {
-	env, _, _ := newGeminiTestEnv(t)
+	env, _, _ := newGeminiTestEnv(t) // test env setup, t.Fatal on error within
 
 	// Create settings with existing content
 	settingsPath := geminiGlobalSettingsPath(env.homeDir)
@@ -315,7 +315,7 @@ func TestRemoveGemini_NoSettingsFile(t *testing.T) {
 }
 
 func TestRemoveGemini_PreservesOtherHooks(t *testing.T) {
-	env, _, _ := newGeminiTestEnv(t)
+	env, _, _ := newGeminiTestEnv(t) // test env setup, t.Fatal on error within
 
 	// Create settings with other hooks
 	settingsPath := geminiGlobalSettingsPath(env.homeDir)
@@ -392,7 +392,7 @@ func TestHasGeminiBeadsHooks(t *testing.T) {
 			},
 		},
 	}
-	data, _ := json.Marshal(settings)
+	data, _ := json.Marshal(settings) // marshaling known types, error not possible // test setup, marshaling known types
 	if err := os.WriteFile(settingsPath, data, 0o644); err != nil {
 		t.Fatal(err)
 	}

@@ -1325,7 +1325,7 @@ func TestFixRedirectTracking(t *testing.T) {
 
 	// Verify it's tracked
 	lsFiles := exec.Command("git", "ls-files", redirectPath)
-	output, _ := lsFiles.Output()
+	output, _ := lsFiles.Output() // test helper, errors checked elsewhere
 	if strings.TrimSpace(string(output)) == "" {
 		t.Fatal("redirect file should be tracked before fix")
 	}

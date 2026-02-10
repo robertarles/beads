@@ -40,7 +40,7 @@ func TestMigrateCommand(t *testing.T) {
 		if err := store.SetMetadata(ctx, "bd_version", "0.16.0"); err != nil {
 			t.Fatalf("Failed to set old version: %v", err)
 		}
-		_ = store.Close()
+		_ = store.Close() // best-effort cleanup
 
 		// Detect databases
 		databases, err := detectDatabases(beadsDir)
@@ -90,7 +90,7 @@ func TestMigrateCommand(t *testing.T) {
 		if err := store.SetMetadata(ctx, "bd_version", Version); err != nil {
 			t.Fatalf("Failed to update version: %v", err)
 		}
-		_ = store.Close()
+		_ = store.Close() // best-effort cleanup
 
 		// Verify updated version
 		version = getDBVersion(dbPath)
@@ -151,7 +151,7 @@ func TestMigrateRespectsConfigJSON(t *testing.T) {
 	if err := store.SetMetadata(ctx, "bd_version", "0.21.1"); err != nil {
 		t.Fatalf("Failed to set version: %v", err)
 	}
-	_ = store.Close()
+	_ = store.Close() // best-effort cleanup
 
 	// Load config
 	cfg, err := loadOrCreateConfig(beadsDir)

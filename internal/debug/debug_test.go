@@ -71,7 +71,7 @@ func TestLogf(t *testing.T) {
 
 			enabled = tt.enabled
 
-			r, w, _ := os.Pipe()
+			r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 			os.Stderr = w
 
 			Logf(tt.format, tt.args...)
@@ -122,7 +122,7 @@ func TestPrintf(t *testing.T) {
 
 			enabled = tt.enabled
 
-			r, w, _ := os.Pipe()
+			r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 			os.Stdout = w
 
 			Printf(tt.format, tt.args...)
@@ -220,7 +220,7 @@ func TestPrintNormal(t *testing.T) {
 
 			quietMode = tt.quiet
 
-			r, w, _ := os.Pipe()
+			r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 			os.Stdout = w
 
 			printNormal(tt.format, tt.args...)
@@ -268,7 +268,7 @@ func TestPrintlnNormal(t *testing.T) {
 
 			quietMode = tt.quiet
 
-			r, w, _ := os.Pipe()
+			r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 			os.Stdout = w
 
 			printlnNormal(tt.args...)

@@ -186,7 +186,7 @@ func mergeSyncBranch(ctx context.Context, dryRun bool) error {
 		fmt.Println("→ [DRY RUN] Would merge sync branch")
 		// Show what would be merged
 		logCmd := rc.GitCmd(ctx, "log", "--oneline", currentBranch+".."+syncBranch)
-		logOutput, _ := logCmd.CombinedOutput()
+		logOutput, _ := logCmd.CombinedOutput() // best-effort, ignore command errors
 		if len(strings.TrimSpace(string(logOutput))) > 0 {
 			fmt.Println("\nCommits that would be merged:")
 			fmt.Print(string(logOutput))

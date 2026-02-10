@@ -135,7 +135,7 @@ func TestMemoryStorage_CreateIssues_DefaultPrefix_DuplicateExisting_ExternalRef(
 	if err := store.CreateIssues(ctx, batch, "actor"); err != nil {
 		t.Fatalf("CreateIssues: %v", err)
 	}
-	if got, _ := store.GetIssueByExternalRef(ctx, "ext"); got == nil || got.ID != "bd-x" {
+	if got, _ := store.GetIssueByExternalRef(ctx, "ext"); got == nil || got.ID != "bd-x" { // nil if not found
 		t.Fatalf("expected external ref indexed")
 	}
 
@@ -633,28 +633,28 @@ func TestMemoryStorage_UpdateIssue_SearchIssues_ReadyWork_BlockedIssues(t *testi
 	if err := store.UpdateIssue(ctx, child.ID, map[string]interface{}{"assignee": nil, "external_ref": "new-ext"}, "actor"); err != nil {
 		t.Fatalf("UpdateIssue: %v", err)
 	}
-	if got, _ := store.GetIssueByExternalRef(ctx, "old-ext"); got != nil {
+	if got, _ := store.GetIssueByExternalRef(ctx, "old-ext"); got != nil { // nil if not found
 		t.Fatalf("expected old-ext removed")
 	}
-	if got, _ := store.GetIssueByExternalRef(ctx, "new-ext"); got == nil || got.ID != child.ID {
+	if got, _ := store.GetIssueByExternalRef(ctx, "new-ext"); got == nil || got.ID != child.ID { // nil if not found
 		t.Fatalf("expected new-ext mapping")
 	}
 
 	if err := store.UpdateIssue(ctx, child.ID, map[string]interface{}{"status": string(types.StatusClosed)}, "actor"); err != nil {
 		t.Fatalf("UpdateIssue close: %v", err)
 	}
-	closed, _ := store.GetIssue(ctx, child.ID)
+	closed, _ := store.GetIssue(ctx, child.ID) // test assertion handles nil
 	if closed.ClosedAt == nil {
 		t.Fatalf("expected ClosedAt set")
 	}
 	if err := store.UpdateIssue(ctx, child.ID, map[string]interface{}{"status": string(types.StatusOpen), "external_ref": nil}, "actor"); err != nil {
 		t.Fatalf("UpdateIssue reopen: %v", err)
 	}
-	reopened, _ := store.GetIssue(ctx, child.ID)
+	reopened, _ := store.GetIssue(ctx, child.ID) // test assertion handles nil
 	if reopened.ClosedAt != nil {
 		t.Fatalf("expected ClosedAt cleared")
 	}
-	if got, _ := store.GetIssueByExternalRef(ctx, "new-ext"); got != nil {
+	if got, _ := store.GetIssueByExternalRef(ctx, "new-ext"); got != nil { // nil if not found
 		t.Fatalf("expected new-ext cleared")
 	}
 
@@ -846,7 +846,7 @@ func TestMemoryStorage_UpdateIssue_CoversMoreFields(t *testing.T) {
 		t.Fatalf("UpdateIssue: %v", err)
 	}
 
-	got, _ := store.GetIssue(ctx, iss.ID)
+	got, _ := store.GetIssue(ctx, iss.ID) // test assertion handles nil
 	if got.Description != "d" || got.Design != "design" || got.AcceptanceCriteria != "ac" || got.Notes != "n" {
 		t.Fatalf("expected text fields updated")
 	}
@@ -858,14 +858,14 @@ func TestMemoryStorage_UpdateIssue_CoversMoreFields(t *testing.T) {
 	if err := store.CloseIssue(ctx, iss.ID, "done", "actor", ""); err != nil {
 		t.Fatalf("CloseIssue: %v", err)
 	}
-	closedOnce, _ := store.GetIssue(ctx, iss.ID)
+	closedOnce, _ := store.GetIssue(ctx, iss.ID) // test assertion handles nil
 	if closedOnce.ClosedAt == nil {
 		t.Fatalf("expected ClosedAt")
 	}
 	if err := store.UpdateIssue(ctx, iss.ID, map[string]interface{}{"status": string(types.StatusClosed)}, "actor"); err != nil {
 		t.Fatalf("UpdateIssue closed->closed: %v", err)
 	}
-	closedTwice, _ := store.GetIssue(ctx, iss.ID)
+	closedTwice, _ := store.GetIssue(ctx, iss.ID) // test assertion handles nil
 	if closedTwice.ClosedAt == nil {
 		t.Fatalf("expected ClosedAt preserved")
 	}

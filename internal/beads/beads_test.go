@@ -35,7 +35,7 @@ func TestFindDatabasePathEnvVar(t *testing.T) {
 
 	result := FindDatabasePath()
 	// FindDatabasePath canonicalizes to absolute path
-	expectedPath, _ := filepath.Abs(testPath)
+	expectedPath, _ := filepath.Abs(testPath) // best-effort path resolution
 	if result != expectedPath {
 		t.Errorf("Expected '%s', got '%s'", expectedPath, result)
 	}
@@ -409,8 +409,8 @@ func TestFindBeadsDirSkipsDaemonRegistry(t *testing.T) {
 	result := FindBeadsDir()
 	if result != "" {
 		// Resolve symlinks for comparison
-		resultResolved, _ := filepath.EvalSymlinks(result)
-		beadsDirResolved, _ := filepath.EvalSymlinks(beadsDir)
+		resultResolved, _ := filepath.EvalSymlinks(result) // best-effort symlink resolution
+		beadsDirResolved, _ := filepath.EvalSymlinks(beadsDir) // best-effort symlink resolution
 		if resultResolved == beadsDirResolved {
 			t.Errorf("FindBeadsDir() should skip daemon-only directory, got %q", result)
 		}
@@ -447,8 +447,8 @@ func TestFindBeadsDirValidatesBeadsDirEnv(t *testing.T) {
 	// Should NOT return the daemon-only directory
 	result := FindBeadsDir()
 	if result != "" {
-		resultResolved, _ := filepath.EvalSymlinks(result)
-		tmpDirResolved, _ := filepath.EvalSymlinks(tmpDir)
+		resultResolved, _ := filepath.EvalSymlinks(result) // best-effort symlink resolution
+		tmpDirResolved, _ := filepath.EvalSymlinks(tmpDir) // best-effort symlink resolution
 		if resultResolved == tmpDirResolved {
 			t.Errorf("FindBeadsDir() should skip BEADS_DIR with only daemon files, got %q", result)
 		}
@@ -672,11 +672,11 @@ func TestFollowRedirect(t *testing.T) {
 			result := FollowRedirect(stubDir)
 
 			// Resolve symlinks for comparison (macOS uses /private/var)
-			resultResolved, _ := filepath.EvalSymlinks(result)
-			stubResolved, _ := filepath.EvalSymlinks(stubDir)
+			resultResolved, _ := filepath.EvalSymlinks(result) // best-effort symlink resolution
+			stubResolved, _ := filepath.EvalSymlinks(stubDir) // best-effort symlink resolution
 
 			if tt.expectRedirect {
-				targetResolved, _ := filepath.EvalSymlinks(targetDir)
+				targetResolved, _ := filepath.EvalSymlinks(targetDir) // best-effort symlink resolution
 				if resultResolved != targetResolved {
 					t.Errorf("FollowRedirect() = %q, want %q", result, targetDir)
 				}
@@ -739,8 +739,8 @@ func TestFindDatabasePathWithRedirect(t *testing.T) {
 	result := FindDatabasePath()
 
 	// Resolve symlinks for comparison
-	resultResolved, _ := filepath.EvalSymlinks(result)
-	targetDBResolved, _ := filepath.EvalSymlinks(targetDB)
+	resultResolved, _ := filepath.EvalSymlinks(result) // best-effort symlink resolution
+	targetDBResolved, _ := filepath.EvalSymlinks(targetDB) // best-effort symlink resolution
 
 	if resultResolved != targetDBResolved {
 		t.Errorf("FindDatabasePath() = %q, want %q (via redirect)", result, targetDB)
@@ -796,8 +796,8 @@ func TestFindBeadsDirWithRedirect(t *testing.T) {
 	result := FindBeadsDir()
 
 	// Resolve symlinks for comparison
-	resultResolved, _ := filepath.EvalSymlinks(result)
-	targetDirResolved, _ := filepath.EvalSymlinks(targetDir)
+	resultResolved, _ := filepath.EvalSymlinks(result) // best-effort symlink resolution
+	targetDirResolved, _ := filepath.EvalSymlinks(targetDir) // best-effort symlink resolution
 
 	if resultResolved != targetDirResolved {
 		t.Errorf("FindBeadsDir() = %q, want %q (via redirect)", result, targetDir)
@@ -829,10 +829,10 @@ func TestFindGitRoot_RegularRepo(t *testing.T) {
 	// Configure git user for the test repo (required for commits)
 	cmd = exec.Command("git", "config", "user.email", "test@example.com")
 	cmd.Dir = repoDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "config", "user.name", "Test User")
 	cmd.Dir = repoDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	// Create a subdirectory and change to it
 	subDir := filepath.Join(repoDir, "sub", "nested")
@@ -847,8 +847,8 @@ func TestFindGitRoot_RegularRepo(t *testing.T) {
 	result := findGitRoot()
 
 	// Resolve symlinks for comparison (macOS /var -> /private/var)
-	resultResolved, _ := filepath.EvalSymlinks(result)
-	repoDirResolved, _ := filepath.EvalSymlinks(repoDir)
+	resultResolved, _ := filepath.EvalSymlinks(result) // best-effort symlink resolution
+	repoDirResolved, _ := filepath.EvalSymlinks(repoDir) // best-effort symlink resolution
 
 	if resultResolved != repoDirResolved {
 		t.Errorf("findGitRoot() = %q, want %q", result, repoDir)
@@ -881,10 +881,10 @@ func TestFindGitRoot_Worktree(t *testing.T) {
 	// Configure git user for the test repo (required for commits)
 	cmd = exec.Command("git", "config", "user.email", "test@example.com")
 	cmd.Dir = mainRepoDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "config", "user.name", "Test User")
 	cmd.Dir = mainRepoDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	// Create an initial commit (required for worktree)
 	dummyFile := filepath.Join(mainRepoDir, "README.md")
@@ -913,7 +913,7 @@ func TestFindGitRoot_Worktree(t *testing.T) {
 		// Clean up worktree
 		cmd := exec.Command("git", "worktree", "remove", worktreeDir)
 		cmd.Dir = mainRepoDir
-		_ = cmd.Run()
+		_ = cmd.Run() // test setup, errors not critical
 	}()
 
 	// Change to the worktree directory
@@ -924,9 +924,9 @@ func TestFindGitRoot_Worktree(t *testing.T) {
 	result := findGitRoot()
 
 	// Resolve symlinks for comparison
-	resultResolved, _ := filepath.EvalSymlinks(result)
-	worktreeDirResolved, _ := filepath.EvalSymlinks(worktreeDir)
-	mainRepoDirResolved, _ := filepath.EvalSymlinks(mainRepoDir)
+	resultResolved, _ := filepath.EvalSymlinks(result) // best-effort symlink resolution
+	worktreeDirResolved, _ := filepath.EvalSymlinks(worktreeDir) // best-effort symlink resolution
+	mainRepoDirResolved, _ := filepath.EvalSymlinks(mainRepoDir) // best-effort symlink resolution
 
 	if resultResolved != worktreeDirResolved {
 		t.Errorf("findGitRoot() = %q, want worktree %q (not main repo %q)", result, worktreeDir, mainRepoDir)
@@ -996,10 +996,10 @@ func TestFindBeadsDir_Worktree(t *testing.T) {
 	// Configure git user
 	cmd = exec.Command("git", "config", "user.email", "test@example.com")
 	cmd.Dir = mainRepoDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "config", "user.name", "Test User")
 	cmd.Dir = mainRepoDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	// Create .beads directory in main repo with a database
 	mainBeadsDir := filepath.Join(mainRepoDir, ".beads")
@@ -1016,7 +1016,7 @@ func TestFindBeadsDir_Worktree(t *testing.T) {
 	}
 	cmd = exec.Command("git", "add", "-A")
 	cmd.Dir = mainRepoDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "commit", "-m", "Initial commit")
 	cmd.Dir = mainRepoDir
 	if err := cmd.Run(); err != nil {
@@ -1033,7 +1033,7 @@ func TestFindBeadsDir_Worktree(t *testing.T) {
 	defer func() {
 		cmd := exec.Command("git", "worktree", "remove", worktreeDir)
 		cmd.Dir = mainRepoDir
-		_ = cmd.Run()
+		_ = cmd.Run() // test setup, errors not critical
 	}()
 
 	// Create .beads directory in worktree with its own database
@@ -1053,9 +1053,9 @@ func TestFindBeadsDir_Worktree(t *testing.T) {
 	result := FindBeadsDir()
 
 	// Resolve symlinks for comparison
-	resultResolved, _ := filepath.EvalSymlinks(result)
-	worktreeBeadsDirResolved, _ := filepath.EvalSymlinks(worktreeBeadsDir)
-	mainBeadsDirResolved, _ := filepath.EvalSymlinks(mainBeadsDir)
+	resultResolved, _ := filepath.EvalSymlinks(result) // best-effort symlink resolution
+	worktreeBeadsDirResolved, _ := filepath.EvalSymlinks(worktreeBeadsDir) // best-effort symlink resolution
+	mainBeadsDirResolved, _ := filepath.EvalSymlinks(mainBeadsDir) // best-effort symlink resolution
 
 	if resultResolved != mainBeadsDirResolved {
 		t.Errorf("FindBeadsDir() = %q, want main repo .beads %q (prioritized for worktrees)", result, mainBeadsDir)
@@ -1111,10 +1111,10 @@ func TestFindDatabasePath_Worktree(t *testing.T) {
 	// Configure git user
 	cmd = exec.Command("git", "config", "user.email", "test@example.com")
 	cmd.Dir = mainRepoDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "config", "user.name", "Test User")
 	cmd.Dir = mainRepoDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	// Create .beads directory in main repo with database
 	mainBeadsDir := filepath.Join(mainRepoDir, ".beads")
@@ -1132,7 +1132,7 @@ func TestFindDatabasePath_Worktree(t *testing.T) {
 	}
 	cmd = exec.Command("git", "add", "-A")
 	cmd.Dir = mainRepoDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "commit", "-m", "Initial commit")
 	cmd.Dir = mainRepoDir
 	if err := cmd.Run(); err != nil {
@@ -1149,7 +1149,7 @@ func TestFindDatabasePath_Worktree(t *testing.T) {
 	defer func() {
 		cmd := exec.Command("git", "worktree", "remove", worktreeDir)
 		cmd.Dir = mainRepoDir
-		_ = cmd.Run()
+		_ = cmd.Run() // test setup, errors not critical
 	}()
 
 	// Change to worktree subdirectory
@@ -1164,8 +1164,8 @@ func TestFindDatabasePath_Worktree(t *testing.T) {
 	result := FindDatabasePath()
 
 	// Resolve symlinks for comparison
-	resultResolved, _ := filepath.EvalSymlinks(result)
-	mainDBPathResolved, _ := filepath.EvalSymlinks(mainDBPath)
+	resultResolved, _ := filepath.EvalSymlinks(result) // best-effort symlink resolution
+	mainDBPathResolved, _ := filepath.EvalSymlinks(mainDBPath) // best-effort symlink resolution
 
 	if resultResolved != mainDBPathResolved {
 		t.Errorf("FindDatabasePath() = %q, want main repo shared db %q", result, mainDBPath)
@@ -1216,10 +1216,10 @@ func TestFindDatabasePath_WorktreeNoLocalDB(t *testing.T) {
 	// Configure git user
 	cmd = exec.Command("git", "config", "user.email", "test@example.com")
 	cmd.Dir = mainRepoDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "config", "user.name", "Test User")
 	cmd.Dir = mainRepoDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	// Create .beads directory in main repo with database
 	mainBeadsDir := filepath.Join(mainRepoDir, ".beads")
@@ -1237,7 +1237,7 @@ func TestFindDatabasePath_WorktreeNoLocalDB(t *testing.T) {
 	}
 	cmd = exec.Command("git", "add", "-A")
 	cmd.Dir = mainRepoDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "commit", "-m", "Initial commit")
 	cmd.Dir = mainRepoDir
 	if err := cmd.Run(); err != nil {
@@ -1254,7 +1254,7 @@ func TestFindDatabasePath_WorktreeNoLocalDB(t *testing.T) {
 	defer func() {
 		cmd := exec.Command("git", "worktree", "remove", worktreeDir)
 		cmd.Dir = mainRepoDir
-		_ = cmd.Run()
+		_ = cmd.Run() // test setup, errors not critical
 	}()
 
 	// Note: We do NOT create .beads in the worktree
@@ -1272,8 +1272,8 @@ func TestFindDatabasePath_WorktreeNoLocalDB(t *testing.T) {
 	result := FindDatabasePath()
 
 	// Resolve symlinks for comparison
-	resultResolved, _ := filepath.EvalSymlinks(result)
-	mainDBPathResolved, _ := filepath.EvalSymlinks(mainDBPath)
+	resultResolved, _ := filepath.EvalSymlinks(result) // best-effort symlink resolution
+	mainDBPathResolved, _ := filepath.EvalSymlinks(mainDBPath) // best-effort symlink resolution
 
 	if resultResolved != mainDBPathResolved {
 		t.Errorf("FindDatabasePath() = %q, want main repo shared db %q", result, mainDBPath)

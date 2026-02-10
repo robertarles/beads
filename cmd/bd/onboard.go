@@ -120,7 +120,7 @@ The old approach of embedding full instructions in AGENTS.md is deprecated
 because it wasted tokens and got stale when bd upgraded.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := renderOnboardInstructions(cmd.OutOrStdout()); err != nil {
-			_, _ = fmt.Fprintf(cmd.ErrOrStderr(), "Error: %v\n", err)
+			_, _ = fmt.Fprintf(cmd.ErrOrStderr(), "Error: %v\n", err) // output error not actionable
 		}
 	},
 }

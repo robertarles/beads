@@ -166,7 +166,7 @@ Examples:
 				if err != nil {
 					FatalErrorRespectJSON("failed to open database: %v", err)
 				}
-				defer func() { _ = store.Close() }()
+				defer func() { _ = store.Close() }() // best-effort cleanup
 			} else {
 				FatalErrorRespectJSON("no database connection")
 			}
@@ -632,7 +632,7 @@ Examples:
 				if err != nil {
 					FatalErrorRespectJSON("failed to open database: %v", err)
 				}
-				defer func() { _ = store.Close() }()
+				defer func() { _ = store.Close() }() // best-effort cleanup
 			} else {
 				FatalErrorRespectJSON("no database connection")
 			}
@@ -769,7 +769,7 @@ func getSwarmStatus(ctx context.Context, s SwarmStorage, epic *types.Issue) (*Sw
 			deps := dependsOn[issue.ID]
 			var blockers []string
 			for _, depID := range deps {
-				depIssue, _ := s.GetIssue(ctx, depID)
+				depIssue, _ := s.GetIssue(ctx, depID) // nil if not found
 				if depIssue != nil && depIssue.Status != types.StatusClosed {
 					blockers = append(blockers, depID)
 				}
@@ -926,7 +926,7 @@ Examples:
 				if err != nil {
 					FatalErrorRespectJSON("failed to open database: %v", err)
 				}
-				defer func() { _ = store.Close() }()
+				defer func() { _ = store.Close() }() // best-effort cleanup
 			} else {
 				FatalErrorRespectJSON("no database connection")
 			}
@@ -1108,7 +1108,7 @@ Examples:
 				if err != nil {
 					FatalErrorRespectJSON("failed to open database: %v", err)
 				}
-				defer func() { _ = store.Close() }()
+				defer func() { _ = store.Close() }() // best-effort cleanup
 			} else {
 				FatalErrorRespectJSON("no database connection")
 			}

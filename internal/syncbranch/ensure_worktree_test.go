@@ -23,7 +23,7 @@ func TestEnsureWorktree(t *testing.T) {
 		setupGitRepo(t, tmpDir)
 
 		// Change to the repo directory
-		oldWd, _ := os.Getwd()
+		oldWd, _ := os.Getwd() // best-effort, unlikely to fail
 		defer os.Chdir(oldWd)
 		os.Chdir(tmpDir)
 
@@ -45,7 +45,7 @@ func TestEnsureWorktree(t *testing.T) {
 		setupGitRepo(t, tmpDir)
 
 		// Change to the repo directory
-		oldWd, _ := os.Getwd()
+		oldWd, _ := os.Getwd() // best-effort, unlikely to fail
 		defer os.Chdir(oldWd)
 		os.Chdir(tmpDir)
 
@@ -102,7 +102,7 @@ func TestEnsureWorktree(t *testing.T) {
 		runCmd(t, localDir, "git", "config", "user.name", "Test User")
 
 		// Change to the local repo directory
-		oldWd, _ := os.Getwd()
+		oldWd, _ := os.Getwd() // best-effort, unlikely to fail
 		defer os.Chdir(oldWd)
 		os.Chdir(localDir)
 
@@ -137,7 +137,7 @@ func TestEnsureWorktree(t *testing.T) {
 		setupGitRepo(t, tmpDir)
 
 		// Change to the repo directory
-		oldWd, _ := os.Getwd()
+		oldWd, _ := os.Getwd() // best-effort, unlikely to fail
 		defer os.Chdir(oldWd)
 		os.Chdir(tmpDir)
 
@@ -167,7 +167,7 @@ func TestEnsureWorktree(t *testing.T) {
 		tmpDir := t.TempDir()
 
 		// Change to the directory
-		oldWd, _ := os.Getwd()
+		oldWd, _ := os.Getwd() // best-effort, unlikely to fail
 		defer os.Chdir(oldWd)
 		os.Chdir(tmpDir)
 
@@ -272,7 +272,7 @@ func TestFreshCloneScenario(t *testing.T) {
 	runCmd(t, localDir, "git", "config", "user.name", "Test User")
 
 	// Verify we're on master with stale issues
-	mainIssues, _ := os.ReadFile(filepath.Join(localDir, ".beads", "issues.jsonl"))
+	mainIssues, _ := os.ReadFile(filepath.Join(localDir, ".beads", "issues.jsonl")) // best-effort read, nil on error
 	if !contains(string(mainIssues), "STALE-001") {
 		t.Fatalf("Expected stale issues on main, got: %s", mainIssues)
 	}
@@ -281,7 +281,7 @@ func TestFreshCloneScenario(t *testing.T) {
 	}
 
 	// Change to the local repo
-	oldWd, _ := os.Getwd()
+	oldWd, _ := os.Getwd() // best-effort, unlikely to fail
 	defer os.Chdir(oldWd)
 	os.Chdir(localDir)
 
@@ -315,8 +315,8 @@ func TestFreshCloneScenario(t *testing.T) {
 	// symlinks before comparing paths
 	repoRoot := localDir
 	gotPath := getBeadsWorktreePath(ctx, repoRoot, "beads-sync")
-	gotPathResolved, _ := filepath.EvalSymlinks(gotPath)
-	worktreePathResolved, _ := filepath.EvalSymlinks(worktreePath)
+	gotPathResolved, _ := filepath.EvalSymlinks(gotPath) // best-effort symlink resolution
+	worktreePathResolved, _ := filepath.EvalSymlinks(worktreePath) // best-effort symlink resolution
 	if gotPathResolved != worktreePathResolved {
 		t.Errorf("getBeadsWorktreePath returned %q (resolved: %q), expected %q (resolved: %q)",
 			gotPath, gotPathResolved, worktreePath, worktreePathResolved)

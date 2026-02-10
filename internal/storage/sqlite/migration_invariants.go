@@ -224,7 +224,7 @@ func cleanOrphanedRefs(db *sql.DB) (deps int, labels int, err error) {
 	if err != nil {
 		return 0, 0, fmt.Errorf("failed to clean orphaned dependencies (issue_id): %w", err)
 	}
-	depsIssue, _ := result.RowsAffected()
+	depsIssue, _ := result.RowsAffected() // informational only, error not critical
 
 	// Clean orphaned dependencies (depends_on_id not in issues, excluding external refs)
 	result, err = db.Exec(`
@@ -235,7 +235,7 @@ func cleanOrphanedRefs(db *sql.DB) (deps int, labels int, err error) {
 	if err != nil {
 		return 0, 0, fmt.Errorf("failed to clean orphaned dependencies (depends_on_id): %w", err)
 	}
-	depsDependsOn, _ := result.RowsAffected()
+	depsDependsOn, _ := result.RowsAffected() // informational only, error not critical
 
 	// Clean orphaned labels (issue_id not in issues)
 	result, err = db.Exec(`
@@ -245,7 +245,7 @@ func cleanOrphanedRefs(db *sql.DB) (deps int, labels int, err error) {
 	if err != nil {
 		return 0, 0, fmt.Errorf("failed to clean orphaned labels: %w", err)
 	}
-	labelsCount, _ := result.RowsAffected()
+	labelsCount, _ := result.RowsAffected() // informational only, error not critical
 
 	return int(depsIssue + depsDependsOn), int(labelsCount), nil
 }

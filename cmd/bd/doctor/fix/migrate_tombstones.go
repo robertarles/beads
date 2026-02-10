@@ -105,7 +105,7 @@ func MigrateTombstones(path string) error {
 				}
 			}
 		}
-		_ = file.Close()
+		_ = file.Close() // best-effort cleanup
 	}
 
 	// Convert deletions to tombstones

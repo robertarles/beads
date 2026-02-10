@@ -166,7 +166,7 @@ func TestTryDaemonLock(t *testing.T) {
 			Version:   "1.0.0",
 			StartedAt: time.Now(),
 		}
-		data, _ := json.Marshal(lockInfo)
+		data, _ := json.Marshal(lockInfo) // marshaling known types, error not possible // test setup, marshaling known types
 		if err := os.WriteFile(lockPath, data, 0644); err != nil {
 			t.Fatalf("failed to write lock file: %v", err)
 		}
@@ -187,7 +187,7 @@ func TestTryDaemonLock(t *testing.T) {
 			Version:   "1.0.0",
 			StartedAt: time.Now(),
 		}
-		data, _ := json.Marshal(lockInfo)
+		data, _ := json.Marshal(lockInfo) // marshaling known types, error not possible // test setup, marshaling known types
 		if err := os.WriteFile(lockPath, data, 0644); err != nil {
 			t.Fatalf("failed to write lock file: %v", err)
 		}

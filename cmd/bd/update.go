@@ -94,9 +94,9 @@ create, update, show, or close operation).`,
 		if cmd.Flags().Changed("acceptance") || cmd.Flags().Changed("acceptance-criteria") {
 			var acceptanceCriteria string
 			if cmd.Flags().Changed("acceptance") {
-				acceptanceCriteria, _ = cmd.Flags().GetString("acceptance")
+				acceptanceCriteria, _ = cmd.Flags().GetString("acceptance") // flag was registered in init, error cannot occur
 			} else {
-				acceptanceCriteria, _ = cmd.Flags().GetString("acceptance-criteria")
+				acceptanceCriteria, _ = cmd.Flags().GetString("acceptance-criteria") // flag was registered in init, error cannot occur
 			}
 			updates["acceptance_criteria"] = acceptanceCriteria
 		}
@@ -497,7 +497,7 @@ create, update, show, or close operation).`,
 				}
 
 				// Run update hook
-				updatedIssue, _ := issueStore.GetIssue(ctx, result.ResolvedID)
+				updatedIssue, _ := issueStore.GetIssue(ctx, result.ResolvedID) // nil if not found
 				if updatedIssue != nil && hookRunner != nil {
 					hookRunner.Run(hooks.EventUpdate, updatedIssue)
 				}
@@ -657,7 +657,7 @@ create, update, show, or close operation).`,
 			}
 
 			// Run update hook
-			updatedIssue, _ := issueStore.GetIssue(ctx, result.ResolvedID)
+			updatedIssue, _ := issueStore.GetIssue(ctx, result.ResolvedID) // nil if not found
 			if updatedIssue != nil && hookRunner != nil {
 				hookRunner.Run(hooks.EventUpdate, updatedIssue)
 			}

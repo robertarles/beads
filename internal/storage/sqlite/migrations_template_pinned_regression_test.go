@@ -35,13 +35,13 @@ func TestRunMigrations_DoesNotResetPinnedOrTemplate(t *testing.T) {
 		t.Fatalf("CreateIssue: %v", err)
 	}
 
-	_ = s.Close()
+	_ = s.Close() // best-effort cleanup
 
 	s2, err := New(ctx, dbPath)
 	if err != nil {
 		t.Fatalf("New(reopen): %v", err)
 	}
-	defer func() { _ = s2.Close() }()
+	defer func() { _ = s2.Close() }() // best-effort cleanup
 
 	got, err := s2.GetIssue(ctx, issue.ID)
 	if err != nil {

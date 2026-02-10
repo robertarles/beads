@@ -129,7 +129,7 @@ func TestCheckDatabaseJSONLSync(t *testing.T) {
 			setup: func(t *testing.T, dir string) {
 				// Create database with one issue
 				dbPath := setupTestDatabase(t, dir)
-				db, _ := sql.Open("sqlite3", dbPath)
+				db, _ := sql.Open("sqlite3", dbPath) // example code, errors simplified
 				defer db.Close()
 				_, _ = db.Exec(`INSERT INTO issues (id, title, status) VALUES ('test-1', 'Test Issue', 'open')`)
 
@@ -147,7 +147,7 @@ func TestCheckDatabaseJSONLSync(t *testing.T) {
 			setup: func(t *testing.T, dir string) {
 				// Create database with one issue
 				dbPath := setupTestDatabase(t, dir)
-				db, _ := sql.Open("sqlite3", dbPath)
+				db, _ := sql.Open("sqlite3", dbPath) // example code, errors simplified
 				defer db.Close()
 				_, _ = db.Exec(`INSERT INTO issues (id, title, status) VALUES ('test-1', 'Test Issue', 'open')`)
 
@@ -167,7 +167,7 @@ func TestCheckDatabaseJSONLSync(t *testing.T) {
 			setup: func(t *testing.T, dir string) {
 				// Create database with 3 issues: 2 regular + 1 ephemeral wisp
 				dbPath := setupTestDatabase(t, dir)
-				db, _ := sql.Open("sqlite3", dbPath)
+				db, _ := sql.Open("sqlite3", dbPath) // example code, errors simplified
 				defer db.Close()
 				// Add config table for prefix check
 				_, _ = db.Exec(`CREATE TABLE IF NOT EXISTS config (key TEXT PRIMARY KEY, value TEXT)`)
@@ -196,7 +196,7 @@ func TestCheckDatabaseJSONLSync(t *testing.T) {
 			setup: func(t *testing.T, dir string) {
 				// Create database with issue status "closed"
 				dbPath := setupTestDatabase(t, dir)
-				db, _ := sql.Open("sqlite3", dbPath)
+				db, _ := sql.Open("sqlite3", dbPath) // example code, errors simplified
 				defer db.Close()
 				// Add config table for prefix check (required by CheckDatabaseJSONLSync)
 				_, _ = db.Exec(`CREATE TABLE IF NOT EXISTS config (key TEXT PRIMARY KEY, value TEXT)`)
@@ -523,7 +523,7 @@ func TestCheckDatabaseJSONLSync_EdgeCases(t *testing.T) {
 			name: "malformed JSONL with some valid entries",
 			setup: func(t *testing.T, dir string) {
 				dbPath := setupTestDatabase(t, dir)
-				db, _ := sql.Open("sqlite3", dbPath)
+				db, _ := sql.Open("sqlite3", dbPath) // example code, errors simplified
 				defer db.Close()
 
 				// Insert test issue into database
@@ -564,7 +564,7 @@ not json at all
 			name: "JSONL with entries missing id field",
 			setup: func(t *testing.T, dir string) {
 				dbPath := setupTestDatabase(t, dir)
-				db, _ := sql.Open("sqlite3", dbPath)
+				db, _ := sql.Open("sqlite3", dbPath) // example code, errors simplified
 				defer db.Close()
 				_, _ = db.Exec(`INSERT INTO issues (id, title, status) VALUES ('test-1', 'Test', 'open')`)
 

@@ -317,7 +317,7 @@ Subcommands:
 					detectedPrefix := utils.ExtractIssuePrefix(issues[0].ID)
 					if detectedPrefix != "" {
 						if err := store.SetConfig(ctx, "issue_prefix", detectedPrefix); err != nil {
-							_ = store.Close()
+							_ = store.Close() // best-effort cleanup
 							if jsonOutput {
 								outputJSON(map[string]interface{}{
 									"error":   "prefix_detection_failed",
@@ -336,7 +336,7 @@ Subcommands:
 			}
 
 			if err := store.SetMetadata(ctx, "bd_version", Version); err != nil {
-				_ = store.Close()
+				_ = store.Close() // best-effort cleanup
 				if jsonOutput {
 					outputJSON(map[string]interface{}{
 						"error":   "version_update_failed",
@@ -375,7 +375,7 @@ Subcommands:
 					}
 					fmt.Print("\nRemove these files? [y/N] ")
 					var response string
-					_, _ = fmt.Scanln(&response)
+					_, _ = fmt.Scanln(&response) // interactive input, empty on error
 					if strings.ToLower(response) != "y" && strings.ToLower(response) != "yes" {
 						fmt.Println("Cleanup canceled")
 						return
@@ -465,10 +465,10 @@ func handleDoltMetadataUpdate(cfg *configfile.Config, beadsDir string, dryRun bo
 		}
 		os.Exit(1)
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	// Check current version
-	currentVersion, _ := store.GetMetadata(ctx, "bd_version")
+	currentVersion, _ := store.GetMetadata(ctx, "bd_version") // returns "" if not set
 	if currentVersion == Version {
 		if jsonOutput {
 			outputJSON(map[string]interface{}{
@@ -673,7 +673,7 @@ func handleUpdateRepoID(dryRun bool, autoYes bool) {
 		}
 		os.Exit(1)
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	// Get old repo ID
 	ctx := rootCtx
@@ -718,7 +718,7 @@ func handleUpdateRepoID(dryRun bool, autoYes bool) {
 		fmt.Printf("New repo ID:     %s\n\n", truncateID(newRepoID, 8))
 		fmt.Printf("Continue? [y/N] ")
 		var response string
-		_, _ = fmt.Scanln(&response)
+		_, _ = fmt.Scanln(&response) // interactive input, empty on error
 		if strings.ToLower(response) != "y" && strings.ToLower(response) != "yes" {
 			fmt.Println("Canceled")
 			return
@@ -873,7 +873,7 @@ func handleInspect() {
 		}
 		os.Exit(1)
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	ctx := rootCtx
 
@@ -891,7 +891,7 @@ func handleInspect() {
 
 	// Get config
 	configMap := make(map[string]string)
-	prefix, _ := store.GetConfig(ctx, "issue_prefix")
+	prefix, _ := store.GetConfig(ctx, "issue_prefix") // returns "" if not set
 	if prefix != "" {
 		configMap["issue_prefix"] = prefix
 	}
@@ -1042,11 +1042,11 @@ func handleToSeparateBranch(branch string, dryRun bool) {
 		}
 		os.Exit(1)
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	// Get current sync.branch config
 	ctx := rootCtx
-	current, _ := store.GetConfig(ctx, "sync.branch")
+	current, _ := store.GetConfig(ctx, "sync.branch") // returns "" if not set
 
 	// Dry-run mode
 	if dryRun {

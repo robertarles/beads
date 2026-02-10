@@ -175,7 +175,7 @@ func TestBootstrapNoOpWhenDoltExists(t *testing.T) {
 		Title:  "New issue",
 		Status: types.StatusOpen,
 	}
-	data, _ := json.Marshal(issue)
+	data, _ := json.Marshal(issue) // marshaling known types, error not possible // test setup, marshaling known types
 	if err := os.WriteFile(jsonlPath, append(data, '\n'), 0644); err != nil {
 		t.Fatalf("failed to write JSONL: %v", err)
 	}
@@ -204,7 +204,7 @@ func TestBootstrapNoOpWhenDoltExists(t *testing.T) {
 	}
 	defer store.Close()
 
-	prefix, _ := store.GetConfig(ctx, "issue_prefix")
+	prefix, _ := store.GetConfig(ctx, "issue_prefix") // returns "" if not set
 	if prefix != "existing" {
 		t.Errorf("expected prefix 'existing', got '%s'", prefix)
 	}
@@ -254,7 +254,7 @@ func TestBootstrapGracefulDegradation(t *testing.T) {
 		Title:  "Good issue",
 		Status: types.StatusOpen,
 	}
-	goodData, _ := json.Marshal(goodIssue)
+	goodData, _ := json.Marshal(goodIssue) // marshaling known types, error not possible // test setup, marshaling known types
 
 	content := string(goodData) + "\n" +
 		"{invalid json}\n" +
@@ -306,7 +306,7 @@ func TestParseJSONLWithErrors(t *testing.T) {
 		Title:  "Good issue",
 		Status: types.StatusOpen,
 	}
-	goodData, _ := json.Marshal(goodIssue)
+	goodData, _ := json.Marshal(goodIssue) // marshaling known types, error not possible // test setup, marshaling known types
 
 	content := string(goodData) + "\n" +
 		"\n" + // Empty line - should be skipped
@@ -363,7 +363,7 @@ func TestBootstrapWithRoutesAndInteractions(t *testing.T) {
 		Title:  "Test issue",
 		Status: types.StatusOpen,
 	}
-	data, _ := json.Marshal(issue)
+	data, _ := json.Marshal(issue) // marshaling known types, error not possible // test setup, marshaling known types
 	if err := os.WriteFile(jsonlPath, append(data, '\n'), 0644); err != nil {
 		t.Fatalf("failed to write issues JSONL: %v", err)
 	}
@@ -456,7 +456,7 @@ func TestParseJSONLValidation(t *testing.T) {
 
 	t.Run("empty ID rejected", func(t *testing.T) {
 		issue := types.Issue{Title: "No ID", Status: types.StatusOpen, IssueType: types.TypeTask}
-		data, _ := json.Marshal(issue)
+		data, _ := json.Marshal(issue) // marshaling known types, error not possible // test setup, marshaling known types
 		if err := os.WriteFile(jsonlPath, append(data, '\n'), 0644); err != nil {
 			t.Fatal(err)
 		}
@@ -489,7 +489,7 @@ func TestParseJSONLValidation(t *testing.T) {
 			ID: "test-1", Title: "Open with closed_at", Status: types.StatusOpen,
 			IssueType: types.TypeTask, ClosedAt: &now,
 		}
-		data, _ := json.Marshal(issue)
+		data, _ := json.Marshal(issue) // marshaling known types, error not possible // test setup, marshaling known types
 		if err := os.WriteFile(jsonlPath, append(data, '\n'), 0644); err != nil {
 			t.Fatal(err)
 		}
@@ -510,7 +510,7 @@ func TestParseJSONLValidation(t *testing.T) {
 			ID: "test-1", Title: "Tombstone no deleted_at", Status: types.StatusTombstone,
 			IssueType: types.TypeTask,
 		}
-		data, _ := json.Marshal(issue)
+		data, _ := json.Marshal(issue) // marshaling known types, error not possible // test setup, marshaling known types
 		if err := os.WriteFile(jsonlPath, append(data, '\n'), 0644); err != nil {
 			t.Fatal(err)
 		}
@@ -531,7 +531,7 @@ func TestParseJSONLValidation(t *testing.T) {
 			ID: "test-1", Title: "Open with deleted_at", Status: types.StatusOpen,
 			IssueType: types.TypeTask, DeletedAt: &now,
 		}
-		data, _ := json.Marshal(issue)
+		data, _ := json.Marshal(issue) // marshaling known types, error not possible // test setup, marshaling known types
 		if err := os.WriteFile(jsonlPath, append(data, '\n'), 0644); err != nil {
 			t.Fatal(err)
 		}
@@ -567,8 +567,8 @@ func TestBootstrapTombstoneResurrectionProtection(t *testing.T) {
 		IssueType: types.TypeTask, DeletedAt: &now,
 	}
 
-	liveData, _ := json.Marshal(liveIssue)
-	tombData, _ := json.Marshal(tombstoneIssue)
+	liveData, _ := json.Marshal(liveIssue) // marshaling known types, error not possible // test setup, marshaling known types
+	tombData, _ := json.Marshal(tombstoneIssue) // marshaling known types, error not possible // test setup, marshaling known types
 
 	// Live version appears first, tombstone second (chronological order)
 	content := string(liveData) + "\n" + string(tombData) + "\n"
@@ -633,8 +633,8 @@ func TestBootstrapDuplicateExternalRef(t *testing.T) {
 		IssueType: types.TypeTask, ExternalRef: &extRef,
 	}
 
-	data1, _ := json.Marshal(issue1)
-	data2, _ := json.Marshal(issue2)
+	data1, _ := json.Marshal(issue1) // marshaling known types, error not possible // test setup, marshaling known types
+	data2, _ := json.Marshal(issue2) // marshaling known types, error not possible // test setup, marshaling known types
 	content := string(data1) + "\n" + string(data2) + "\n"
 
 	jsonlPath := filepath.Join(beadsDir, "issues.jsonl")
@@ -678,7 +678,7 @@ func TestBootstrapWithoutOptionalFiles(t *testing.T) {
 		Title:  "Test issue",
 		Status: types.StatusOpen,
 	}
-	data, _ := json.Marshal(issue)
+	data, _ := json.Marshal(issue) // marshaling known types, error not possible // test setup, marshaling known types
 	if err := os.WriteFile(jsonlPath, append(data, '\n'), 0644); err != nil {
 		t.Fatalf("failed to write issues JSONL: %v", err)
 	}

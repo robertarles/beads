@@ -177,7 +177,7 @@ func burnMultipleMolecules(ctx context.Context, moleculeIDs []string, dryRun, fo
 		fmt.Printf("\nContinue? [y/N] ")
 
 		var response string
-		_, _ = fmt.Scanln(&response)
+		_, _ = fmt.Scanln(&response) // interactive input, empty on error
 		if response != "y" && response != "Y" {
 			fmt.Println("Canceled.")
 			return
@@ -298,7 +298,7 @@ func burnWispMolecule(ctx context.Context, resolvedID string, dryRun, force bool
 		fmt.Printf("\nContinue? [y/N] ")
 
 		var response string
-		_, _ = fmt.Scanln(&response)
+		_, _ = fmt.Scanln(&response) // interactive input, empty on error
 		if response != "y" && response != "Y" {
 			fmt.Println("Canceled.")
 			return
@@ -379,7 +379,7 @@ func burnPersistentMolecule(ctx context.Context, resolvedID string, dryRun, forc
 		fmt.Printf("\nContinue? [y/N] ")
 
 		var response string
-		_, _ = fmt.Scanln(&response)
+		_, _ = fmt.Scanln(&response) // interactive input, empty on error
 		if response != "y" && response != "Y" {
 			fmt.Println("Canceled.")
 			return

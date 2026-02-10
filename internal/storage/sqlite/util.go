@@ -33,7 +33,7 @@ func (s *SQLiteStorage) withTx(ctx context.Context, fn func(*sql.Conn) error) er
 	if err != nil {
 		return wrapDBError("acquire connection", err)
 	}
-	defer func() { _ = conn.Close() }()
+	defer func() { _ = conn.Close() }() // best-effort cleanup
 
 	// Start IMMEDIATE transaction with retry logic for SQLITE_BUSY.
 	// BEGIN IMMEDIATE prevents deadlocks by acquiring the write lock upfront

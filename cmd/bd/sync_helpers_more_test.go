@@ -75,7 +75,7 @@ func TestGitCommitBeadsDir_PathspecDoesNotCommitOtherStagedFiles(t *testing.T) {
 	if err := os.WriteFile("other.txt", []byte("x\n"), 0o600); err != nil {
 		t.Fatalf("WriteFile other: %v", err)
 	}
-	_ = exec.Command("git", "add", "other.txt").Run()
+	_ = exec.Command("git", "add", "other.txt").Run() // test setup, errors not critical
 
 	// Create a beads sync file to commit.
 	issuesPath := filepath.Join(".beads", "issues.jsonl")

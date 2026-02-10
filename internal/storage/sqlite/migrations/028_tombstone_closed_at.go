@@ -108,7 +108,7 @@ func MigrateTombstoneClosedAt(db *sql.DB) error {
 		var notnull, pk int
 		var dflt interface{}
 		if err := rows.Scan(&cid, &name, &ctype, &notnull, &dflt, &pk); err != nil {
-			_ = rows.Close()
+			_ = rows.Close() // best-effort cleanup
 			return fmt.Errorf("failed to scan table info: %w", err)
 		}
 		if name == "created_by" {
@@ -116,7 +116,7 @@ func MigrateTombstoneClosedAt(db *sql.DB) error {
 			break
 		}
 	}
-	_ = rows.Close()
+	_ = rows.Close() // best-effort cleanup
 
 	var insertSQL string
 	if hasCreatedBy {

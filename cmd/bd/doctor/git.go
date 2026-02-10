@@ -727,12 +727,12 @@ func CheckSyncBranchHealth(path string) DoctorCheck {
 	mergeBase := strings.TrimSpace(string(mergeBaseOutput))
 	cmd = exec.Command("git", "rev-parse", syncBranch) // #nosec G204 - syncBranch from config
 	cmd.Dir = path
-	localHead, _ := cmd.Output()
+	localHead, _ := cmd.Output() // best-effort, ignore command errors
 	localHeadStr := strings.TrimSpace(string(localHead))
 
 	cmd = exec.Command("git", "rev-parse", remoteBranch) // #nosec G204 - remoteBranch from config
 	cmd.Dir = path
-	remoteHead, _ := cmd.Output()
+	remoteHead, _ := cmd.Output() // best-effort, ignore command errors
 	remoteHeadStr := strings.TrimSpace(string(remoteHead))
 
 	// If merge base equals local but not remote, local is behind
@@ -740,7 +740,7 @@ func CheckSyncBranchHealth(path string) DoctorCheck {
 		// Count how far behind
 		cmd = exec.Command("git", "rev-list", "--count", fmt.Sprintf("%s..%s", syncBranch, remoteBranch)) // #nosec G204 - branches from config
 		cmd.Dir = path
-		countOutput, _ := cmd.Output()
+		countOutput, _ := cmd.Output() // best-effort, ignore command errors
 		behindCount := strings.TrimSpace(string(countOutput))
 
 		return DoctorCheck{
@@ -971,7 +971,7 @@ func findOrphanedIssuesFromPath(path string) ([]OrphanIssue, error) {
 	if err != nil {
 		return []OrphanIssue{}, nil
 	}
-	defer func() { _ = provider.Close() }()
+	defer func() { _ = provider.Close() }() // best-effort cleanup
 
 	return FindOrphanedIssues(path, provider)
 }

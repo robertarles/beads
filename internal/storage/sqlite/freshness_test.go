@@ -447,7 +447,7 @@ func TestDatabaseFileReplacement(t *testing.T) {
 	t.Logf("Branch issue ID: %s", branchIssueID)
 
 	// Verify the issue exists in branch store before closing
-	verifyIssue, _ := branchStore.GetIssue(ctx, branchIssueID)
+	verifyIssue, _ := branchStore.GetIssue(ctx, branchIssueID) // test assertion handles nil
 	if verifyIssue == nil {
 		t.Fatalf("Branch issue not found in branch store before close!")
 	}
@@ -462,7 +462,7 @@ func TestDatabaseFileReplacement(t *testing.T) {
 		t.Fatalf("failed to open branch db for verification: %v", err)
 	}
 	verifyStore.SetConfig(ctx, "issue_prefix", "bd")
-	verifyIssue2, _ := verifyStore.GetIssue(ctx, branchIssueID)
+	verifyIssue2, _ := verifyStore.GetIssue(ctx, branchIssueID) // test assertion handles nil
 	if verifyIssue2 == nil {
 		t.Fatalf("Branch issue not found in branch db after close!")
 	}
@@ -527,13 +527,13 @@ func TestDatabaseFileReplacement(t *testing.T) {
 		t.Fatalf("failed to open replaced db: %v", err)
 	}
 	verifyAfterReplace.SetConfig(ctx, "issue_prefix", "bd")
-	verifyIssue3, _ := verifyAfterReplace.GetIssue(ctx, branchIssueID)
+	verifyIssue3, _ := verifyAfterReplace.GetIssue(ctx, branchIssueID) // test assertion handles nil
 	if verifyIssue3 != nil {
 		t.Logf("SUCCESS: Branch issue visible in replaced db via independent connection")
 	} else {
 		t.Logf("FAIL: Branch issue NOT visible in replaced db via independent connection")
 		// List all issues
-		issues, _ := verifyAfterReplace.SearchIssues(ctx, "", types.IssueFilter{})
+		issues, _ := verifyAfterReplace.SearchIssues(ctx, "", types.IssueFilter{}) // best-effort search, nil on error
 		for _, iss := range issues {
 			t.Logf("  Found issue: %s - %s", iss.ID, iss.Title)
 		}
@@ -576,7 +576,7 @@ func TestDatabaseFileReplacement(t *testing.T) {
 		debugStore, _ := New(ctx, dbPath1)
 		if debugStore != nil {
 			debugStore.SetConfig(ctx, "issue_prefix", "bd")
-			debugIssue, _ := debugStore.GetIssue(ctx, branchIssueID)
+			debugIssue, _ := debugStore.GetIssue(ctx, branchIssueID) // test assertion handles nil
 			if debugIssue != nil {
 				t.Logf("DEBUG: branch issue IS visible via fresh connection")
 			} else {
@@ -719,7 +719,7 @@ func TestBranchMergeNoErroneousDeletion(t *testing.T) {
 	daemonStore.SetConfig(ctx, "issue_prefix", "bd")
 
 	// Verify daemon sees only issue A initially
-	issuesBeforeMerge, _ := daemonStore.SearchIssues(ctx, "", types.IssueFilter{})
+	issuesBeforeMerge, _ := daemonStore.SearchIssues(ctx, "", types.IssueFilter{}) // best-effort search, nil on error
 	t.Logf("Daemon sees %d issue(s) before merge", len(issuesBeforeMerge))
 	if len(issuesBeforeMerge) != 1 {
 		t.Errorf("Expected 1 issue before merge, got %d", len(issuesBeforeMerge))
@@ -769,7 +769,7 @@ func TestBranchMergeNoErroneousDeletion(t *testing.T) {
 		t.Logf("Issue B visible after merge: %s", issueBResult.Title)
 	}
 
-	issuesAfterMerge, _ := daemonStore.SearchIssues(ctx, "", types.IssueFilter{})
+	issuesAfterMerge, _ := daemonStore.SearchIssues(ctx, "", types.IssueFilter{}) // best-effort search, nil on error
 	t.Logf("Daemon sees %d issue(s) after merge", len(issuesAfterMerge))
 
 	if len(issuesAfterMerge) != 2 {
@@ -785,8 +785,8 @@ func TestBranchMergeNoErroneousDeletion(t *testing.T) {
 	// Check if any deletions occurred (they shouldn't)
 	// Note: This test doesn't create a deletions.jsonl file, so we verify
 	// by ensuring both issues are still accessible
-	finalIssueA, _ := daemonStore.GetIssue(ctx, issueAID)
-	finalIssueB, _ := daemonStore.GetIssue(ctx, issueBID)
+	finalIssueA, _ := daemonStore.GetIssue(ctx, issueAID) // test assertion handles nil
+	finalIssueB, _ := daemonStore.GetIssue(ctx, issueBID) // test assertion handles nil
 
 	if finalIssueA == nil {
 		t.Error("ERRONEOUS DELETION: Issue A was deleted!")

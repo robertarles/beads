@@ -888,8 +888,8 @@ func TestGetMainRepoRoot(t *testing.T) {
 		}
 
 		// Resolve symlinks for comparison (e.g., /tmp -> /private/tmp on macOS)
-		expectedRoot, _ := filepath.EvalSymlinks(repoPath)
-		actualRoot, _ := filepath.EvalSymlinks(root)
+		expectedRoot, _ := filepath.EvalSymlinks(repoPath) // best-effort symlink resolution
+		actualRoot, _ := filepath.EvalSymlinks(root) // best-effort symlink resolution
 
 		if actualRoot != expectedRoot {
 			t.Errorf("GetMainRepoRoot() = %s, want %s", actualRoot, expectedRoot)
@@ -936,8 +936,8 @@ func TestGetMainRepoRoot(t *testing.T) {
 		}
 
 		// Resolve symlinks for comparison (e.g., /tmp -> /private/tmp on macOS)
-		expectedRoot, _ := filepath.EvalSymlinks(submodulePath)
-		actualRoot, _ := filepath.EvalSymlinks(root)
+		expectedRoot, _ := filepath.EvalSymlinks(submodulePath) // best-effort symlink resolution
+		actualRoot, _ := filepath.EvalSymlinks(root) // best-effort symlink resolution
 
 		if actualRoot != expectedRoot {
 			t.Errorf("GetMainRepoRoot() = %s, want %s (submodule repo)", actualRoot, expectedRoot)
@@ -974,8 +974,8 @@ func TestGetMainRepoRoot(t *testing.T) {
 		}
 
 		// Resolve symlinks for comparison
-		expectedRoot, _ := filepath.EvalSymlinks(repoPath)
-		actualRoot, _ := filepath.EvalSymlinks(root)
+		expectedRoot, _ := filepath.EvalSymlinks(repoPath) // best-effort symlink resolution
+		actualRoot, _ := filepath.EvalSymlinks(root) // best-effort symlink resolution
 
 		if actualRoot != expectedRoot {
 			t.Errorf("GetMainRepoRoot() = %s, want %s (main repo)", actualRoot, expectedRoot)
@@ -1013,8 +1013,8 @@ func TestGetMainRepoRoot(t *testing.T) {
 		}
 
 		// Resolve symlinks for comparison
-		expectedRoot, _ := filepath.EvalSymlinks(repoPath)
-		actualRoot, _ := filepath.EvalSymlinks(root)
+		expectedRoot, _ := filepath.EvalSymlinks(repoPath) // best-effort symlink resolution
+		actualRoot, _ := filepath.EvalSymlinks(root) // best-effort symlink resolution
 
 		if actualRoot != expectedRoot {
 			t.Errorf("GetMainRepoRoot() = %s, want %s (main repo, not worktree)", actualRoot, expectedRoot)
@@ -1058,8 +1058,8 @@ func TestGetMainRepoRoot(t *testing.T) {
 		}
 
 		// Resolve symlinks for comparison
-		expectedRoot, _ := filepath.EvalSymlinks(repoPath)
-		actualRoot, _ := filepath.EvalSymlinks(root)
+		expectedRoot, _ := filepath.EvalSymlinks(repoPath) // best-effort symlink resolution
+		actualRoot, _ := filepath.EvalSymlinks(root) // best-effort symlink resolution
 
 		if actualRoot != expectedRoot {
 			t.Errorf("GetMainRepoRoot() = %s, want %s (main repo)", actualRoot, expectedRoot)
@@ -1196,7 +1196,7 @@ func TestCreateBeadsWorktree_MainRepoSparseCheckoutDisabled(t *testing.T) {
 	// Verify sparse checkout is not enabled before worktree creation
 	cmd := exec.Command("git", "config", "--get", "core.sparseCheckout")
 	cmd.Dir = repoPath
-	output, _ := cmd.Output()
+	output, _ := cmd.Output() // test helper, errors checked elsewhere
 	initialValue := strings.TrimSpace(string(output))
 	// Empty or "false" are both acceptable initial states
 	if initialValue == "true" {

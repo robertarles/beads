@@ -64,7 +64,7 @@ func loadSyncStateUnlocked(beadsDir string) SyncState {
 
 	// Clear stale state (older than 24h with no recent failures)
 	if !state.LastFailure.IsZero() && time.Since(state.LastFailure) > staleStateThreshold {
-		_ = os.Remove(statePath)
+		_ = os.Remove(statePath) // best-effort cleanup
 		return SyncState{}
 	}
 
@@ -85,7 +85,7 @@ func saveSyncStateUnlocked(beadsDir string, state SyncState) error {
 
 	// If state is empty/reset, remove the file
 	if state.FailureCount == 0 && !state.NeedsManualSync {
-		_ = os.Remove(statePath)
+		_ = os.Remove(statePath) // best-effort cleanup
 		return nil
 	}
 

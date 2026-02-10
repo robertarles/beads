@@ -569,8 +569,8 @@ func TestDualPathParity(t *testing.T) {
 		}
 
 		// Compare persisted values
-		directRetrieved, _ := store.GetIssue(ctx, directIssue.ID)
-		daemonRetrieved, _ := store.GetIssue(ctx, daemonIssue.ID)
+		directRetrieved, _ := store.GetIssue(ctx, directIssue.ID) // test assertion handles nil
+		daemonRetrieved, _ := store.GetIssue(ctx, daemonIssue.ID) // test assertion handles nil
 
 		if !compareTimePtr(t, "DueAt", directRetrieved.DueAt, daemonRetrieved.DueAt) {
 			t.Error("PARITY FAILURE: DueAt differs between direct and daemon mode")
@@ -607,8 +607,8 @@ func TestDualPathParity(t *testing.T) {
 		}
 
 		// Compare persisted values
-		directRetrieved, _ := store.GetIssue(ctx, directIssue.ID)
-		daemonRetrieved, _ := store.GetIssue(ctx, daemonIssue.ID)
+		directRetrieved, _ := store.GetIssue(ctx, directIssue.ID) // test assertion handles nil
+		daemonRetrieved, _ := store.GetIssue(ctx, daemonIssue.ID) // test assertion handles nil
 
 		if !compareTimePtr(t, "DeferUntil", directRetrieved.DeferUntil, daemonRetrieved.DeferUntil) {
 			t.Error("PARITY FAILURE: DeferUntil differs between direct and daemon mode")
@@ -639,7 +639,7 @@ func TestDualPathParity(t *testing.T) {
 		}
 
 		// Verify persisted
-		retrieved, _ := store.GetIssue(ctx, issue.ID)
+		retrieved, _ := store.GetIssue(ctx, issue.ID) // test assertion handles nil
 		if retrieved.DueAt == nil {
 			t.Error("PARITY FAILURE: DueAt not set after daemon update")
 		} else if retrieved.DueAt.Sub(dueAt).Abs() > time.Second {
@@ -671,7 +671,7 @@ func TestDualPathParity(t *testing.T) {
 		}
 
 		// Verify persisted
-		retrieved, _ := store.GetIssue(ctx, issue.ID)
+		retrieved, _ := store.GetIssue(ctx, issue.ID) // test assertion handles nil
 		if retrieved.DeferUntil == nil {
 			t.Error("PARITY FAILURE: DeferUntil not set after daemon update")
 		} else if retrieved.DeferUntil.Sub(deferUntil).Abs() > time.Second {

@@ -47,7 +47,7 @@ func issueIDCompletion(cmd *cobra.Command, args []string, toComplete string) ([]
 			// If we can't open database, return empty completion
 			return nil, cobra.ShellCompDirectiveNoFileComp
 		}
-		defer func() { _ = currentStore.Close() }()
+		defer func() { _ = currentStore.Close() }() // best-effort cleanup
 	}
 
 	// Use SearchIssues with IDPrefix filter to efficiently query matching issues

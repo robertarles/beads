@@ -1228,7 +1228,7 @@ func TestSpawnVariableAggregation(t *testing.T) {
 	}
 
 	// Bond attachment with same variables
-	spawnedMol, _ := s.GetIssue(ctx, spawnResult.NewEpicID)
+	spawnedMol, _ := s.GetIssue(ctx, spawnResult.NewEpicID) // test assertion handles nil
 	bondResult, err := bondProtoMol(ctx, s, attachProto, spawnedMol, types.BondTypeSequential, vars, "", "test", false, false)
 	if err != nil {
 		t.Fatalf("Failed to bond: %v", err)
@@ -1714,7 +1714,7 @@ func TestAdvanceToNextStep(t *testing.T) {
 	}
 
 	// Verify step2 is still open
-	step2Updated, _ := s.GetIssue(ctx, step2.ID)
+	step2Updated, _ := s.GetIssue(ctx, step2.ID) // test assertion handles nil
 	if step2Updated.Status != types.StatusOpen {
 		t.Errorf("Step2 status = %v, want open (no auto-claim)", step2Updated.Status)
 	}
@@ -1729,7 +1729,7 @@ func TestAdvanceToNextStep(t *testing.T) {
 	}
 
 	// Verify step2 is now in_progress
-	step2Updated, _ = s.GetIssue(ctx, step2.ID)
+	step2Updated, _ = s.GetIssue(ctx, step2.ID) // nil if not found
 	if step2Updated.Status != types.StatusInProgress {
 		t.Errorf("Step2 status = %v, want in_progress (auto-claim)", step2Updated.Status)
 	}

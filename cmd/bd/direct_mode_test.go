@@ -50,7 +50,7 @@ func TestFallbackToDirectModeEnablesFlush(t *testing.T) {
 		}
 
 		if store != nil && store != origStore {
-			_ = store.Close()
+			_ = store.Close() // best-effort cleanup
 		}
 		storeMutex.Lock()
 		store = origStore
@@ -191,7 +191,7 @@ func TestImportFromJSONLInlineAfterDaemonDisconnect(t *testing.T) {
 	defer func() {
 		rootCtx = oldRootCtx
 		if store != nil && store != origStore {
-			_ = store.Close()
+			_ = store.Close() // best-effort cleanup
 		}
 		storeMutex.Lock()
 		store = origStore
@@ -252,7 +252,7 @@ func TestImportFromJSONLInlineAfterDaemonDisconnect(t *testing.T) {
 		t.Fatalf("failed to create JSONL: %v", err)
 	}
 	for _, iss := range issues {
-		data, _ := json.Marshal(iss)
+		data, _ := json.Marshal(iss) // marshaling known types, error not possible // test setup, marshaling known types
 		f.Write(data)
 		f.Write([]byte("\n"))
 	}
@@ -274,7 +274,7 @@ func TestImportFromJSONLInlineAfterDaemonDisconnect(t *testing.T) {
 
 	// Simulate what sync.go does: close daemon but DON'T initialize store
 	// This is the bug scenario
-	_ = daemonClient.Close()
+	_ = daemonClient.Close() // best-effort cleanup
 	daemonClient = nil
 
 	// BUG: Without ensureStoreActive(), importFromJSONLInline fails

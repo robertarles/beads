@@ -97,7 +97,7 @@ Examples:
 
 		// If no args and no flags, show help
 		if len(args) == 0 && blocksID == "" {
-			_ = cmd.Help()
+			_ = cmd.Help() // help output error not actionable
 			return
 		}
 
@@ -201,7 +201,7 @@ Examples:
 		}
 
 		// If we have an arg but no --blocks flag, show help
-		_ = cmd.Help()
+		_ = cmd.Help() // help output error not actionable
 	},
 }
 
@@ -475,7 +475,7 @@ Examples:
 				if err != nil {
 					FatalErrorRespectJSON("failed to open database: %v", err)
 				}
-				defer func() { _ = store.Close() }()
+				defer func() { _ = store.Close() }() // best-effort cleanup
 			}
 			depStore = store
 		}
@@ -706,7 +706,7 @@ Examples:
 			if err != nil {
 				FatalErrorRespectJSON("failed to open database: %v", err)
 			}
-			defer func() { _ = store.Close() }()
+			defer func() { _ = store.Close() }() // best-effort cleanup
 		}
 
 		showAllPaths, _ := cmd.Flags().GetBool("show-all-paths")
@@ -818,7 +818,7 @@ var depCyclesCmd = &cobra.Command{
 			if err != nil {
 				FatalErrorRespectJSON("failed to open database: %v", err)
 			}
-			defer func() { _ = store.Close() }()
+			defer func() { _ = store.Close() }() // best-effort cleanup
 		}
 
 		ctx := rootCtx
@@ -1270,7 +1270,7 @@ func resolveExternalDependencies(ctx context.Context, depStore storage.Storage, 
 
 		// Fetch the issue from the target rig
 		issue, err := targetStore.GetIssue(ctx, targetID)
-		_ = targetStore.Close()
+		_ = targetStore.Close() // best-effort cleanup
 		if err != nil || issue == nil {
 			if isVerbose() {
 				fmt.Fprintf(os.Stderr, "[external-deps] issue not found: %s (err=%v)\n", targetID, err)

@@ -29,7 +29,7 @@ func runContributorWizard(ctx context.Context, store storage.Storage) error {
 		fmt.Println()
 		fmt.Print("Continue anyway? [y/N]: ")
 		reader := bufio.NewReader(os.Stdin)
-		response, _ := reader.ReadString('\n')
+		response, _ := reader.ReadString('\n') // interactive input, handle empty on error
 		response = strings.TrimSpace(strings.ToLower(response))
 
 		if response != "y" && response != "yes" {
@@ -55,7 +55,7 @@ func runContributorWizard(ctx context.Context, store storage.Storage) error {
 		// Ask if they want to continue anyway
 		fmt.Print("Continue with contributor setup? [y/N]: ")
 		reader := bufio.NewReader(os.Stdin)
-		response, _ := reader.ReadString('\n')
+		response, _ := reader.ReadString('\n') // interactive input, handle empty on error
 		response = strings.TrimSpace(strings.ToLower(response))
 
 		if response != "y" && response != "yes" {
@@ -75,7 +75,7 @@ func runContributorWizard(ctx context.Context, store storage.Storage) error {
 		fmt.Println()
 		fmt.Print("Do you want to use a separate planning repo anyway? [Y/n]: ")
 		reader := bufio.NewReader(os.Stdin)
-		response, _ := reader.ReadString('\n')
+		response, _ := reader.ReadString('\n') // interactive input, handle empty on error
 		response = strings.TrimSpace(strings.ToLower(response))
 
 		if response == "n" || response == "no" {
@@ -107,7 +107,7 @@ func runContributorWizard(ctx context.Context, store storage.Storage) error {
 	fmt.Print("Planning repo path [press Enter for default]: ")
 
 	reader := bufio.NewReader(os.Stdin)
-	planningPath, _ := reader.ReadString('\n')
+	planningPath, _ := reader.ReadString('\n') // interactive input, handle empty on error
 	planningPath = strings.TrimSpace(planningPath)
 
 	if planningPath == "" {
@@ -173,11 +173,11 @@ Created by: bd init --contributor
 		// Initial commit in planning repo
 		cmd = exec.Command("git", "add", ".")
 		cmd.Dir = planningPath
-		_ = cmd.Run()
+		_ = cmd.Run() // best-effort, ignore errors
 
 		cmd = exec.Command("git", "commit", "-m", "Initial commit: beads planning repository")
 		cmd.Dir = planningPath
-		_ = cmd.Run()
+		_ = cmd.Run() // best-effort, ignore errors
 
 		fmt.Printf("%s Planning repository created\n", ui.RenderPass("✓"))
 	} else {

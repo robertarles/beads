@@ -70,7 +70,7 @@ func CheckDatabaseVersion(path string, cliVersion string) DoctorCheck {
 				Fix:     "Run 'bd doctor --fix' to recover from JSONL backup, or manually: rm -rf .beads/dolt && bd init --backend dolt",
 			}
 		}
-		defer func() { _ = store.Close() }()
+		defer func() { _ = store.Close() }() // best-effort cleanup
 
 		dbVersion, err := store.GetMetadata(ctx, "bd_version")
 		if err != nil {
@@ -239,7 +239,7 @@ func CheckSchemaCompatibility(path string) DoctorCheck {
 				Detail:  fmt.Sprintf("Storage: Dolt\n\nError: %v", err),
 			}
 		}
-		defer func() { _ = store.Close() }()
+		defer func() { _ = store.Close() }() // best-effort cleanup
 
 		// Exercise core tables/views.
 		if _, err := store.GetStatistics(ctx); err != nil {
@@ -371,7 +371,7 @@ func CheckDatabaseIntegrity(path string) DoctorCheck {
 				Fix:     "Run 'bd doctor --fix' to recover from JSONL backup, or manually: rm -rf .beads/dolt && bd init --backend dolt",
 			}
 		}
-		defer func() { _ = store.Close() }()
+		defer func() { _ = store.Close() }() // best-effort cleanup
 
 		// Minimal checks: metadata + statistics. If these work, the store is at least readable.
 		if _, err := store.GetMetadata(ctx, "bd_version"); err != nil {
@@ -951,7 +951,7 @@ func CountJSONLIssues(jsonlPath string) (int, map[string]int, error) {
 // countIssuesInJSONLFile counts the number of valid issues in a JSONL file
 // This is a wrapper around CountJSONLIssues that returns only the count
 func countIssuesInJSONLFile(jsonlPath string) int {
-	count, _, _ := CountJSONLIssues(jsonlPath)
+	count, _, _ := CountJSONLIssues(jsonlPath) // best-effort count, 0 on error
 	return count
 }
 

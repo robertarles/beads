@@ -159,18 +159,18 @@ func compareIssues(existing, incoming *types.Issue) []string {
 // not just metadata. See docs/HASH_ID_DESIGN.md for more on content hash philosophy.
 func hashIssueContent(issue *types.Issue) string {
 	h := sha256.New()
-	_, _ = fmt.Fprintf(h, "title:%s\n", issue.Title)
-	_, _ = fmt.Fprintf(h, "description:%s\n", issue.Description)
-	_, _ = fmt.Fprintf(h, "status:%s\n", issue.Status)
-	_, _ = fmt.Fprintf(h, "priority:%d\n", issue.Priority)
-	_, _ = fmt.Fprintf(h, "type:%s\n", issue.IssueType)
-	_, _ = fmt.Fprintf(h, "assignee:%s\n", issue.Assignee)
-	_, _ = fmt.Fprintf(h, "design:%s\n", issue.Design)
-	_, _ = fmt.Fprintf(h, "acceptance:%s\n", issue.AcceptanceCriteria)
-	_, _ = fmt.Fprintf(h, "notes:%s\n", issue.Notes)
+	_, _ = fmt.Fprintf(h, "title:%s\n", issue.Title) // output error not actionable
+	_, _ = fmt.Fprintf(h, "description:%s\n", issue.Description) // output error not actionable
+	_, _ = fmt.Fprintf(h, "status:%s\n", issue.Status) // output error not actionable
+	_, _ = fmt.Fprintf(h, "priority:%d\n", issue.Priority) // output error not actionable
+	_, _ = fmt.Fprintf(h, "type:%s\n", issue.IssueType) // output error not actionable
+	_, _ = fmt.Fprintf(h, "assignee:%s\n", issue.Assignee) // output error not actionable
+	_, _ = fmt.Fprintf(h, "design:%s\n", issue.Design) // output error not actionable
+	_, _ = fmt.Fprintf(h, "acceptance:%s\n", issue.AcceptanceCriteria) // output error not actionable
+	_, _ = fmt.Fprintf(h, "notes:%s\n", issue.Notes) // output error not actionable
 	// external_ref is included in content hash (see comment above)
 	if issue.ExternalRef != nil {
-		_, _ = fmt.Fprintf(h, "external_ref:%s\n", *issue.ExternalRef)
+		_, _ = fmt.Fprintf(h, "external_ref:%s\n", *issue.ExternalRef) // output error not actionable
 	}
 	return fmt.Sprintf("%x", h.Sum(nil))
 }

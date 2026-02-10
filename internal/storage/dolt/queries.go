@@ -342,12 +342,12 @@ func (s *DoltStore) GetBlockedIssues(ctx context.Context, filter types.WorkFilte
 	for activeRows.Next() {
 		var id string
 		if err := activeRows.Scan(&id); err != nil {
-			_ = activeRows.Close()
+			_ = activeRows.Close() // best-effort cleanup
 			return nil, err
 		}
 		activeIDs[id] = true
 	}
-	_ = activeRows.Close()
+	_ = activeRows.Close() // best-effort cleanup
 	if err := activeRows.Err(); err != nil {
 		return nil, err
 	}
@@ -367,14 +367,14 @@ func (s *DoltStore) GetBlockedIssues(ctx context.Context, filter types.WorkFilte
 	for depRows.Next() {
 		var issueID, blockerID string
 		if err := depRows.Scan(&issueID, &blockerID); err != nil {
-			_ = depRows.Close()
+			_ = depRows.Close() // best-effort cleanup
 			return nil, err
 		}
 		if activeIDs[issueID] && activeIDs[blockerID] {
 			blockerMap[issueID] = append(blockerMap[issueID], blockerID)
 		}
 	}
-	_ = depRows.Close()
+	_ = depRows.Close() // best-effort cleanup
 	if err := depRows.Err(); err != nil {
 		return nil, err
 	}

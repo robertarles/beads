@@ -84,7 +84,7 @@ func runBDInProcess(t *testing.T, dir string, args ...string) string {
 	// Save original state
 	oldStdout := os.Stdout
 	oldStderr := os.Stderr
-	oldDir, _ := os.Getwd()
+	oldDir, _ := os.Getwd() // best-effort, unlikely to fail
 	oldArgs := os.Args
 
 	// Change to test directory
@@ -93,8 +93,8 @@ func runBDInProcess(t *testing.T, dir string, args ...string) string {
 	}
 
 	// Capture stdout/stderr
-	rOut, wOut, _ := os.Pipe()
-	rErr, wErr, _ := os.Pipe()
+	rOut, wOut, _ := os.Pipe() // test setup, pipe creation unlikely to fail
+	rErr, wErr, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stdout = wOut
 	os.Stderr = wErr
 
@@ -665,7 +665,7 @@ func init() {
 	existingBD := filepath.Join(repoRoot, bdBinary)
 	if _, err := os.Stat(existingBD); err == nil {
 		// Use existing binary
-		testBD, _ = filepath.Abs(existingBD)
+		testBD, _ = filepath.Abs(existingBD) // best-effort path resolution
 		return
 	}
 
@@ -853,15 +853,15 @@ func runBDInProcessAllowError(t *testing.T, dir string, args ...string) (string,
 
 	oldStdout := os.Stdout
 	oldStderr := os.Stderr
-	oldDir, _ := os.Getwd()
+	oldDir, _ := os.Getwd() // best-effort, unlikely to fail
 	oldArgs := os.Args
 
 	if err := os.Chdir(dir); err != nil {
 		t.Fatalf("Failed to chdir to %s: %v", dir, err)
 	}
 
-	rOut, wOut, _ := os.Pipe()
-	rErr, wErr, _ := os.Pipe()
+	rOut, wOut, _ := os.Pipe() // test setup, pipe creation unlikely to fail
+	rErr, wErr, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stdout = wOut
 	os.Stderr = wErr
 

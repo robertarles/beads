@@ -33,11 +33,11 @@ func setupGitRepo(t *testing.T) string {
 	// Configure git user for commits
 	cmd = exec.Command("git", "config", "user.email", "test@test.com")
 	cmd.Dir = dir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	cmd = exec.Command("git", "config", "user.name", "Test User")
 	cmd.Dir = dir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	return dir
 }
@@ -274,11 +274,11 @@ func setupGitRepoInDir(t *testing.T, dir string) {
 	// Configure git user for commits
 	cmd = exec.Command("git", "config", "user.email", "test@test.com")
 	cmd.Dir = dir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	cmd = exec.Command("git", "config", "user.name", "Test User")
 	cmd.Dir = dir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 }
 
 // Edge case tests for CheckGitHooks
@@ -485,10 +485,10 @@ func TestCheckSyncBranchConfig_MultipleRemotes(t *testing.T) {
 				// add multiple remotes
 				cmd := exec.Command("git", "remote", "add", "origin", "https://github.com/user/repo.git")
 				cmd.Dir = dir
-				_ = cmd.Run()
+				_ = cmd.Run() // test setup, errors not critical
 				cmd = exec.Command("git", "remote", "add", "upstream", "https://github.com/upstream/repo.git")
 				cmd.Dir = dir
-				_ = cmd.Run()
+				_ = cmd.Run() // test setup, errors not critical
 			},
 			expectedStatus: "warning",
 			expectInMsg:    "not configured",
@@ -500,10 +500,10 @@ func TestCheckSyncBranchConfig_MultipleRemotes(t *testing.T) {
 				// add multiple remotes
 				cmd := exec.Command("git", "remote", "add", "origin", "https://github.com/user/repo.git")
 				cmd.Dir = dir
-				_ = cmd.Run()
+				_ = cmd.Run() // test setup, errors not critical
 				cmd = exec.Command("git", "remote", "add", "upstream", "https://github.com/upstream/repo.git")
 				cmd.Dir = dir
-				_ = cmd.Run()
+				_ = cmd.Run() // test setup, errors not critical
 				// use env var to configure sync-branch since config package reads from cwd
 				os.Setenv("BEADS_SYNC_BRANCH", "beads-sync")
 				t.Cleanup(func() { os.Unsetenv("BEADS_SYNC_BRANCH") })
@@ -526,7 +526,7 @@ func TestCheckSyncBranchConfig_MultipleRemotes(t *testing.T) {
 				// create and checkout sync branch
 				cmd := exec.Command("git", "checkout", "-b", "beads-sync")
 				cmd.Dir = dir
-				_ = cmd.Run()
+				_ = cmd.Run() // test setup, errors not critical
 				// use env var to configure sync-branch
 				os.Setenv("BEADS_SYNC_BRANCH", "beads-sync")
 				t.Cleanup(func() { os.Unsetenv("BEADS_SYNC_BRANCH") })
@@ -571,14 +571,14 @@ func TestCheckSyncBranchHealth_DetachedHEAD(t *testing.T) {
 				os.WriteFile(testFile, []byte("test"), 0644)
 				cmd := exec.Command("git", "add", "test.txt")
 				cmd.Dir = dir
-				_ = cmd.Run()
+				_ = cmd.Run() // test setup, errors not critical
 				cmd = exec.Command("git", "commit", "-m", "initial commit")
 				cmd.Dir = dir
-				_ = cmd.Run()
+				_ = cmd.Run() // test setup, errors not critical
 				// detach HEAD
 				cmd = exec.Command("git", "checkout", "HEAD^0")
 				cmd.Dir = dir
-				_ = cmd.Run()
+				_ = cmd.Run() // test setup, errors not critical
 			},
 			expectedStatus: "ok",
 			expectInMsg:    "no sync branch configured",
@@ -592,18 +592,18 @@ func TestCheckSyncBranchHealth_DetachedHEAD(t *testing.T) {
 				os.WriteFile(testFile, []byte("test"), 0644)
 				cmd := exec.Command("git", "add", "test.txt")
 				cmd.Dir = dir
-				_ = cmd.Run()
+				_ = cmd.Run() // test setup, errors not critical
 				cmd = exec.Command("git", "commit", "-m", "initial commit")
 				cmd.Dir = dir
-				_ = cmd.Run()
+				_ = cmd.Run() // test setup, errors not critical
 				// create sync branch
 				cmd = exec.Command("git", "branch", "beads-sync")
 				cmd.Dir = dir
-				_ = cmd.Run()
+				_ = cmd.Run() // test setup, errors not critical
 				// detach HEAD
 				cmd = exec.Command("git", "checkout", "HEAD^0")
 				cmd.Dir = dir
-				_ = cmd.Run()
+				_ = cmd.Run() // test setup, errors not critical
 				// use env var to configure sync-branch
 				os.Setenv("BEADS_SYNC_BRANCH", "beads-sync")
 				t.Cleanup(func() { os.Unsetenv("BEADS_SYNC_BRANCH") })
@@ -620,14 +620,14 @@ func TestCheckSyncBranchHealth_DetachedHEAD(t *testing.T) {
 				os.WriteFile(testFile, []byte("test"), 0644)
 				cmd := exec.Command("git", "add", "test.txt")
 				cmd.Dir = dir
-				_ = cmd.Run()
+				_ = cmd.Run() // test setup, errors not critical
 				cmd = exec.Command("git", "commit", "-m", "initial commit")
 				cmd.Dir = dir
-				_ = cmd.Run()
+				_ = cmd.Run() // test setup, errors not critical
 				// create sync branch
 				cmd = exec.Command("git", "branch", "beads-sync")
 				cmd.Dir = dir
-				_ = cmd.Run()
+				_ = cmd.Run() // test setup, errors not critical
 				// use env var to configure sync-branch
 				os.Setenv("BEADS_SYNC_BRANCH", "beads-sync")
 				t.Cleanup(func() { os.Unsetenv("BEADS_SYNC_BRANCH") })
@@ -760,7 +760,7 @@ func TestCheckSyncBranchHookCompatibility_OldHookFormat(t *testing.T) {
 				// configure core.hooksPath (ignored by this check)
 				cmd := exec.Command("git", "config", "core.hooksPath", ".git-hooks")
 				cmd.Dir = dir
-				_ = cmd.Run()
+				_ = cmd.Run() // test setup, errors not critical
 				// use env var to configure sync-branch
 				os.Setenv("BEADS_SYNC_BRANCH", "beads-sync")
 				t.Cleanup(func() { os.Unsetenv("BEADS_SYNC_BRANCH") })
@@ -916,10 +916,10 @@ func TestCheckOrphanedIssues_OpenIssueNotInCommits(t *testing.T) {
 	}
 	cmd := exec.Command("git", "add", "README.md")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "commit", "-m", "Initial commit")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	check := CheckOrphanedIssues(tmpDir)
 
@@ -966,10 +966,10 @@ func TestCheckOrphanedIssues_OpenIssueInCommit(t *testing.T) {
 	}
 	cmd := exec.Command("git", "add", "README.md")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "commit", "-m", "Fix bug (bd-abc)")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	check := CheckOrphanedIssues(tmpDir)
 
@@ -1019,10 +1019,10 @@ func TestCheckOrphanedIssues_ClosedIssueInCommit(t *testing.T) {
 	}
 	cmd := exec.Command("git", "add", "README.md")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "commit", "-m", "Fix bug (bd-abc)")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	check := CheckOrphanedIssues(tmpDir)
 
@@ -1067,10 +1067,10 @@ func TestCheckOrphanedIssues_HierarchicalIssueID(t *testing.T) {
 	}
 	cmd := exec.Command("git", "add", "README.md")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "commit", "-m", "Fix subtask (bd-abc.1)")
 	cmd.Dir = tmpDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	check := CheckOrphanedIssues(tmpDir)
 

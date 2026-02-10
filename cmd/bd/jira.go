@@ -263,9 +263,9 @@ var jiraStatusCmd = &cobra.Command{
 		}
 
 		// Get configuration
-		jiraURL, _ := store.GetConfig(ctx, "jira.url")
-		jiraProject, _ := store.GetConfig(ctx, "jira.project")
-		lastSync, _ := store.GetConfig(ctx, "jira.last_sync")
+		jiraURL, _ := store.GetConfig(ctx, "jira.url") // returns "" if not set
+		jiraProject, _ := store.GetConfig(ctx, "jira.project") // returns "" if not set
+		lastSync, _ := store.GetConfig(ctx, "jira.last_sync") // returns "" if not set
 
 		// Check if configured
 		configured := jiraURL != "" && jiraProject != ""
@@ -359,8 +359,8 @@ func validateJiraConfig() error {
 	}
 
 	ctx := rootCtx
-	jiraURL, _ := store.GetConfig(ctx, "jira.url")
-	jiraProject, _ := store.GetConfig(ctx, "jira.project")
+	jiraURL, _ := store.GetConfig(ctx, "jira.url") // returns "" if not set
+	jiraProject, _ := store.GetConfig(ctx, "jira.project") // returns "" if not set
 
 	if jiraURL == "" {
 		return fmt.Errorf("jira.url not configured\nRun: bd config set jira.url \"https://company.atlassian.net\"")
@@ -370,7 +370,7 @@ func validateJiraConfig() error {
 	}
 
 	// Check for API token (from config or env)
-	apiToken, _ := store.GetConfig(ctx, "jira.api_token")
+	apiToken, _ := store.GetConfig(ctx, "jira.api_token") // returns "" if not set
 	if apiToken == "" && os.Getenv("JIRA_API_TOKEN") == "" {
 		return fmt.Errorf("Jira API token not configured\nRun: bd config set jira.api_token \"YOUR_TOKEN\"\nOr: export JIRA_API_TOKEN=YOUR_TOKEN")
 	}
@@ -402,7 +402,7 @@ func doPullFromJira(ctx context.Context, dryRun bool, state string) (*PullStats,
 	}
 
 	// Add pull prefix if configured
-	pullPrefix, _ := store.GetConfig(ctx, "jira.pull_prefix")
+	pullPrefix, _ := store.GetConfig(ctx, "jira.pull_prefix") // returns "" if not set
 	if pullPrefix != "" {
 		args = append(args, "--prefix", pullPrefix)
 	}
@@ -493,7 +493,7 @@ func doPushToJira(ctx context.Context, dryRun bool, createOnly bool, updateRefs 
 	}
 
 	// Filter by push prefix if configured
-	pushPrefixConfig, _ := store.GetConfig(ctx, "jira.push_prefix")
+	pushPrefixConfig, _ := store.GetConfig(ctx, "jira.push_prefix") // returns "" if not set
 	if pushPrefixConfig != "" {
 		var filteredIssues []*types.Issue
 
@@ -656,7 +656,7 @@ type JiraConflict struct {
 // only reporting a conflict if both sides have been modified since the last sync.
 func detectJiraConflicts(ctx context.Context) ([]JiraConflict, error) {
 	// Get last sync time
-	lastSyncStr, _ := store.GetConfig(ctx, "jira.last_sync")
+	lastSyncStr, _ := store.GetConfig(ctx, "jira.last_sync") // returns "" if not set
 	if lastSyncStr == "" {
 		// No previous sync - no conflicts possible
 		return nil, nil
@@ -674,7 +674,7 @@ func detectJiraConflicts(ctx context.Context) ([]JiraConflict, error) {
 	}
 
 	// Get jiraURL for validation
-	jiraURL, _ := store.GetConfig(ctx, "jira.url")
+	jiraURL, _ := store.GetConfig(ctx, "jira.url") // returns "" if not set
 
 	var conflicts []JiraConflict
 	for _, issue := range allIssues {
@@ -836,14 +836,14 @@ func fetchJiraIssueTimestamp(ctx context.Context, jiraKey string) (time.Time, er
 	var zero time.Time
 
 	// Get Jira configuration
-	jiraURL, _ := store.GetConfig(ctx, "jira.url")
+	jiraURL, _ := store.GetConfig(ctx, "jira.url") // returns "" if not set
 	if jiraURL == "" {
 		return zero, fmt.Errorf("jira.url not configured")
 	}
 	jiraURL = strings.TrimSuffix(jiraURL, "/")
 
 	// Get credentials (config takes precedence over env)
-	apiToken, _ := store.GetConfig(ctx, "jira.api_token")
+	apiToken, _ := store.GetConfig(ctx, "jira.api_token") // returns "" if not set
 	if apiToken == "" {
 		apiToken = os.Getenv("JIRA_API_TOKEN")
 	}
@@ -851,7 +851,7 @@ func fetchJiraIssueTimestamp(ctx context.Context, jiraKey string) (time.Time, er
 		return zero, fmt.Errorf("jira API token not configured")
 	}
 
-	username, _ := store.GetConfig(ctx, "jira.username")
+	username, _ := store.GetConfig(ctx, "jira.username") // returns "" if not set
 	if username == "" {
 		username = os.Getenv("JIRA_USERNAME")
 	}
@@ -890,7 +890,7 @@ func fetchJiraIssueTimestamp(ctx context.Context, jiraKey string) (time.Time, er
 		return zero, fmt.Errorf("failed to fetch issue %s: %w", jiraKey, err)
 	}
 	defer func() {
-		_ = resp.Body.Close()
+		_ = resp.Body.Close() // best-effort cleanup
 	}()
 
 	if resp.StatusCode != http.StatusOK {

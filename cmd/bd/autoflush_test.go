@@ -111,7 +111,7 @@ func TestFindJSONLPath_BEADS_DIR_Relative(t *testing.T) {
 	}
 
 	// Change to parent of tmpDir so relative path works
-	origWd, _ := os.Getwd()
+	origWd, _ := os.Getwd() // best-effort, unlikely to fail
 	defer os.Chdir(origWd)
 	os.Chdir(filepath.Dir(tmpDir))
 

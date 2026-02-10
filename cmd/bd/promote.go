@@ -148,7 +148,7 @@ Examples:
 		markDirtyAndScheduleFlush()
 
 		if jsonOutput {
-			updated, _ := store.GetIssue(ctx, fullID)
+			updated, _ := store.GetIssue(ctx, fullID) // nil if not found
 			if updated != nil {
 				outputJSON(updated)
 			}

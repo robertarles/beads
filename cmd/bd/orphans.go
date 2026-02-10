@@ -75,7 +75,7 @@ Examples:
 			fmt.Println()
 			fmt.Printf("This will close %d orphaned issue(s). Continue? (Y/n): ", len(orphans))
 			var response string
-			_, _ = fmt.Scanln(&response)
+			_, _ = fmt.Scanln(&response) // interactive input, empty on error
 			response = strings.ToLower(strings.TrimSpace(response))
 			if response != "" && response != "y" && response != "yes" {
 				fmt.Println("Canceled.")
@@ -117,7 +117,7 @@ func getIssueProvider() (types.IssueProvider, func(), error) {
 		if err != nil {
 			return nil, nil, fmt.Errorf("failed to open database at %s: %w", dbPath, err)
 		}
-		return provider, func() { _ = provider.Close() }, nil
+		return provider, func() { _ = provider.Close() }, nil // best-effort cleanup
 	}
 
 	// Use the global store (already opened by PersistentPreRun)

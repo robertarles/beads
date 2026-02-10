@@ -905,7 +905,7 @@ func checkBeadGate(ctx context.Context, awaitID string) (bool, string) {
 	if err != nil {
 		return false, fmt.Sprintf("failed to open database for rig %q: %v", rigName, err)
 	}
-	defer func() { _ = db.Close() }()
+	defer func() { _ = db.Close() }() // best-effort cleanup
 
 	// Check if the target bead exists and is closed
 	var status string

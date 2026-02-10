@@ -150,7 +150,7 @@ func connectToDaemon(socketPath, dbPath string) error {
 	// Check daemon health
 	health, err := client.Health()
 	if err != nil || health.Status != "healthy" {
-		_ = client.Close()
+		_ = client.Close() // best-effort cleanup
 		if err != nil {
 			return fmt.Errorf("daemon health check failed: %v", err)
 		}
@@ -162,7 +162,7 @@ func connectToDaemon(socketPath, dbPath string) error {
 	}
 
 	// Set database path
-	absDBPath, _ := filepath.Abs(dbPath)
+	absDBPath, _ := filepath.Abs(dbPath) // best-effort path resolution
 	client.SetDatabasePath(absDBPath)
 
 	daemonClient = client
@@ -390,7 +390,7 @@ func pollMutations() {
 
 		// Broadcast each mutation to WebSocket clients
 		for _, mutation := range mutations {
-			data, _ := json.Marshal(mutation)
+			data, _ := json.Marshal(mutation) // marshaling known types, error not possible // example code, errors simplified
 			wsBroadcast <- data
 
 			// Update last poll time to this mutation's timestamp

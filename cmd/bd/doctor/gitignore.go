@@ -181,7 +181,7 @@ func CheckIssuesTracking() DoctorCheck {
 		// Exit code 0 means the file IS ignored - this is bad
 		// Get details about what's ignoring it
 		detailCmd := exec.Command("git", "check-ignore", "-v", issuesPath) // #nosec G204 - args are hardcoded paths
-		output, _ := detailCmd.Output()
+		output, _ := detailCmd.Output() // best-effort, ignore command errors
 		detail := strings.TrimSpace(string(output))
 
 		return DoctorCheck{

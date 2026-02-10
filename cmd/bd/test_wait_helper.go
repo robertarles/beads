@@ -54,8 +54,8 @@ func setupGitRepo(t *testing.T) (repoPath string, cleanup func()) {
 	beads.ResetCaches()
 
 	// Configure git
-	_ = exec.Command("git", "config", "user.email", "test@test.com").Run()
-	_ = exec.Command("git", "config", "user.name", "Test User").Run()
+	_ = exec.Command("git", "config", "user.email", "test@test.com").Run() // best-effort, ignore errors
+	_ = exec.Command("git", "config", "user.name", "Test User").Run() // best-effort, ignore errors
 
 	// Create .beads directory with minimal issues.jsonl (required for RepoContext)
 	beadsDir := filepath.Join(tmpDir, ".beads")
@@ -73,7 +73,7 @@ func setupGitRepo(t *testing.T) (repoPath string, cleanup func()) {
 		_ = os.Chdir(originalWd)
 		t.Fatalf("failed to write test file: %v", err)
 	}
-	_ = exec.Command("git", "add", ".").Run()
+	_ = exec.Command("git", "add", ".").Run() // best-effort, ignore errors
 	if err := exec.Command("git", "commit", "-m", "initial").Run(); err != nil {
 		_ = os.Chdir(originalWd)
 		t.Fatalf("failed to create initial commit: %v", err)
@@ -116,8 +116,8 @@ func setupGitRepoWithBranch(t *testing.T, branch string) (repoPath string, clean
 	beads.ResetCaches()
 
 	// Configure git
-	_ = exec.Command("git", "config", "user.email", "test@test.com").Run()
-	_ = exec.Command("git", "config", "user.name", "Test User").Run()
+	_ = exec.Command("git", "config", "user.email", "test@test.com").Run() // best-effort, ignore errors
+	_ = exec.Command("git", "config", "user.name", "Test User").Run() // best-effort, ignore errors
 
 	// Create .beads directory with minimal issues.jsonl (required for RepoContext)
 	beadsDir := filepath.Join(tmpDir, ".beads")
@@ -135,7 +135,7 @@ func setupGitRepoWithBranch(t *testing.T, branch string) (repoPath string, clean
 		_ = os.Chdir(originalWd)
 		t.Fatalf("failed to write test file: %v", err)
 	}
-	_ = exec.Command("git", "add", ".").Run()
+	_ = exec.Command("git", "add", ".").Run() // best-effort, ignore errors
 	if err := exec.Command("git", "commit", "-m", "initial").Run(); err != nil {
 		_ = os.Chdir(originalWd)
 		t.Fatalf("failed to create initial commit: %v", err)
@@ -176,8 +176,8 @@ func setupMinimalGitRepo(t *testing.T) (repoPath string, cleanup func()) {
 	}
 
 	// Configure git
-	_ = exec.Command("git", "config", "user.email", "test@test.com").Run()
-	_ = exec.Command("git", "config", "user.name", "Test User").Run()
+	_ = exec.Command("git", "config", "user.email", "test@test.com").Run() // best-effort, ignore errors
+	_ = exec.Command("git", "config", "user.name", "Test User").Run() // best-effort, ignore errors
 
 	cleanup = func() {
 		_ = os.Chdir(originalWd)

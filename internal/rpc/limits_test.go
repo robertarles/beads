@@ -75,7 +75,7 @@ func TestConnectionLimits(t *testing.T) {
 			req := Request{
 				Operation: OpPing,
 			}
-			data, _ := json.Marshal(req)
+			data, _ := json.Marshal(req) // marshaling known types, error not possible // test setup, marshaling known types
 			c.Write(append(data, '\n'))
 
 			// Read response
@@ -99,7 +99,7 @@ func TestConnectionLimits(t *testing.T) {
 
 	// Send request on extra connection
 	req := Request{Operation: OpPing}
-	data, _ := json.Marshal(req)
+	data, _ := json.Marshal(req) // marshaling known types, error not possible // test setup, marshaling known types
 	extraConn.Write(append(data, '\n'))
 
 	// Set short read timeout to detect rejection
@@ -237,7 +237,7 @@ func TestShutdownDrainsBeforeClosingStorage(t *testing.T) {
 
 		// Send a ping to make the connection active in handleConnection
 		req := Request{Operation: OpPing}
-		data, _ := json.Marshal(req)
+		data, _ := json.Marshal(req) // marshaling known types, error not possible // test setup, marshaling known types
 		conn.Write(append(data, '\n'))
 
 		reader := bufio.NewReader(conn)
@@ -314,7 +314,7 @@ func TestHealthResponseIncludesLimits(t *testing.T) {
 	defer conn.Close()
 
 	req := Request{Operation: OpHealth}
-	data, _ := json.Marshal(req)
+	data, _ := json.Marshal(req) // marshaling known types, error not possible // test setup, marshaling known types
 	conn.Write(append(data, '\n'))
 
 	reader := bufio.NewReader(conn)

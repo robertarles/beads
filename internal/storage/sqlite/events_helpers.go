@@ -37,7 +37,7 @@ func recordCreatedEvents(ctx context.Context, conn *sql.Conn, issues []*types.Is
 	if err != nil {
 		return fmt.Errorf("failed to prepare event statement: %w", err)
 	}
-	defer func() { _ = stmt.Close() }()
+	defer func() { _ = stmt.Close() }() // best-effort cleanup
 
 	for _, issue := range issues {
 		eventData, err := json.Marshal(issue)

@@ -14,7 +14,7 @@ import (
 // Guardrail: ensure the cmd/bd test suite does not touch the real repo .beads state.
 // Disable with BEADS_TEST_GUARD_DISABLE=1 (useful when running tests while actively using beads).
 func TestMain(m *testing.M) {
-	origWD, _ := os.Getwd()
+	origWD, _ := os.Getwd() // best-effort, unlikely to fail
 
 	// Isolate config discovery from the repo's tracked `.beads/config.yaml`.
 	// Many tests expect default config values; running from within this repo would
@@ -25,7 +25,7 @@ func TestMain(m *testing.M) {
 		fmt.Fprintf(os.Stderr, "failed to create temp dir: %v\n", err)
 		os.Exit(1)
 	}
-	defer func() { _ = os.RemoveAll(tmp) }()
+	defer func() { _ = os.RemoveAll(tmp) }() // best-effort cleanup
 	_ = os.Setenv("HOME", tmp)
 	_ = os.Setenv("USERPROFILE", tmp) // Windows compatibility
 	_ = os.Setenv("XDG_CONFIG_HOME", filepath.Join(tmp, "xdg-config"))
@@ -193,7 +193,7 @@ func stopRepoDaemon(repoRoot string) {
 	cmd.Env = append(os.Environ(), "BEADS_DIR="+beadsDir)
 
 	// Best-effort stop - ignore errors (daemon may not be running)
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	// Give daemon time to shutdown gracefully
 	time.Sleep(500 * time.Millisecond)

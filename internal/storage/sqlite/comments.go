@@ -118,7 +118,7 @@ func (s *SQLiteStorage) GetIssueComments(ctx context.Context, issueID string) ([
 	if err != nil {
 		return nil, fmt.Errorf("failed to query comments: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	var comments []*types.Comment
 	for rows.Next() {
@@ -166,7 +166,7 @@ func (s *SQLiteStorage) GetCommentsForIssues(ctx context.Context, issueIDs []str
 	if err != nil {
 		return nil, fmt.Errorf("failed to batch get comments: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	result := make(map[string][]*types.Comment)
 	for rows.Next() {
@@ -208,7 +208,7 @@ func (s *SQLiteStorage) GetCommentCounts(ctx context.Context, issueIDs []string)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get comment counts: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	result := make(map[string]int)
 	for rows.Next() {

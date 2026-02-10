@@ -38,11 +38,11 @@ create, update, show, or close operation).`,
 		reason, _ := cmd.Flags().GetString("reason")
 		if reason == "" {
 			// Check --resolution alias (Jira CLI convention)
-			reason, _ = cmd.Flags().GetString("resolution")
+			reason, _ = cmd.Flags().GetString("resolution") // flag was registered in init, error cannot occur
 		}
 		if reason == "" {
 			// Check -m alias (git commit convention)
-			reason, _ = cmd.Flags().GetString("message")
+			reason, _ = cmd.Flags().GetString("message") // flag was registered in init, error cannot occur
 		}
 		if reason == "" {
 			reason = "Closed"
@@ -271,7 +271,7 @@ create, update, show, or close operation).`,
 		// Handle local IDs
 		for _, id := range resolvedIDs {
 			// Get issue for checks
-			issue, _ := store.GetIssue(ctx, id)
+			issue, _ := store.GetIssue(ctx, id) // nil if not found
 
 			if err := validateIssueClosable(id, issue, force); err != nil {
 				fmt.Fprintf(os.Stderr, "%s\n", err)
@@ -307,7 +307,7 @@ create, update, show, or close operation).`,
 			closedCount++
 
 			// Run close hook
-			closedIssue, _ := store.GetIssue(ctx, id)
+			closedIssue, _ := store.GetIssue(ctx, id) // nil if not found
 			if closedIssue != nil && hookRunner != nil {
 				hookRunner.Run(hooks.EventClose, closedIssue)
 			}

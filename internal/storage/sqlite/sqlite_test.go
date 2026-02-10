@@ -1283,7 +1283,7 @@ func TestPath(t *testing.T) {
 	}
 
 	// Path should match the temp directory
-	expectedPath, _ := filepath.Abs(relPath)
+	expectedPath, _ := filepath.Abs(relPath) // best-effort path resolution
 	if path != expectedPath {
 		t.Errorf("Path() returned %s, expected %s", path, expectedPath)
 	}

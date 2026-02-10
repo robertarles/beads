@@ -175,12 +175,12 @@ func TestInstallJunieIdempotent(t *testing.T) {
 
 	// Run twice
 	InstallJunie()
-	firstGuidelines, _ := os.ReadFile(".junie/guidelines.md")
-	firstMCP, _ := os.ReadFile(".junie/mcp/mcp.json")
+	firstGuidelines, _ := os.ReadFile(".junie/guidelines.md") // best-effort read, nil on error
+	firstMCP, _ := os.ReadFile(".junie/mcp/mcp.json") // best-effort read, nil on error
 
 	InstallJunie()
-	secondGuidelines, _ := os.ReadFile(".junie/guidelines.md")
-	secondMCP, _ := os.ReadFile(".junie/mcp/mcp.json")
+	secondGuidelines, _ := os.ReadFile(".junie/guidelines.md") // best-effort read, nil on error
+	secondMCP, _ := os.ReadFile(".junie/mcp/mcp.json") // best-effort read, nil on error
 
 	if string(firstGuidelines) != string(secondGuidelines) {
 		t.Error("InstallJunie should be idempotent for guidelines")
@@ -442,7 +442,7 @@ func TestCheckJunie_PartialInstall_MCPOnly(t *testing.T) {
 		t.Fatalf("failed to create directory: %v", err)
 	}
 	mcpConfig := junieMCPConfig()
-	mcpData, _ := json.MarshalIndent(mcpConfig, "", "  ")
+	mcpData, _ := json.MarshalIndent(mcpConfig, "", "  ") // marshaling known types, error not possible
 	if err := os.WriteFile(".junie/mcp/mcp.json", mcpData, 0644); err != nil {
 		t.Fatalf("failed to create MCP config file: %v", err)
 	}

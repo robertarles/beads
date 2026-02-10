@@ -27,7 +27,7 @@ func TestSetupGitExclude_Worktree(t *testing.T) {
 	} {
 		cmd := exec.Command(args[0], args[1:]...)
 		cmd.Dir = mainDir
-		_ = cmd.Run()
+		_ = cmd.Run() // test setup, errors not critical
 	}
 
 	// Create initial commit (required for worktree)
@@ -37,7 +37,7 @@ func TestSetupGitExclude_Worktree(t *testing.T) {
 	}
 	cmd = exec.Command("git", "add", ".")
 	cmd.Dir = mainDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "commit", "-m", "initial")
 	cmd.Dir = mainDir
 	if err := cmd.Run(); err != nil {
@@ -53,7 +53,7 @@ func TestSetupGitExclude_Worktree(t *testing.T) {
 	}
 
 	// Change to worktree directory and run setupGitExclude
-	origDir, _ := os.Getwd()
+	origDir, _ := os.Getwd() // best-effort, unlikely to fail
 	if err := os.Chdir(worktreeDir); err != nil {
 		t.Fatalf("failed to chdir to worktree: %v", err)
 	}
@@ -111,7 +111,7 @@ func TestSetupForkExclude_Worktree(t *testing.T) {
 	} {
 		cmd := exec.Command(args[0], args[1:]...)
 		cmd.Dir = mainDir
-		_ = cmd.Run()
+		_ = cmd.Run() // test setup, errors not critical
 	}
 
 	// Create initial commit (required for worktree)
@@ -121,7 +121,7 @@ func TestSetupForkExclude_Worktree(t *testing.T) {
 	}
 	cmd = exec.Command("git", "add", ".")
 	cmd.Dir = mainDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "commit", "-m", "initial")
 	cmd.Dir = mainDir
 	if err := cmd.Run(); err != nil {
@@ -137,7 +137,7 @@ func TestSetupForkExclude_Worktree(t *testing.T) {
 	}
 
 	// Change to worktree directory and run setupForkExclude
-	origDir, _ := os.Getwd()
+	origDir, _ := os.Getwd() // best-effort, unlikely to fail
 	if err := os.Chdir(worktreeDir); err != nil {
 		t.Fatalf("failed to chdir to worktree: %v", err)
 	}
@@ -183,7 +183,7 @@ func TestSetupGitExclude_RegularRepo(t *testing.T) {
 		t.Fatalf("failed to init git repo: %v", err)
 	}
 
-	origDir, _ := os.Getwd()
+	origDir, _ := os.Getwd() // best-effort, unlikely to fail
 	if err := os.Chdir(dir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}

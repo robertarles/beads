@@ -536,7 +536,7 @@ func resolveProtoIDOrTitle(ctx context.Context, s storage.Storage, input string)
 		// Verify it's a proto (has template label)
 		issue, getErr := s.GetIssue(ctx, protoID)
 		if getErr == nil && issue != nil {
-			labels, _ := s.GetLabels(ctx, protoID)
+			labels, _ := s.GetLabels(ctx, protoID) // best-effort enrichment, nil on error
 			for _, label := range labels {
 				if label == BeadsTemplateLabel {
 					return protoID, nil // Found a valid proto by ID

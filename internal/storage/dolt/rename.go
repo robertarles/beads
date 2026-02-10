@@ -17,7 +17,7 @@ func (s *DoltStore) UpdateIssueID(ctx context.Context, oldID, newID string, issu
 	if err != nil {
 		return fmt.Errorf("failed to begin transaction: %w", err)
 	}
-	defer func() { _ = tx.Rollback() }()
+	defer func() { _ = tx.Rollback() }() // no-op if committed
 
 	// Disable foreign key checks to allow PK update on issues table
 	// (child tables like dirty_issues, dependencies, etc. reference issues.id)
@@ -137,7 +137,7 @@ func (s *DoltStore) RenameDependencyPrefix(ctx context.Context, oldPrefix, newPr
 	if err != nil {
 		return fmt.Errorf("failed to begin transaction: %w", err)
 	}
-	defer func() { _ = tx.Rollback() }()
+	defer func() { _ = tx.Rollback() }() // no-op if committed
 
 	// Update issue_id column
 	_, err = tx.ExecContext(ctx, `

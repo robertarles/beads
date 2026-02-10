@@ -123,7 +123,7 @@ func TestCheckBeadGate_RigNotFound(t *testing.T) {
 	defer os.RemoveAll(tmpDir)
 
 	// Change to temp dir
-	origDir, _ := os.Getwd()
+	origDir, _ := os.Getwd() // best-effort, unlikely to fail
 	defer os.Chdir(origDir)
 	os.Chdir(tmpDir)
 

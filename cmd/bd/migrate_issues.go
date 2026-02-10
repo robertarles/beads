@@ -613,7 +613,7 @@ func displayMigrationPlan(plan migrationPlan, dryRun bool) error {
 func confirmMigration(plan migrationPlan) bool {
 	fmt.Printf("\nMigrate %d issues from %s to %s? [y/N] ", len(plan.IssueIDs), plan.From, plan.To)
 	var response string
-	_, _ = fmt.Scanln(&response)
+	_, _ = fmt.Scanln(&response) // interactive input, empty on error
 	return strings.ToLower(strings.TrimSpace(response)) == "y"
 }
 

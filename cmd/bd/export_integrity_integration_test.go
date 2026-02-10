@@ -124,7 +124,7 @@ func TestExportIntegrityAfterJSONLTruncation(t *testing.T) {
 		t.Errorf("This indicates the bug bd-160 would have occurred!")
 
 		// Read JSONL to count actual lines
-		finalData, _ := os.ReadFile(jsonlPath)
+		finalData, _ := os.ReadFile(jsonlPath) // best-effort read, nil on error
 		lines := 0
 		for _, b := range finalData {
 			if b == '\n' {

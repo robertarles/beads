@@ -15,7 +15,7 @@ func TestHashIDGeneration(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create storage: %v", err)
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	ctx = context.Background()
 
@@ -81,7 +81,7 @@ func TestHashIDCollisionHandling(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create storage: %v", err)
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	ctx = context.Background()
 
@@ -142,7 +142,7 @@ func TestHashIDBatchCreation(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create storage: %v", err)
 	}
-	defer func() { _ = store.Close() }()
+	defer func() { _ = store.Close() }() // best-effort cleanup
 
 	ctx = context.Background()
 

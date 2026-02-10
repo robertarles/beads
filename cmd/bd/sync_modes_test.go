@@ -116,14 +116,14 @@ func TestExternalBeadsDirWithPullFirst(t *testing.T) {
 	if err := exec.Command("git", "-C", externalDir, "init", "--initial-branch=main").Run(); err != nil {
 		t.Fatalf("git init (external) failed: %v", err)
 	}
-	_ = exec.Command("git", "-C", externalDir, "config", "user.email", "test@test.com").Run()
-	_ = exec.Command("git", "-C", externalDir, "config", "user.name", "Test User").Run()
+	_ = exec.Command("git", "-C", externalDir, "config", "user.email", "test@test.com").Run() // test setup, errors not critical
+	_ = exec.Command("git", "-C", externalDir, "config", "user.name", "Test User").Run() // test setup, errors not critical
 
 	// Create initial commit in external repo
 	if err := os.WriteFile(filepath.Join(externalDir, "README.md"), []byte("External beads repo"), 0644); err != nil {
 		t.Fatalf("write README failed: %v", err)
 	}
-	_ = exec.Command("git", "-C", externalDir, "add", ".").Run()
+	_ = exec.Command("git", "-C", externalDir, "add", ".").Run() // test setup, errors not critical
 	if err := exec.Command("git", "-C", externalDir, "commit", "-m", "initial").Run(); err != nil {
 		t.Fatalf("external initial commit failed: %v", err)
 	}
@@ -142,8 +142,8 @@ func TestExternalBeadsDirWithPullFirst(t *testing.T) {
 	}
 
 	// Commit initial beads files
-	_ = exec.Command("git", "-C", externalDir, "add", ".beads").Run()
-	_ = exec.Command("git", "-C", externalDir, "commit", "-m", "add beads").Run()
+	_ = exec.Command("git", "-C", externalDir, "add", ".beads").Run() // test setup, errors not critical
+	_ = exec.Command("git", "-C", externalDir, "commit", "-m", "add beads").Run() // test setup, errors not critical
 
 	// Change back to main repo (simulating user's project)
 	if err := os.Chdir(mainDir); err != nil {
@@ -175,7 +175,7 @@ func TestExternalBeadsDirWithPullFirst(t *testing.T) {
 		t.Fatalf("getRepoRootFromPath failed: %v", err)
 	}
 	// Should return the external repo root
-	resolvedExternal, _ := filepath.EvalSymlinks(externalDir)
+	resolvedExternal, _ := filepath.EvalSymlinks(externalDir) // best-effort symlink resolution
 	if repoRoot != resolvedExternal {
 		t.Errorf("getRepoRootFromPath = %q, want %q", repoRoot, resolvedExternal)
 	}
@@ -475,8 +475,8 @@ func setupBareRemoteWithClones(t *testing.T) (remoteDir, machineA, machineB stri
 		t.Fatalf("failed to clone for machineA: %v", err)
 	}
 	// Configure git user in Machine A
-	_ = exec.Command("git", "-C", machineA, "config", "user.email", "machineA@test.com").Run()
-	_ = exec.Command("git", "-C", machineA, "config", "user.name", "Machine A").Run()
+	_ = exec.Command("git", "-C", machineA, "config", "user.email", "machineA@test.com").Run() // test setup, errors not critical
+	_ = exec.Command("git", "-C", machineA, "config", "user.name", "Machine A").Run() // test setup, errors not critical
 
 	// Clone for Machine B
 	machineB = t.TempDir()
@@ -485,15 +485,15 @@ func setupBareRemoteWithClones(t *testing.T) (remoteDir, machineA, machineB stri
 		t.Fatalf("failed to clone for machineB: %v", err)
 	}
 	// Configure git user in Machine B
-	_ = exec.Command("git", "-C", machineB, "config", "user.email", "machineB@test.com").Run()
-	_ = exec.Command("git", "-C", machineB, "config", "user.name", "Machine B").Run()
+	_ = exec.Command("git", "-C", machineB, "config", "user.email", "machineB@test.com").Run() // test setup, errors not critical
+	_ = exec.Command("git", "-C", machineB, "config", "user.name", "Machine B").Run() // test setup, errors not critical
 
 	// Initial commit from Machine A (bare repos need at least one commit)
 	readmePath := filepath.Join(machineA, "README.md")
 	if err := os.WriteFile(readmePath, []byte("# Test Repo\n"), 0644); err != nil {
 		t.Fatalf("failed to write README: %v", err)
 	}
-	_ = exec.Command("git", "-C", machineA, "add", ".").Run()
+	_ = exec.Command("git", "-C", machineA, "add", ".").Run() // test setup, errors not critical
 	if err := exec.Command("git", "-C", machineA, "commit", "-m", "initial").Run(); err != nil {
 		t.Fatalf("failed to create initial commit: %v", err)
 	}
@@ -502,8 +502,8 @@ func setupBareRemoteWithClones(t *testing.T) (remoteDir, machineA, machineB stri
 	}
 
 	// Machine B fetches and checks out main
-	_ = exec.Command("git", "-C", machineB, "fetch", "origin").Run()
-	_ = exec.Command("git", "-C", machineB, "checkout", "main").Run()
+	_ = exec.Command("git", "-C", machineB, "fetch", "origin").Run() // test setup, errors not critical
+	_ = exec.Command("git", "-C", machineB, "checkout", "main").Run() // test setup, errors not critical
 
 	cleanup = func() {
 		git.ResetCaches() // Prevent cache pollution between tests
@@ -600,7 +600,7 @@ func TestSyncBranchE2E(t *testing.T) {
 		}
 
 		// Re-read and append bd-2 to maintain bd-1 from pull
-		existingContent, _ := os.ReadFile(jsonlPathB)
+		existingContent, _ := os.ReadFile(jsonlPathB) // best-effort read, nil on error
 		if !strings.Contains(string(existingContent), "bd-2") {
 			// Append bd-2 if not already present
 			if len(existingContent) > 0 && !strings.HasSuffix(string(existingContent), "\n") {
@@ -682,7 +682,7 @@ func TestExportOnlySync(t *testing.T) {
 	jsonlPath := filepath.Join(beadsDir, "issues.jsonl")
 
 	// Remove pre-existing issues.jsonl from setupGitRepo (we want a clean slate)
-	_ = os.Remove(jsonlPath)
+	_ = os.Remove(jsonlPath) // best-effort cleanup
 
 	// Setup: Create .beads directory
 	if err := os.MkdirAll(beadsDir, 0755); err != nil {

@@ -94,7 +94,7 @@ NOTE: Import requires direct database access and does not work with daemon mode.
 		// having sync use --no-daemon mode for consistency.
 		if daemonClient != nil {
 			debug.Logf("Debug: import command forcing direct mode (closes daemon connection)\n")
-			_ = daemonClient.Close()
+			_ = daemonClient.Close() // best-effort cleanup
 			daemonClient = nil
 
 			var err error
@@ -110,7 +110,7 @@ NOTE: Import requires direct database access and does not work with daemon mode.
 				fmt.Fprintf(os.Stderr, "Error: failed to open database: %v\n", err)
 				os.Exit(1)
 			}
-			defer func() { _ = store.Close() }()
+			defer func() { _ = store.Close() }() // best-effort cleanup
 		}
 
 		// We'll check if database needs initialization after reading the JSONL
@@ -202,7 +202,7 @@ NOTE: Import requires direct database access and does not work with daemon mode.
 				if input != "" {
 					// Close current file handle
 					if in != os.Stdin {
-						_ = in.Close()
+						_ = in.Close() // best-effort cleanup
 					}
 
 					// Re-open the merged file
@@ -663,7 +663,7 @@ func countLines(filePath string) int {
 	if err != nil {
 		return 0
 	}
-	defer func() { _ = f.Close() }()
+	defer func() { _ = f.Close() }() // best-effort cleanup
 
 	scanner := bufio.NewScanner(f)
 	lines := 0
@@ -754,7 +754,7 @@ func attemptAutoMerge(conflictedPath string) error {
 	if err != nil {
 		return fmt.Errorf("failed to create temp directory: %w", err)
 	}
-	defer func() { _ = os.RemoveAll(tmpDir) }()
+	defer func() { _ = os.RemoveAll(tmpDir) }() // best-effort cleanup
 
 	basePath := filepath.Join(tmpDir, "base.jsonl")
 	leftPath := filepath.Join(tmpDir, "left.jsonl")

@@ -55,11 +55,11 @@ func setupTestGitRepo(t *testing.T, commits []string) string {
 	// Configure git user for commits
 	cmd = exec.Command("git", "config", "user.email", "test@test.com")
 	cmd.Dir = dir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	cmd = exec.Command("git", "config", "user.name", "Test User")
 	cmd.Dir = dir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	// Create commits
 	for i, msg := range commits {
@@ -70,7 +70,7 @@ func setupTestGitRepo(t *testing.T, commits []string) string {
 		}
 		cmd = exec.Command("git", "add", "file.txt")
 		cmd.Dir = dir
-		_ = cmd.Run()
+		_ = cmd.Run() // test setup, errors not critical
 		cmd = exec.Command("git", "commit", "-m", msg)
 		cmd.Dir = dir
 		if err := cmd.Run(); err != nil {
@@ -287,11 +287,11 @@ func TestFindOrphanedIssues_LocalProvider(t *testing.T) {
 	// Configure git user for commits
 	cmd = exec.Command("git", "config", "user.email", "test@test.com")
 	cmd.Dir = dir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	cmd = exec.Command("git", "config", "user.name", "Test User")
 	cmd.Dir = dir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	// Create .beads directory and database
 	beadsDir := filepath.Join(dir, ".beads")
@@ -323,10 +323,10 @@ func TestFindOrphanedIssues_LocalProvider(t *testing.T) {
 	}
 	cmd = exec.Command("git", "add", "test.txt")
 	cmd.Dir = dir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "commit", "-m", "Fix (bd-local)")
 	cmd.Dir = dir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	// Use findOrphanedIssuesFromPath (the backward-compatible wrapper)
 	orphans, err := findOrphanedIssuesFromPath(dir)
@@ -425,11 +425,11 @@ func TestFindOrphanedIssues_IntegrationCrossRepo(t *testing.T) {
 
 	cmd = exec.Command("git", "config", "user.email", "test@test.com")
 	cmd.Dir = codeDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	cmd = exec.Command("git", "config", "user.name", "Test User")
 	cmd.Dir = codeDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	// Create commits referencing planning issues
 	testFile := filepath.Join(codeDir, "main.go")
@@ -438,10 +438,10 @@ func TestFindOrphanedIssues_IntegrationCrossRepo(t *testing.T) {
 	}
 	cmd = exec.Command("git", "add", "main.go")
 	cmd.Dir = codeDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "commit", "-m", "Implement (PLAN-001)")
 	cmd.Dir = codeDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	// Create a real LocalProvider from the planning database
 	provider, err := storage.NewLocalProvider(planningDBPath)

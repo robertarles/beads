@@ -455,7 +455,7 @@ func CheckRepoFingerprint(path string) DoctorCheck {
 				Detail:  err.Error(),
 			}
 		}
-		defer func() { _ = store.Close() }()
+		defer func() { _ = store.Close() }() // best-effort cleanup
 
 		storedRepoID, err := store.GetMetadata(ctx, "repo_id")
 		if err != nil {

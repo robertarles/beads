@@ -88,7 +88,7 @@ func newTestStore(t *testing.T) *sqlite.SQLiteStorage {
 	}
 	ctx := context.Background()
 	if err := store.SetConfig(ctx, "issue_prefix", "bd"); err != nil {
-		_ = store.Close()
+		_ = store.Close() // best-effort cleanup
 		t.Fatalf("Failed to set issue_prefix: %v", err)
 	}
 	return store
@@ -281,7 +281,7 @@ auto-start-daemon: true
 		}
 
 		// Change to temp dir so findProjectConfigYaml can find it
-		origWd, _ := os.Getwd()
+		origWd, _ := os.Getwd() // best-effort, unlikely to fail
 		if err := os.Chdir(tmpDir); err != nil {
 			t.Fatalf("Failed to chdir: %v", err)
 		}
@@ -452,7 +452,7 @@ func TestIsConfiguredWithDB(t *testing.T) {
 			}
 		}()
 
-		origWd, _ := os.Getwd()
+		origWd, _ := os.Getwd() // best-effort, unlikely to fail
 		os.Chdir(tmpDir)
 		defer os.Chdir(origWd)
 

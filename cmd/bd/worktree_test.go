@@ -84,10 +84,10 @@ func TestResolveWorktreePathByName(t *testing.T) {
 	// Configure git user
 	cmd = exec.Command("git", "config", "user.email", "test@test.com")
 	cmd.Dir = mainDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "config", "user.name", "Test User")
 	cmd.Dir = mainDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 
 	// Create initial commit (required for worktrees)
 	if err := os.WriteFile(filepath.Join(mainDir, "README.md"), []byte("# Test\n"), 0644); err != nil {
@@ -95,7 +95,7 @@ func TestResolveWorktreePathByName(t *testing.T) {
 	}
 	cmd = exec.Command("git", "add", ".")
 	cmd.Dir = mainDir
-	_ = cmd.Run()
+	_ = cmd.Run() // test setup, errors not critical
 	cmd = exec.Command("git", "commit", "-m", "Initial commit")
 	cmd.Dir = mainDir
 	if output, err := cmd.CombinedOutput(); err != nil {
@@ -119,7 +119,7 @@ func TestResolveWorktreePathByName(t *testing.T) {
 		// Cleanup worktree
 		cmd := exec.Command("git", "worktree", "remove", worktreePath, "--force")
 		cmd.Dir = mainDir
-		_ = cmd.Run()
+		_ = cmd.Run() // test setup, errors not critical
 	}()
 
 	ctx := context.Background()
@@ -132,8 +132,8 @@ func TestResolveWorktreePathByName(t *testing.T) {
 			return
 		}
 		// Compare resolved paths to handle symlinks (e.g., /var -> /private/var on macOS)
-		wantResolved, _ := filepath.EvalSymlinks(worktreePath)
-		gotResolved, _ := filepath.EvalSymlinks(resolved)
+		wantResolved, _ := filepath.EvalSymlinks(worktreePath) // best-effort symlink resolution
+		gotResolved, _ := filepath.EvalSymlinks(resolved) // best-effort symlink resolution
 		if gotResolved != wantResolved {
 			t.Errorf("resolveWorktreePath returned %q, want %q", resolved, worktreePath)
 		}

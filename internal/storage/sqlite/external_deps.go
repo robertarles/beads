@@ -87,7 +87,7 @@ func checkExternalDep(ctx context.Context, ref string) *externalDepStatus {
 		status.Reason = "cannot open project database: " + err.Error()
 		return status
 	}
-	defer func() { _ = db.Close() }()
+	defer func() { _ = db.Close() }() // best-effort cleanup
 
 	// Verify we can ping the database
 	if err := db.Ping(); err != nil {
@@ -240,7 +240,7 @@ func checkProjectCapabilities(ctx context.Context, project string, capabilities 
 	if err != nil {
 		return result // all unsatisfied - cannot open
 	}
-	defer func() { _ = db.Close() }()
+	defer func() { _ = db.Close() }() // best-effort cleanup
 
 	if err := db.Ping(); err != nil {
 		return result // all unsatisfied - cannot connect
@@ -269,7 +269,7 @@ func checkProjectCapabilities(ctx context.Context, project string, capabilities 
 	if err != nil {
 		return result // all unsatisfied - query failed
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	// Mark satisfied capabilities
 	for rows.Next() {

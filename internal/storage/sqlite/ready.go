@@ -204,7 +204,7 @@ func (s *SQLiteStorage) GetReadyWork(ctx context.Context, filter types.WorkFilte
 	if err != nil {
 		return nil, fmt.Errorf("failed to get ready work: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	issues, err := s.scanIssues(ctx, rows)
 	if err != nil {
@@ -352,7 +352,7 @@ func (s *SQLiteStorage) getExternalDepsForIssues(ctx context.Context, issueIDs [
 	if err != nil {
 		return nil, fmt.Errorf("failed to query external dependencies: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	result := make(map[string][]string)
 	for rows.Next() {
@@ -403,7 +403,7 @@ func (s *SQLiteStorage) GetStaleIssues(ctx context.Context, filter types.StaleFi
 	if err != nil {
 		return nil, fmt.Errorf("failed to query stale issues: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	var issues []*types.Issue
 	for rows.Next() {
@@ -631,7 +631,7 @@ func (s *SQLiteStorage) GetBlockedIssues(ctx context.Context, filter types.WorkF
 	if err != nil {
 		return nil, fmt.Errorf("failed to get blocked issues: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	var blocked []*types.BlockedIssue
 	for rows.Next() {
@@ -799,7 +799,7 @@ func (s *SQLiteStorage) IsBlocked(ctx context.Context, issueID string) (bool, []
 	if err != nil {
 		return true, nil, fmt.Errorf("failed to get blockers: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	var blockers []string
 	for rows.Next() {
@@ -853,7 +853,7 @@ func (s *SQLiteStorage) GetNewlyUnblockedByClose(ctx context.Context, closedIssu
 	if err != nil {
 		return nil, fmt.Errorf("failed to get newly unblocked issues: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	return s.scanIssues(ctx, rows)
 }

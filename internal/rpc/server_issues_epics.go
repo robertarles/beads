@@ -530,7 +530,7 @@ func (s *Server) handleCreate(req *Request) Response {
 	// Emit mutation event for event-driven daemon
 	s.emitMutation(MutationCreate, issue.ID, issue.Title, issue.Assignee)
 
-	data, _ := json.Marshal(issue)
+	data, _ := json.Marshal(issue) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -670,7 +670,7 @@ func (s *Server) handleUpdate(req *Request) Response {
 	// This enables filtering queries like: bd list --label=gt:agent --label=role_type:witness
 	// Note: We remove old role_type/rig labels first to prevent accumulation
 	// Check for gt:agent label to identify agent beads (Gas Town separation)
-	issueLabels, _ := store.GetLabels(ctx, updateArgs.ID)
+	issueLabels, _ := store.GetLabels(ctx, updateArgs.ID) // best-effort enrichment, nil on error
 	if containsLabel(issueLabels, "gt:agent") {
 		if updateArgs.RoleType != nil && *updateArgs.RoleType != "" {
 			// Remove any existing role_type:* labels first
@@ -801,7 +801,7 @@ func (s *Server) handleUpdate(req *Request) Response {
 		}
 	}
 
-	data, _ := json.Marshal(updatedIssue)
+	data, _ := json.Marshal(updatedIssue) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -886,7 +886,7 @@ func (s *Server) handleClose(req *Request) Response {
 		NewStatus: "closed",
 	})
 
-	closedIssue, _ := store.GetIssue(ctx, closeArgs.ID)
+	closedIssue, _ := store.GetIssue(ctx, closeArgs.ID) // nil if not found
 
 	// If SuggestNext is requested, find newly unblocked issues (GH#679)
 	if closeArgs.SuggestNext {
@@ -899,7 +899,7 @@ func (s *Server) handleClose(req *Request) Response {
 			Closed:    closedIssue,
 			Unblocked: unblocked,
 		}
-		data, _ := json.Marshal(result)
+		data, _ := json.Marshal(result) // marshaling known types, error not possible
 		return Response{
 			Success: true,
 			Data:    data,
@@ -907,7 +907,7 @@ func (s *Server) handleClose(req *Request) Response {
 	}
 
 	// Backward compatible: just return the closed issue
-	data, _ := json.Marshal(closedIssue)
+	data, _ := json.Marshal(closedIssue) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -986,7 +986,7 @@ func (s *Server) handleDelete(req *Request) Response {
 				responseData["orphaned_issues"] = result.OrphanedIssues
 			}
 
-			data, _ := json.Marshal(responseData)
+			data, _ := json.Marshal(responseData) // marshaling known types, error not possible
 			return Response{
 				Success: true,
 				Data:    data,
@@ -997,7 +997,7 @@ func (s *Server) handleDelete(req *Request) Response {
 	// Simple single-issue delete path (preserves custom reason)
 	// DryRun mode: just return what would be deleted
 	if deleteArgs.DryRun {
-		data, _ := json.Marshal(map[string]interface{}{
+		data, _ := json.Marshal(map[string]interface{}{ // marshaling known types, error not possible
 			"dry_run":     true,
 			"issue_count": len(deleteArgs.IDs),
 			"issues":      deleteArgs.IDs,
@@ -1076,7 +1076,7 @@ func (s *Server) handleDelete(req *Request) Response {
 		result["partial_success"] = true
 	}
 
-	data, _ := json.Marshal(result)
+	data, _ := json.Marshal(result) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -1338,17 +1338,17 @@ func (s *Server) handleList(req *Request) Response {
 	}
 
 	// Populate labels in bulk (single query instead of N queries)
-	labelsMap, _ := store.GetLabelsForIssues(ctx, issueIDs)
+	labelsMap, _ := store.GetLabelsForIssues(ctx, issueIDs) // best-effort enrichment, nil on error
 	for _, issue := range issues {
 		issue.Labels = labelsMap[issue.ID]
 	}
 
 	// Get dependency counts in bulk (single query instead of N queries)
-	depCounts, _ := store.GetDependencyCounts(ctx, issueIDs)
-	commentCounts, _ := store.GetCommentCounts(ctx, issueIDs)
+	depCounts, _ := store.GetDependencyCounts(ctx, issueIDs) // best-effort enrichment, nil on error
+	commentCounts, _ := store.GetCommentCounts(ctx, issueIDs) // best-effort enrichment, nil on error
 
 	// Populate dependencies for JSON output
-	allDeps, _ := store.GetAllDependencyRecords(ctx)
+	allDeps, _ := store.GetAllDependencyRecords(ctx) // best-effort enrichment, nil on error
 	for _, issue := range issues {
 		issue.Dependencies = allDeps[issue.ID]
 	}
@@ -1368,7 +1368,7 @@ func (s *Server) handleList(req *Request) Response {
 		}
 	}
 
-	data, _ := json.Marshal(issuesWithCounts)
+	data, _ := json.Marshal(issuesWithCounts) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -1518,7 +1518,7 @@ func (s *Server) handleCount(req *Request) Response {
 		type CountResult struct {
 			Count int `json:"count"`
 		}
-		data, _ := json.Marshal(CountResult{Count: len(issues)})
+		data, _ := json.Marshal(CountResult{Count: len(issues)}) // marshaling known types, error not possible
 		return Response{
 			Success: true,
 			Data:    data,
@@ -1601,7 +1601,7 @@ func (s *Server) handleCount(req *Request) Response {
 		Groups: groups,
 	}
 
-	data, _ := json.Marshal(result)
+	data, _ := json.Marshal(result) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -1634,7 +1634,7 @@ func (s *Server) handleResolveID(req *Request) Response {
 		}
 	}
 
-	data, _ := json.Marshal(resolvedID)
+	data, _ := json.Marshal(resolvedID) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -1675,15 +1675,15 @@ func (s *Server) handleShow(req *Request) Response {
 	}
 
 	// Populate labels, dependencies (with metadata), and dependents (with metadata)
-	labels, _ := store.GetLabels(ctx, issue.ID)
+	labels, _ := store.GetLabels(ctx, issue.ID) // best-effort enrichment, nil on error
 
 	// Get dependencies and dependents with metadata (including dependency type)
 	// These methods are part of the Storage interface - no type assertion needed
-	deps, _ := store.GetDependenciesWithMetadata(ctx, issue.ID)
+	deps, _ := store.GetDependenciesWithMetadata(ctx, issue.ID) // best-effort enrichment, nil on error
 	dependents, _ := store.GetDependentsWithMetadata(ctx, issue.ID)
 
 	// Fetch comments
-	comments, _ := store.GetIssueComments(ctx, issue.ID)
+	comments, _ := store.GetIssueComments(ctx, issue.ID) // best-effort enrichment, nil on error
 
 	// Create detailed response with related data
 	details := &types.IssueDetails{
@@ -1694,7 +1694,7 @@ func (s *Server) handleShow(req *Request) Response {
 		Comments:     comments,
 	}
 
-	data, _ := json.Marshal(details)
+	data, _ := json.Marshal(details) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -1755,7 +1755,7 @@ func (s *Server) handleReady(req *Request) Response {
 	for i, issue := range issues {
 		issueIDs[i] = issue.ID
 	}
-	commentCounts, _ := store.GetCommentCounts(ctx, issueIDs)
+	commentCounts, _ := store.GetCommentCounts(ctx, issueIDs) // best-effort enrichment, nil on error
 	issuesWithCounts := make([]*types.IssueWithCounts, len(issues))
 	for i, issue := range issues {
 		issuesWithCounts[i] = &types.IssueWithCounts{
@@ -1764,7 +1764,7 @@ func (s *Server) handleReady(req *Request) Response {
 		}
 	}
 
-	data, _ := json.Marshal(issuesWithCounts)
+	data, _ := json.Marshal(issuesWithCounts) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -1803,7 +1803,7 @@ func (s *Server) handleBlocked(req *Request) Response {
 		}
 	}
 
-	data, _ := json.Marshal(blocked)
+	data, _ := json.Marshal(blocked) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -1843,7 +1843,7 @@ func (s *Server) handleStale(req *Request) Response {
 		}
 	}
 
-	data, _ := json.Marshal(issues)
+	data, _ := json.Marshal(issues) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -1869,7 +1869,7 @@ func (s *Server) handleStats(req *Request) Response {
 		}
 	}
 
-	data, _ := json.Marshal(stats)
+	data, _ := json.Marshal(stats) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -1962,7 +1962,7 @@ func (s *Server) handleGetConfig(req *Request) Response {
 		Value: value,
 	}
 
-	data, _ := json.Marshal(result)
+	data, _ := json.Marshal(result) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -2067,7 +2067,7 @@ func (s *Server) handleMolStale(req *Request) Response {
 		BlockingCount:  blockingCount,
 	}
 
-	data, _ := json.Marshal(result)
+	data, _ := json.Marshal(result) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -2124,7 +2124,7 @@ func (s *Server) handleGateCreate(req *Request) Response {
 	// Emit mutation event
 	s.emitMutation(MutationCreate, gate.ID, gate.Title, gate.Assignee)
 
-	data, _ := json.Marshal(GateCreateResult{ID: gate.ID})
+	data, _ := json.Marshal(GateCreateResult{ID: gate.ID}) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -2169,7 +2169,7 @@ func (s *Server) handleGateList(req *Request) Response {
 		}
 	}
 
-	data, _ := json.Marshal(gates)
+	data, _ := json.Marshal(gates) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -2225,7 +2225,7 @@ func (s *Server) handleGateShow(req *Request) Response {
 		}
 	}
 
-	data, _ := json.Marshal(gate)
+	data, _ := json.Marshal(gate) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -2304,8 +2304,8 @@ func (s *Server) handleGateClose(req *Request) Response {
 		NewStatus: "closed",
 	})
 
-	closedGate, _ := store.GetIssue(ctx, gateID)
-	data, _ := json.Marshal(closedGate)
+	closedGate, _ := store.GetIssue(ctx, gateID) // nil if not found
+	data, _ := json.Marshal(closedGate) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -2401,7 +2401,7 @@ func (s *Server) handleGateWait(req *Request) Response {
 		s.emitMutation(MutationUpdate, gateID, gate.Title, gate.Assignee)
 	}
 
-	data, _ := json.Marshal(GateWaitResult{AddedCount: addedCount})
+	data, _ := json.Marshal(GateWaitResult{AddedCount: addedCount}) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,

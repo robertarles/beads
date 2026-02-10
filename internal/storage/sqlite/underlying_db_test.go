@@ -95,7 +95,7 @@ func TestUnderlyingDB_CreateExtensionTable(t *testing.T) {
 		t.Fatalf("Failed to insert into extension table: %v", err)
 	}
 
-	id, _ := result.LastInsertId()
+	id, _ := result.LastInsertId() // informational only, error not critical
 	if id == 0 {
 		t.Error("Expected non-zero insert ID")
 	}
@@ -376,7 +376,7 @@ func TestUnderlyingConn_DDLOperations(t *testing.T) {
 		t.Fatalf("Failed to insert into extension table: %v", err)
 	}
 
-	id, _ := result.LastInsertId()
+	id, _ := result.LastInsertId() // informational only, error not critical
 	if id == 0 {
 		t.Error("Expected non-zero insert ID")
 	}

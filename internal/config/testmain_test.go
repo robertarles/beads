@@ -19,7 +19,7 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 
-	oldWD, _ := os.Getwd()
+	oldWD, _ := os.Getwd() // best-effort, unlikely to fail
 
 	// Point config discovery away from the repo and user's machine.
 	_ = os.Chdir(tmp)
@@ -30,6 +30,6 @@ func TestMain(m *testing.M) {
 	code := m.Run()
 
 	_ = os.Chdir(oldWD)
-	_ = os.RemoveAll(tmp)
+	_ = os.RemoveAll(tmp) // best-effort cleanup
 	os.Exit(code)
 }

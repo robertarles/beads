@@ -166,7 +166,7 @@ func TestLocalUnpushedIssueNotDeleted(t *testing.T) {
 	}
 
 	// Local work should still exist
-	localFound, _ := store.GetIssue(ctx, "bd-local-work")
+	localFound, _ := store.GetIssue(ctx, "bd-local-work") // test assertion handles nil
 	if localFound == nil {
 		t.Error("Local issue was incorrectly purged")
 	}

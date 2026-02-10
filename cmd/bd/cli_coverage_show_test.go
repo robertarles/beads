@@ -33,15 +33,15 @@ func runBDForCoverage(t *testing.T, dir string, args ...string) (stdout string, 
 
 	oldStdout := os.Stdout
 	oldStderr := os.Stderr
-	oldDir, _ := os.Getwd()
+	oldDir, _ := os.Getwd() // best-effort, unlikely to fail
 	oldArgs := os.Args
 
 	if err := os.Chdir(dir); err != nil {
 		t.Fatalf("chdir %s: %v", dir, err)
 	}
 
-	rOut, wOut, _ := os.Pipe()
-	rErr, wErr, _ := os.Pipe()
+	rOut, wOut, _ := os.Pipe() // test setup, pipe creation unlikely to fail
+	rErr, wErr, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stdout = wOut
 	os.Stderr = wErr
 
@@ -157,8 +157,8 @@ func runBDForCoverage(t *testing.T, dir string, args ...string) (stdout string, 
 	// Give SQLite time to release file locks.
 	time.Sleep(10 * time.Millisecond)
 
-	_ = wOut.Close()
-	_ = wErr.Close()
+	_ = wOut.Close() // best-effort cleanup
+	_ = wErr.Close() // best-effort cleanup
 	os.Stdout = oldStdout
 	os.Stderr = oldStderr
 	_ = os.Chdir(oldDir)
@@ -168,8 +168,8 @@ func runBDForCoverage(t *testing.T, dir string, args ...string) (stdout string, 
 	var outBuf, errBuf bytes.Buffer
 	_, _ = io.Copy(&outBuf, rOut)
 	_, _ = io.Copy(&errBuf, rErr)
-	_ = rOut.Close()
-	_ = rErr.Close()
+	_ = rOut.Close() // best-effort cleanup
+	_ = rErr.Close() // best-effort cleanup
 
 	stdout = outBuf.String()
 	stderr = errBuf.String()
@@ -239,7 +239,7 @@ func TestCoverage_ShowUpdateClose(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected labels in show output: %s", showOut)
 	}
-	labelsBytes, _ := json.Marshal(labelsAny)
+	labelsBytes, _ := json.Marshal(labelsAny) // marshaling known types, error not possible // test setup, marshaling known types
 	labelsStr := string(labelsBytes)
 	if !strings.Contains(labelsStr, "b") || !strings.Contains(labelsStr, "c") {
 		t.Fatalf("expected labels b and c, got %s", labelsStr)
@@ -334,7 +334,7 @@ func TestCoverage_TemplateAndPinnedProtections(t *testing.T) {
 		s.Close()
 		t.Fatalf("expected inserted issue to be IsTemplate=true, got %+v", created)
 	}
-	_ = s.Close()
+	_ = s.Close() // best-effort cleanup
 
 	showOut, _ := runBDForCoverage(t, dir, "show", "--allow-stale", template.ID, "--json")
 	showPayload := extractJSONPayload(showOut)
@@ -351,7 +351,7 @@ func TestCoverage_TemplateAndPinnedProtections(t *testing.T) {
 		t.Fatalf("sqlite.New (reopen): %v", err)
 	}
 	postShow, err := s2.GetIssue(context.Background(), template.ID)
-	_ = s2.Close()
+	_ = s2.Close() // best-effort cleanup
 	if err != nil {
 		t.Fatalf("GetIssue(template, post-show): %v", err)
 	}
@@ -414,7 +414,7 @@ func TestCoverage_ShowThread(t *testing.T) {
 		s.Close()
 		t.Fatalf("AddDependency reply2->reply1: %v", err)
 	}
-	_ = s.Close()
+	_ = s.Close() // best-effort cleanup
 
 	out, _ := runBDForCoverage(t, dir, "show", "--allow-stale", reply2.ID, "--thread")
 	if !strings.Contains(out, "Thread") || !strings.Contains(out, "Total: 3 messages") {

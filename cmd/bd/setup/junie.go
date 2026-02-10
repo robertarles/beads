@@ -227,10 +227,10 @@ func RemoveJunie() {
 	}
 
 	// Try to remove .junie/mcp directory if empty
-	_ = os.Remove(mcpDir)
+	_ = os.Remove(mcpDir) // best-effort cleanup
 
 	// Try to remove .junie directory if empty
-	_ = os.Remove(junieDir)
+	_ = os.Remove(junieDir) // best-effort cleanup
 
 	if !removed {
 		fmt.Println("No Junie integration files found")

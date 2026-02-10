@@ -1932,7 +1932,7 @@ func TestImportIssues_DryRun_UpdateCount(t *testing.T) {
 	}
 
 	// Verify new issue was NOT created
-	newIssue, _ := store.GetIssue(ctx, "test-ccc333")
+	newIssue, _ := store.GetIssue(ctx, "test-ccc333") // test assertion handles nil
 	if newIssue != nil {
 		t.Error("Dry-run created a new issue in the database!")
 	}

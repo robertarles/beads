@@ -264,7 +264,7 @@ func findInProgressMolecules(ctx context.Context, s storage.Storage, agent strin
 		}
 		resp, err := daemonClient.List(listArgs)
 		if err == nil {
-			_ = json.Unmarshal(resp.Data, &inProgressIssues)
+			_ = json.Unmarshal(resp.Data, &inProgressIssues) // best-effort parse, ignore malformed data
 		}
 	} else {
 		// Direct query - search for in_progress issues

@@ -84,7 +84,7 @@ Status icons: ○ open  ◐ in_progress  ● blocked  ✓ closed  ❄ deferred`,
 				fmt.Fprintf(os.Stderr, "Error: failed to open database: %v\n", err)
 				os.Exit(1)
 			}
-			defer func() { _ = store.Close() }()
+			defer func() { _ = store.Close() }() // best-effort cleanup
 		}
 
 		if store == nil {

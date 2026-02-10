@@ -232,7 +232,7 @@ func setGitIndexFlags(repoPath, filePath, excludePattern string) (bool, error) {
 		// Revert assume-unchanged if skip-worktree fails
 		revertCmd := exec.Command("git", "update-index", "--no-assume-unchanged", filePath)
 		revertCmd.Dir = repoPath
-		_ = revertCmd.Run()
+		_ = revertCmd.Run() // best-effort, ignore errors
 		return false, fmt.Errorf("failed to set skip-worktree on %s: %w\n%s", filePath, err, out)
 	}
 
@@ -310,7 +310,7 @@ func addToGitExclude(path, pattern string) error {
 	}
 
 	// Check if pattern already exists (exact line match)
-	content, _ := os.ReadFile(excludePath)
+	content, _ := os.ReadFile(excludePath) // best-effort read, nil on error
 	lines := strings.Split(string(content), "\n")
 	for _, line := range lines {
 		if strings.TrimSpace(line) == pattern {

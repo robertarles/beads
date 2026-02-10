@@ -23,12 +23,12 @@ func (s *SQLiteStorage) DeleteIssue(ctx context.Context, id string) error {
 		for rows.Next() {
 			var depID string
 			if err := rows.Scan(&depID); err != nil {
-				_ = rows.Close()
+				_ = rows.Close() // best-effort cleanup
 				return fmt.Errorf("failed to scan dependent issue ID: %w", err)
 			}
 			dependentIDs = append(dependentIDs, depID)
 		}
-		_ = rows.Close()
+		_ = rows.Close() // best-effort cleanup
 		if err := rows.Err(); err != nil {
 			return fmt.Errorf("failed to iterate dependent issues: %w", err)
 		}
@@ -179,7 +179,7 @@ func (s *SQLiteStorage) checkSingleIssueValidation(ctx context.Context, exec dbE
 	if err != nil {
 		return fmt.Errorf("failed to get dependents for %s: %w", id, err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	hasExternal := false
 	for rows.Next() {
@@ -222,7 +222,7 @@ func (s *SQLiteStorage) collectOrphansForID(ctx context.Context, exec dbExecutor
 	if err != nil {
 		return fmt.Errorf("failed to get dependents for %s: %w", id, err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	for rows.Next() {
 		var depID string
@@ -298,7 +298,7 @@ func (s *SQLiteStorage) executeDelete(ctx context.Context, exec dbExecutor, inCl
 		}
 		issueTypes[id] = issueType
 	}
-	_ = rows.Close()
+	_ = rows.Close() // best-effort cleanup
 
 	// 3. Convert issues to tombstones (only for issues that exist)
 	// Note: closed_at must be set to NULL because of CHECK constraint:

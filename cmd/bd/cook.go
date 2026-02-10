@@ -932,7 +932,7 @@ func collectDependencies(step *formula.Step, idMapping map[string]string, deps *
 					meta := types.WaitsForMeta{
 						Gate: waitsForSpec.Gate,
 					}
-					metaJSON, _ := json.Marshal(meta)
+					metaJSON, _ := json.Marshal(meta) // marshaling known types, error not possible
 
 					*deps = append(*deps, &types.Dependency{
 						IssueID:     issueID,

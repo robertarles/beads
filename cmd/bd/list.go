@@ -38,7 +38,7 @@ func withStorage(ctx context.Context, store storage.Storage, dbPath string, lock
 		if err != nil {
 			return err
 		}
-		defer func() { _ = roStore.Close() }()
+		defer func() { _ = roStore.Close() }() // best-effort cleanup
 		return fn(roStore)
 	}
 	return fmt.Errorf("no storage available")
@@ -131,7 +131,7 @@ func watchIssues(ctx context.Context, store storage.Storage, filter types.IssueF
 		fmt.Fprintf(os.Stderr, "Error creating watcher: %v\n", err)
 		return
 	}
-	defer func() { _ = watcher.Close() }()
+	defer func() { _ = watcher.Close() }() // best-effort cleanup
 
 	// Watch the .beads directory
 	if err := watcher.Add(beadsDir); err != nil {
@@ -140,7 +140,7 @@ func watchIssues(ctx context.Context, store storage.Storage, filter types.IssueF
 	}
 
 	// Initial display
-	issues, _ := store.SearchIssues(ctx, "", filter)
+	issues, _ := store.SearchIssues(ctx, "", filter) // best-effort search, nil on error
 	sortIssues(issues, sortBy, reverse)
 	displayPrettyList(issues, true)
 
@@ -172,7 +172,7 @@ func watchIssues(ctx context.Context, store storage.Storage, filter types.IssueF
 						debounceTimer.Stop()
 					}
 					debounceTimer = time.AfterFunc(debounceDelay, func() {
-						issues, _ := store.SearchIssues(ctx, "", filter)
+						issues, _ := store.SearchIssues(ctx, "", filter) // best-effort search, nil on error
 						sortIssues(issues, sortBy, reverse)
 						displayPrettyList(issues, true)
 						fmt.Fprintf(os.Stderr, "\nWatching for changes... (Press Ctrl+C to exit)\n")
@@ -299,7 +299,7 @@ var listCmd = &cobra.Command{
 		// Parent filtering (--filter-parent is alias for --parent)
 		parentID, _ := cmd.Flags().GetString("parent")
 		if parentID == "" {
-			parentID, _ = cmd.Flags().GetString("filter-parent")
+			parentID, _ = cmd.Flags().GetString("filter-parent") // flag was registered in init, error cannot occur
 		}
 
 		// Molecule type filtering
@@ -804,12 +804,12 @@ var listCmd = &cobra.Command{
 				// In daemon mode, open a read-only store to get dependencies
 				var allDeps map[string][]*types.Dependency
 				if store != nil {
-					allDeps, _ = store.GetAllDependencyRecords(ctx)
+					allDeps, _ = store.GetAllDependencyRecords(ctx) // best-effort enrichment, nil on error
 				} else if dbPath != "" {
 					// Daemon mode: open read-only connection for tree deps
 					if roStore, err := sqlite.NewReadOnlyWithTimeout(ctx, dbPath, lockTimeout); err == nil {
-						allDeps, _ = roStore.GetAllDependencyRecords(ctx)
-						_ = roStore.Close()
+						allDeps, _ = roStore.GetAllDependencyRecords(ctx) // best-effort enrichment, nil on error
+						_ = roStore.Close() // best-effort cleanup
 					}
 				}
 				displayPrettyListWithDeps(issues, false, allDeps)
@@ -823,11 +823,11 @@ var listCmd = &cobra.Command{
 			// In daemon mode, open a read-only store to get dependencies
 			var allDepsForList map[string][]*types.Dependency
 			if store != nil {
-				allDepsForList, _ = store.GetAllDependencyRecords(ctx)
+				allDepsForList, _ = store.GetAllDependencyRecords(ctx) // best-effort enrichment, nil on error
 			} else if dbPath != "" {
 				if roStore, err := sqlite.NewReadOnlyWithTimeout(ctx, dbPath, lockTimeout); err == nil {
-					allDepsForList, _ = roStore.GetAllDependencyRecords(ctx)
-					_ = roStore.Close()
+					allDepsForList, _ = roStore.GetAllDependencyRecords(ctx) // best-effort enrichment, nil on error
+					_ = roStore.Close() // best-effort cleanup
 				}
 			}
 			blockedByMap, blocksMap, _ := buildBlockingMaps(allDepsForList)
@@ -913,14 +913,14 @@ var listCmd = &cobra.Command{
 				}
 
 				// Load dependencies for tree structure
-				allDeps, _ := store.GetAllDependencyRecords(ctx)
+				allDeps, _ := store.GetAllDependencyRecords(ctx) // best-effort enrichment, nil on error
 				displayPrettyListWithDeps(treeIssues, false, allDeps)
 				return
 			}
 
 			// Regular tree display (no parent filter)
 			// Load dependencies for tree structure
-			allDeps, _ := store.GetAllDependencyRecords(ctx)
+			allDeps, _ := store.GetAllDependencyRecords(ctx) // best-effort enrichment, nil on error
 			displayPrettyListWithDeps(issues, false, allDeps)
 			// Show truncation hint if we hit the limit (GH#788)
 			if effectiveLimit > 0 && len(issues) == effectiveLimit {
@@ -944,10 +944,10 @@ var listCmd = &cobra.Command{
 			for i, issue := range issues {
 				issueIDs[i] = issue.ID
 			}
-			labelsMap, _ := store.GetLabelsForIssues(ctx, issueIDs)
-			depCounts, _ := store.GetDependencyCounts(ctx, issueIDs)
-			allDeps, _ := store.GetDependencyRecordsForIssues(ctx, issueIDs)
-			commentCounts, _ := store.GetCommentCounts(ctx, issueIDs)
+			labelsMap, _ := store.GetLabelsForIssues(ctx, issueIDs) // best-effort enrichment, nil on error
+			depCounts, _ := store.GetDependencyCounts(ctx, issueIDs) // best-effort enrichment, nil on error
+			allDeps, _ := store.GetDependencyRecordsForIssues(ctx, issueIDs) // best-effort enrichment, nil on error
+			commentCounts, _ := store.GetCommentCounts(ctx, issueIDs) // best-effort enrichment, nil on error
 
 			// Populate labels and dependencies for JSON output
 			for _, issue := range issues {
@@ -981,10 +981,10 @@ var listCmd = &cobra.Command{
 		for i, issue := range issues {
 			issueIDs[i] = issue.ID
 		}
-		labelsMap, _ := store.GetLabelsForIssues(ctx, issueIDs)
+		labelsMap, _ := store.GetLabelsForIssues(ctx, issueIDs) // best-effort enrichment, nil on error
 
 		// Load dependencies for blocking info display
-		allDepsForList, _ := store.GetAllDependencyRecords(ctx)
+		allDepsForList, _ := store.GetAllDependencyRecords(ctx) // best-effort enrichment, nil on error
 		blockedByMap, blocksMap, _ := buildBlockingMaps(allDepsForList)
 
 		// Build output in buffer for pager support (bd-jdz3)

@@ -158,8 +158,8 @@ func (s *Server) handleExport(req *Request) Response {
 	}
 	tempPath := tempFile.Name()
 	defer func() {
-		_ = tempFile.Close()
-		_ = os.Remove(tempPath)
+		_ = tempFile.Close() // best-effort cleanup
+		_ = os.Remove(tempPath) // best-effort cleanup
 	}()
 
 	// Write JSONL
@@ -192,7 +192,7 @@ func (s *Server) handleExport(req *Request) Response {
 	}
 
 	// Close temp file before rename
-	_ = tempFile.Close()
+	_ = tempFile.Close() // best-effort cleanup
 
 	// Atomic replace
 	if err := os.Rename(tempPath, exportArgs.JSONLPath); err != nil {
@@ -243,7 +243,7 @@ func (s *Server) handleExport(req *Request) Response {
 	if len(encodingWarnings) > 0 {
 		responseData["warnings"] = encodingWarnings
 	}
-	data, _ := json.Marshal(responseData)
+	data, _ := json.Marshal(responseData) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,
@@ -265,7 +265,7 @@ func (s *Server) checkAndAutoImportIfStale(req *Request) error {
 	defer cancel()
 
 	// Skip auto-import in dolt-native mode — JSONL is export-only backup
-	mode, _ := store.GetConfig(ctx, "sync.mode")
+	mode, _ := store.GetConfig(ctx, "sync.mode") // returns "" if not set
 	if mode == "dolt-native" {
 		return nil
 	}
@@ -582,8 +582,8 @@ func (s *Server) triggerExport(ctx context.Context, store storage.Storage, dbPat
 	}
 	tempPath := tempFile.Name()
 	defer func() {
-		_ = tempFile.Close()
-		_ = os.Remove(tempPath)
+		_ = tempFile.Close() // best-effort cleanup
+		_ = os.Remove(tempPath) // best-effort cleanup
 	}()
 
 	encoder := json.NewEncoder(tempFile)
@@ -594,7 +594,7 @@ func (s *Server) triggerExport(ctx context.Context, store storage.Storage, dbPat
 	}
 
 	// Close temp file before rename
-	_ = tempFile.Close()
+	_ = tempFile.Close() // best-effort cleanup
 
 	// Atomic replace
 	if err := os.Rename(tempPath, jsonlPath); err != nil {

@@ -92,7 +92,7 @@ func (s *Server) handleCompact(req *Request) Response {
 				Reduction:    "70-80%",
 				DryRun:       true,
 			}
-			data, _ := json.Marshal(result)
+			data, _ := json.Marshal(result) // marshaling known types, error not possible
 			return Response{
 				Success: true,
 				Data:    data,
@@ -115,7 +115,7 @@ func (s *Server) handleCompact(req *Request) Response {
 			}
 		}
 
-		issueAfter, _ := compactStore.GetIssue(ctx, args.IssueID)
+		issueAfter, _ := compactStore.GetIssue(ctx, args.IssueID) // nil if not found
 		compactedSize := 0
 		if issueAfter != nil {
 			compactedSize = len(issueAfter.Description)
@@ -136,7 +136,7 @@ func (s *Server) handleCompact(req *Request) Response {
 			Reduction:     reduction,
 			Duration:      duration.String(),
 		}
-		data, _ := json.Marshal(result)
+		data, _ := json.Marshal(result) // marshaling known types, error not possible
 		return Response{
 			Success: true,
 			Data:    data,
@@ -177,7 +177,7 @@ func (s *Server) handleCompact(req *Request) Response {
 				Success: true,
 				Results: []CompactResult{},
 			}
-			data, _ := json.Marshal(result)
+			data, _ := json.Marshal(result) // marshaling known types, error not possible
 			return Response{
 				Success: true,
 				Data:    data,
@@ -220,7 +220,7 @@ func (s *Server) handleCompact(req *Request) Response {
 			Duration: duration.String(),
 			DryRun:   args.DryRun,
 		}
-		data, _ := json.Marshal(response)
+		data, _ := json.Marshal(response) // marshaling known types, error not possible
 		return Response{
 			Success: true,
 			Data:    data,
@@ -290,7 +290,7 @@ func (s *Server) handleCompactStats(req *Request) Response {
 		Success: true,
 		Stats:   &stats,
 	}
-	data, _ := json.Marshal(result)
+	data, _ := json.Marshal(result) // marshaling known types, error not possible
 	return Response{
 		Success: true,
 		Data:    data,

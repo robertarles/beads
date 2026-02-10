@@ -184,7 +184,7 @@ func TestContributorRoutingTracer(t *testing.T) {
 		}
 
 		// Verify issue does NOT exist in project store (isolation check)
-		projectIssue, _ := projectStore.GetIssue(ctx, issue.ID)
+		projectIssue, _ := projectStore.GetIssue(ctx, issue.ID) // test assertion handles nil
 		if projectIssue != nil {
 			t.Error("issue should NOT exist in project store (isolation failure)")
 		}
@@ -220,18 +220,18 @@ func TestBackwardCompatContributorConfig(t *testing.T) {
 	}
 
 	// Simulate backward compat read (as done in create.go)
-	routingMode, _ := store.GetConfig(ctx, "routing.mode")
-	contributorRepo, _ := store.GetConfig(ctx, "routing.contributor")
+	routingMode, _ := store.GetConfig(ctx, "routing.mode") // returns "" if not set
+	contributorRepo, _ := store.GetConfig(ctx, "routing.contributor") // returns "" if not set
 
 	// Fallback to legacy keys
 	if routingMode == "" {
-		legacyAutoRoute, _ := store.GetConfig(ctx, "contributor.auto_route")
+		legacyAutoRoute, _ := store.GetConfig(ctx, "contributor.auto_route") // returns "" if not set
 		if legacyAutoRoute == "true" {
 			routingMode = "auto"
 		}
 	}
 	if contributorRepo == "" {
-		legacyPlanningRepo, _ := store.GetConfig(ctx, "contributor.planning_repo")
+		legacyPlanningRepo, _ := store.GetConfig(ctx, "contributor.planning_repo") // returns "" if not set
 		contributorRepo = legacyPlanningRepo
 	}
 
@@ -406,7 +406,7 @@ func verifyIssueRouting(
 
 	// Verify issue does NOT exist in other store (isolation check)
 	if otherStore != nil {
-		otherIssue, _ := otherStore.GetIssue(ctx, issue.ID)
+		otherIssue, _ := otherStore.GetIssue(ctx, issue.ID) // test assertion handles nil
 		if otherIssue != nil {
 			t.Errorf("%s: issue should NOT exist in other store (isolation failure)", description)
 		}
@@ -425,8 +425,8 @@ func TestContributorRoutingDirect(t *testing.T) {
 	defer planningStore.Close()
 
 	// Build routing config from stored values
-	mode, _ := projectStore.GetConfig(env.ctx, "routing.mode")
-	contributorPath, _ := projectStore.GetConfig(env.ctx, "routing.contributor")
+	mode, _ := projectStore.GetConfig(env.ctx, "routing.mode") // returns "" if not set
+	contributorPath, _ := projectStore.GetConfig(env.ctx, "routing.contributor") // returns "" if not set
 
 	routingConfig := &routing.RoutingConfig{
 		Mode:            mode,
@@ -453,14 +453,14 @@ func TestContributorRoutingSyncBranch(t *testing.T) {
 	defer planningStore.Close()
 
 	// Verify sync.branch is set
-	syncBranch, _ := projectStore.GetConfig(env.ctx, "sync.branch")
+	syncBranch, _ := projectStore.GetConfig(env.ctx, "sync.branch") // returns "" if not set
 	if syncBranch != "beads-sync" {
 		t.Fatalf("sync.branch not set correctly: got %q, want %q", syncBranch, "beads-sync")
 	}
 
 	// Build routing config
-	mode, _ := projectStore.GetConfig(env.ctx, "routing.mode")
-	contributorPath, _ := projectStore.GetConfig(env.ctx, "routing.contributor")
+	mode, _ := projectStore.GetConfig(env.ctx, "routing.mode") // returns "" if not set
+	contributorPath, _ := projectStore.GetConfig(env.ctx, "routing.contributor") // returns "" if not set
 
 	routingConfig := &routing.RoutingConfig{
 		Mode:            mode,
@@ -487,14 +487,14 @@ func TestContributorRoutingNoDb(t *testing.T) {
 	defer planningStore.Close()
 
 	// Verify no-db is set
-	nodb, _ := projectStore.GetConfig(env.ctx, "sync.nodb")
+	nodb, _ := projectStore.GetConfig(env.ctx, "sync.nodb") // returns "" if not set
 	if nodb != "true" {
 		t.Fatalf("sync.nodb not set correctly: got %q, want %q", nodb, "true")
 	}
 
 	// Build routing config
-	mode, _ := projectStore.GetConfig(env.ctx, "routing.mode")
-	contributorPath, _ := projectStore.GetConfig(env.ctx, "routing.contributor")
+	mode, _ := projectStore.GetConfig(env.ctx, "routing.mode") // returns "" if not set
+	contributorPath, _ := projectStore.GetConfig(env.ctx, "routing.contributor") // returns "" if not set
 
 	routingConfig := &routing.RoutingConfig{
 		Mode:            mode,
@@ -523,8 +523,8 @@ func TestContributorRoutingDaemon(t *testing.T) {
 	defer planningStore.Close()
 
 	// Build routing config
-	mode, _ := projectStore.GetConfig(env.ctx, "routing.mode")
-	contributorPath, _ := projectStore.GetConfig(env.ctx, "routing.contributor")
+	mode, _ := projectStore.GetConfig(env.ctx, "routing.mode") // returns "" if not set
+	contributorPath, _ := projectStore.GetConfig(env.ctx, "routing.contributor") // returns "" if not set
 
 	routingConfig := &routing.RoutingConfig{
 		Mode:            mode,
@@ -552,7 +552,7 @@ func TestContributorRoutingDaemon(t *testing.T) {
 	}
 
 	// Verify isolation
-	projectIssue, _ := projectStore.GetIssue(env.ctx, issue.ID)
+	projectIssue, _ := projectStore.GetIssue(env.ctx, issue.ID) // test assertion handles nil
 	if projectIssue != nil {
 		t.Error("issue should NOT exist in project store (daemon bypass isolation failure)")
 	}
@@ -570,14 +570,14 @@ func TestContributorRoutingLocalOnly(t *testing.T) {
 	defer planningStore.Close()
 
 	// Verify local-only is set
-	localOnly, _ := projectStore.GetConfig(env.ctx, "sync.local-only")
+	localOnly, _ := projectStore.GetConfig(env.ctx, "sync.local-only") // returns "" if not set
 	if localOnly != "true" {
 		t.Fatalf("sync.local-only not set correctly: got %q, want %q", localOnly, "true")
 	}
 
 	// Build routing config
-	mode, _ := projectStore.GetConfig(env.ctx, "routing.mode")
-	contributorPath, _ := projectStore.GetConfig(env.ctx, "routing.contributor")
+	mode, _ := projectStore.GetConfig(env.ctx, "routing.mode") // returns "" if not set
+	contributorPath, _ := projectStore.GetConfig(env.ctx, "routing.contributor") // returns "" if not set
 
 	routingConfig := &routing.RoutingConfig{
 		Mode:            mode,
@@ -604,8 +604,8 @@ func TestMaintainerRoutingUnaffected(t *testing.T) {
 	defer planningStore.Close()
 
 	// Build routing config
-	mode, _ := projectStore.GetConfig(env.ctx, "routing.mode")
-	contributorPath, _ := projectStore.GetConfig(env.ctx, "routing.contributor")
+	mode, _ := projectStore.GetConfig(env.ctx, "routing.mode") // returns "" if not set
+	contributorPath, _ := projectStore.GetConfig(env.ctx, "routing.contributor") // returns "" if not set
 
 	routingConfig := &routing.RoutingConfig{
 		Mode:            mode,
@@ -638,7 +638,7 @@ func TestMaintainerRoutingUnaffected(t *testing.T) {
 	}
 
 	// Verify issue does NOT exist in planning store
-	planningIssue, _ := planningStore.GetIssue(env.ctx, issue.ID)
+	planningIssue, _ := planningStore.GetIssue(env.ctx, issue.ID) // test assertion handles nil
 	if planningIssue != nil {
 		t.Error("maintainer issue should NOT exist in planning store (isolation failure)")
 	}
@@ -674,8 +674,8 @@ func TestExplicitRepoOverride(t *testing.T) {
 	}
 
 	// Build routing config WITH explicit override
-	mode, _ := projectStore.GetConfig(env.ctx, "routing.mode")
-	contributorPath, _ := projectStore.GetConfig(env.ctx, "routing.contributor")
+	mode, _ := projectStore.GetConfig(env.ctx, "routing.mode") // returns "" if not set
+	contributorPath, _ := projectStore.GetConfig(env.ctx, "routing.contributor") // returns "" if not set
 
 	routingConfig := &routing.RoutingConfig{
 		Mode:             mode,
@@ -709,17 +709,17 @@ func TestExplicitRepoOverride(t *testing.T) {
 	}
 
 	// Verify issue exists ONLY in override store
-	retrieved, _ := overrideStore.GetIssue(env.ctx, issue.ID)
+	retrieved, _ := overrideStore.GetIssue(env.ctx, issue.ID) // test assertion handles nil
 	if retrieved == nil {
 		t.Error("issue not found in override store")
 	}
 
-	projectIssue, _ := projectStore.GetIssue(env.ctx, issue.ID)
+	projectIssue, _ := projectStore.GetIssue(env.ctx, issue.ID) // test assertion handles nil
 	if projectIssue != nil {
 		t.Error("issue should NOT exist in project store")
 	}
 
-	planningIssue, _ := planningStore.GetIssue(env.ctx, issue.ID)
+	planningIssue, _ := planningStore.GetIssue(env.ctx, issue.ID) // test assertion handles nil
 	if planningIssue != nil {
 		t.Error("issue should NOT exist in planning store")
 	}
@@ -784,7 +784,7 @@ func TestBEADS_DIRPrecedence(t *testing.T) {
 	defer projectStore.Close()
 
 	// Verify issue does NOT exist in project store
-	projectIssue, _ := projectStore.GetIssue(env.ctx, issue.ID)
+	projectIssue, _ := projectStore.GetIssue(env.ctx, issue.ID) // test assertion handles nil
 	if projectIssue != nil {
 		t.Error("issue should NOT exist in project store when BEADS_DIR is set")
 	}
@@ -865,7 +865,7 @@ func TestRoutingWithAllSyncModes(t *testing.T) {
 			configKey: "sync.branch",
 			configVal: "beads-sync",
 			extraCheck: func(t *testing.T, store *sqlite.SQLiteStorage, ctx context.Context) {
-				val, _ := store.GetConfig(ctx, "sync.branch")
+				val, _ := store.GetConfig(ctx, "sync.branch") // returns "" if not set
 				if val != "beads-sync" {
 					t.Errorf("sync.branch = %q, want %q", val, "beads-sync")
 				}
@@ -902,8 +902,8 @@ func TestRoutingWithAllSyncModes(t *testing.T) {
 			}
 
 			// Build routing config
-			mode, _ := projectStore.GetConfig(env.ctx, "routing.mode")
-			contributorPath, _ := projectStore.GetConfig(env.ctx, "routing.contributor")
+			mode, _ := projectStore.GetConfig(env.ctx, "routing.mode") // returns "" if not set
+			contributorPath, _ := projectStore.GetConfig(env.ctx, "routing.contributor") // returns "" if not set
 
 			routingConfig := &routing.RoutingConfig{
 				Mode:            mode,

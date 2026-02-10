@@ -17,7 +17,7 @@ import (
 func TestDoltShowConfigNotInRepo(t *testing.T) {
 	// Change to a temp dir without .beads
 	tmpDir := t.TempDir()
-	oldCwd, _ := os.Getwd()
+	oldCwd, _ := os.Getwd() // best-effort, unlikely to fail
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
@@ -53,7 +53,7 @@ func TestDoltShowConfigSQLiteBackend(t *testing.T) {
 		t.Fatalf("failed to save config: %v", err)
 	}
 
-	oldCwd, _ := os.Getwd()
+	oldCwd, _ := os.Getwd() // best-effort, unlikely to fail
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
@@ -115,7 +115,7 @@ func TestDoltShowConfigEmbeddedMode(t *testing.T) {
 		t.Fatalf("failed to save config: %v", err)
 	}
 
-	oldCwd, _ := os.Getwd()
+	oldCwd, _ := os.Getwd() // best-effort, unlikely to fail
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
@@ -187,7 +187,7 @@ func TestDoltShowConfigServerMode(t *testing.T) {
 		t.Fatalf("failed to save config: %v", err)
 	}
 
-	oldCwd, _ := os.Getwd()
+	oldCwd, _ := os.Getwd() // best-effort, unlikely to fail
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
@@ -265,7 +265,7 @@ func TestDoltSetConfigValidation(t *testing.T) {
 		t.Fatalf("failed to save config: %v", err)
 	}
 
-	oldCwd, _ := os.Getwd()
+	oldCwd, _ := os.Getwd() // best-effort, unlikely to fail
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
@@ -363,7 +363,7 @@ func TestDoltSetConfigJSONOutput(t *testing.T) {
 		t.Fatalf("failed to save config: %v", err)
 	}
 
-	oldCwd, _ := os.Getwd()
+	oldCwd, _ := os.Getwd() // best-effort, unlikely to fail
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
@@ -414,7 +414,7 @@ func TestDoltSetConfigWithUpdateConfig(t *testing.T) {
 		t.Fatalf("failed to create config.yaml: %v", err)
 	}
 
-	oldCwd, _ := os.Getwd()
+	oldCwd, _ := os.Getwd() // best-effort, unlikely to fail
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatalf("failed to chdir: %v", err)
 	}
@@ -586,7 +586,7 @@ func captureDoltShowOutput(t *testing.T) string {
 	t.Helper()
 	oldStdout := os.Stdout
 	oldStderr := os.Stderr
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stdout = w
 	os.Stderr = w
 
@@ -611,7 +611,7 @@ func captureDoltSetOutput(t *testing.T, key, value string, updateConfig bool) st
 	t.Helper()
 	oldStdout := os.Stdout
 	oldStderr := os.Stderr
-	r, w, _ := os.Pipe()
+	r, w, _ := os.Pipe() // test setup, pipe creation unlikely to fail
 	os.Stdout = w
 	os.Stderr = w
 

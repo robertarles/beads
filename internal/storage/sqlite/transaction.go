@@ -54,7 +54,7 @@ func (s *SQLiteStorage) RunInTransaction(ctx context.Context, fn func(tx storage
 	if err != nil {
 		return fmt.Errorf("failed to acquire connection for transaction: %w", err)
 	}
-	defer func() { _ = conn.Close() }()
+	defer func() { _ = conn.Close() }() // best-effort cleanup
 
 	// Start IMMEDIATE transaction to acquire write lock early.
 	// Use retry logic with exponential backoff to handle SQLITE_BUSY
@@ -426,7 +426,7 @@ func (t *sqliteTxStorage) getLabels(ctx context.Context, issueID string) ([]stri
 	if err != nil {
 		return nil, fmt.Errorf("failed to get labels: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	var labels []string
 	for rows.Next() {
@@ -663,7 +663,7 @@ func (t *sqliteTxStorage) CloseIssue(ctx context.Context, id string, reason stri
 	if err != nil {
 		return fmt.Errorf("failed to find tracking convoys: %w", err)
 	}
-	defer func() { _ = convoyRows.Close() }()
+	defer func() { _ = convoyRows.Close() }() // best-effort cleanup
 
 	var convoyIDs []string
 	for convoyRows.Next() {
@@ -900,7 +900,7 @@ func (t *sqliteTxStorage) GetDependencyRecords(ctx context.Context, issueID stri
 	if err != nil {
 		return nil, fmt.Errorf("failed to query dependencies: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	var deps []*types.Dependency
 	for rows.Next() {
@@ -1214,7 +1214,7 @@ func (t *sqliteTxStorage) GetIssueComments(ctx context.Context, issueID string) 
 	if err != nil {
 		return nil, fmt.Errorf("failed to query comments: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	var comments []*types.Comment
 	for rows.Next() {
@@ -1455,7 +1455,7 @@ func (t *sqliteTxStorage) SearchIssues(ctx context.Context, query string, filter
 	if err != nil {
 		return nil, fmt.Errorf("failed to search issues: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	issues, err := t.scanIssues(ctx, rows)
 	if err != nil {
@@ -1729,7 +1729,7 @@ func (t *sqliteTxStorage) getLabelsForIssues(ctx context.Context, issueIDs []str
 	if err != nil {
 		return nil, fmt.Errorf("failed to get labels: %w", err)
 	}
-	defer func() { _ = rows.Close() }()
+	defer func() { _ = rows.Close() }() // best-effort cleanup
 
 	for rows.Next() {
 		var issueID, label string

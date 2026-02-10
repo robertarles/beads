@@ -93,15 +93,15 @@ func TestDoctorFix_UpgradesLegacySchemaWithoutSpecID(t *testing.T) {
 		t.Fatalf("open legacy db: %v", err)
 	}
 	if _, err := db.Exec(legacyIssuesSchemaWithoutSpecID); err != nil {
-		_ = db.Close()
+		_ = db.Close() // best-effort cleanup
 		t.Fatalf("create legacy issues table: %v", err)
 	}
 	if _, err := db.Exec(`CREATE TABLE IF NOT EXISTS metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL)`); err != nil {
-		_ = db.Close()
+		_ = db.Close() // best-effort cleanup
 		t.Fatalf("create metadata table: %v", err)
 	}
 	if _, err := db.Exec(`INSERT INTO metadata (key, value) VALUES ('bd_version', '0.49.3')`); err != nil {
-		_ = db.Close()
+		_ = db.Close() // best-effort cleanup
 		t.Fatalf("insert legacy version: %v", err)
 	}
 	if err := db.Close(); err != nil {

@@ -164,7 +164,7 @@ func readIssueFromJSONL(jsonlPath, issueID string) (*types.Issue, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to open JSONL: %w", err)
 	}
-	defer func() { _ = file.Close() }()
+	defer func() { _ = file.Close() }() // best-effort cleanup
 
 	scanner := bufio.NewScanner(file)
 	// Increase buffer size for large issues

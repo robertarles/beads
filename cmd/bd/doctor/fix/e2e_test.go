@@ -523,8 +523,8 @@ func TestGitCommandFailures(t *testing.T) {
 		runGit(t, dir, "commit", "-m", "orphan commit")
 
 		// Delete main if it exists
-		_ = exec.Command("git", "-C", dir, "branch", "-D", "main").Run()
-		_ = exec.Command("git", "-C", dir, "branch", "-D", "master").Run()
+		_ = exec.Command("git", "-C", dir, "branch", "-D", "main").Run() // test setup, errors not critical
+		_ = exec.Command("git", "-C", dir, "branch", "-D", "master").Run() // test setup, errors not critical
 
 		err := SyncBranchHealth(dir, "beads-sync")
 		if err == nil {

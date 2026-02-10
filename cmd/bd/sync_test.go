@@ -131,7 +131,7 @@ func TestGitCommit_AutoMessage(t *testing.T) {
 
 	// Verify it committed (message generation worked)
 	cmd := exec.Command("git", "log", "-1", "--pretty=%B")
-	output, _ := cmd.Output()
+	output, _ := cmd.Output() // test helper, errors checked elsewhere
 	if len(output) == 0 {
 		t.Error("expected commit message to be generated")
 	}
@@ -267,7 +267,7 @@ func TestMergeSyncBranch_DirtyWorkingTree(t *testing.T) {
 	// This test verifies the dirty working tree check would work
 	// (We can't test the full merge without database setup)
 	statusCmd := exec.Command("git", "status", "--porcelain")
-	output, _ := statusCmd.Output()
+	output, _ := statusCmd.Output() // test helper, errors checked elsewhere
 	if len(output) == 0 {
 		t.Error("expected dirty working tree for test setup")
 	}
@@ -664,7 +664,7 @@ func TestIsExternalBeadsDir(t *testing.T) {
 		}
 
 		// Change to the repo directory (isExternalBeadsDir uses cwd)
-		origDir, _ := os.Getwd()
+		origDir, _ := os.Getwd() // best-effort, unlikely to fail
 		if err := os.Chdir(repoDir); err != nil {
 			t.Fatalf("chdir failed: %v", err)
 		}
@@ -688,7 +688,7 @@ func TestIsExternalBeadsDir(t *testing.T) {
 		}
 
 		// Change to repo1
-		origDir, _ := os.Getwd()
+		origDir, _ := os.Getwd() // best-effort, unlikely to fail
 		if err := os.Chdir(repo1Dir); err != nil {
 			t.Fatalf("chdir failed: %v", err)
 		}
@@ -722,7 +722,7 @@ func TestIsExternalBeadsDir(t *testing.T) {
 		}
 
 		// Change to worktree
-		origDir, _ := os.Getwd()
+		origDir, _ := os.Getwd() // best-effort, unlikely to fail
 		if err := os.Chdir(worktreeDir); err != nil {
 			t.Fatalf("chdir failed: %v", err)
 		}
@@ -752,8 +752,8 @@ func TestConcurrentEdit(t *testing.T) {
 	if err := exec.Command("git", "init", "--initial-branch=main").Run(); err != nil {
 		t.Fatalf("git init failed: %v", err)
 	}
-	_ = exec.Command("git", "config", "user.email", "test@test.com").Run()
-	_ = exec.Command("git", "config", "user.name", "Test User").Run()
+	_ = exec.Command("git", "config", "user.email", "test@test.com").Run() // test setup, errors not critical
+	_ = exec.Command("git", "config", "user.name", "Test User").Run() // test setup, errors not critical
 
 	// Setup: Create beads directory with JSONL (base state)
 	beadsDir := filepath.Join(tmpDir, ".beads")
@@ -770,7 +770,7 @@ func TestConcurrentEdit(t *testing.T) {
 	}
 
 	// Initial commit
-	_ = exec.Command("git", "add", ".").Run()
+	_ = exec.Command("git", "add", ".").Run() // test setup, errors not critical
 	if err := exec.Command("git", "commit", "-m", "initial").Run(); err != nil {
 		t.Fatalf("initial commit failed: %v", err)
 	}
@@ -860,8 +860,8 @@ func TestConcurrentSyncBlocked(t *testing.T) {
 	if err := exec.Command("git", "init", "--initial-branch=main").Run(); err != nil {
 		t.Fatalf("git init failed: %v", err)
 	}
-	_ = exec.Command("git", "config", "user.email", "test@test.com").Run()
-	_ = exec.Command("git", "config", "user.name", "Test User").Run()
+	_ = exec.Command("git", "config", "user.email", "test@test.com").Run() // test setup, errors not critical
+	_ = exec.Command("git", "config", "user.name", "Test User").Run() // test setup, errors not critical
 
 	// Setup: Create beads directory with JSONL
 	beadsDir := filepath.Join(tmpDir, ".beads")
@@ -876,7 +876,7 @@ func TestConcurrentSyncBlocked(t *testing.T) {
 	}
 
 	// Initial commit
-	_ = exec.Command("git", "add", ".").Run()
+	_ = exec.Command("git", "add", ".").Run() // test setup, errors not critical
 	if err := exec.Command("git", "commit", "-m", "initial").Run(); err != nil {
 		t.Fatalf("initial commit failed: %v", err)
 	}
